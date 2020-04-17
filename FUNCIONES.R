@@ -15,23 +15,67 @@ open_nc = function(file_pattern, model, variable, members, mes_anual){
   
   if(mes_anual == "anual"){
     V = array(data = NA, dim = c(144, 73, 30, r))  
+    
+    for(i in 1:r){
+      
+      v_nc = nc_open(t[i])
+      
+      V[,,,i] = ncvar_get(v_nc, variable)
+      
+      nc_close(v_nc)
+    }             
+    
   } else {
-    V = array(data = NA, dim = c(144, 73, NA, r))  #<---- VER cantidad de meses q usan
+    
+    
+    V =  array(data = NA, dim = c(144, 73, 4, r)) # --> quedan los miembros. (se puede hacer el ensamble en el futuro, operando sobre V (o cambiar todo..))
+    V2 = array(data = NA, dim = c(144, 73, 4, 29, r))  ## --> por si es necesario mas adelante.
+    for(m in 1:r){
+      
+      v_nc = nc_open(t[m])
+      v_v = ncvar_get(v_nc, variable)
+      nc_close(v_nc)
+      v = v_v[,, 3:350] 
+      
+      v_anu_3_2 = array(NA, dim = c(144, 73, 29, 12)) 
+      
+      # años de marzo a feb
+      for(j in 1:12){
+        for (i in 0:28){
+          v_anu_3_2[,,1+i,j] = v[ , , j+12*i]
+        }
+      }
+      
+      # Separa promediando Estaciones en orden MAM, JJA, SON, DJF
+      
+      v_estaciones = array(NA, dim = c(144, 73, 4, 29))
+      i=1
+      while(i<=4){
+        v_estaciones[,,i,] = apply(v_anu_3_2[,,,(i + 2*i - 2):(i+2*i)], c(1,2,3), mean)
+        
+        i = i + 1
+      }
+      V2[,,,,m] = v_estaciones # <--- ##
+     
+      v_estaciones_prom = array(NA, dim = c(144, 73, 4))
+      
+      for( i in 1:4){
+        v_estaciones_prom[,,i] = apply(v_estaciones[,,i,], c(1,2), mean)
+      }
+      
+      V[,,,m] =   v_estaciones_prom 
+      
+    }
+    
   }
-    
   
-  for(i in 1:r){
-    
-    v_nc = nc_open(t[i])
-    
-    V[,,,i] = ncvar_get(v_nc, variable)
-    
-    nc_close(v_nc)
-  }             
-  
-  return = V
-  
+  W = list()
+  W[[1]] = V
+  W[[2]] = V2
+  return(W)
 }
+    
+
 
 #### MAPA ####
 mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, revert, niveles, contour, lon, lat, escala_dis, breaks_c_f, r, salida){
