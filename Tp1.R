@@ -8,6 +8,10 @@ source("FUNCIONES.R")
 lon = read.table("lon.txt")[,1]
 lat = read.table("lat.txt")[,1]
 
+# esto no anda ahora... porque? no hay porque
+#topo = metR::GetTopography(0, 180, 90,  -90, resolution = 1/2) # mapa topografia
+#topo2 = topo #
+#topo2[which(topo2$h<1500)]=NA # altura para la cual tapa el grafico
 
 mask = as.matrix(read.table("mask.txt"))
 mask_arr = array(NA, dim = c(length(lon), length(lat), 9))
@@ -15,123 +19,159 @@ for(i in 1:9){
   mask_arr[,,i] = mask
 }
 
-
+#### Apertura de archivos ####
 ### Observaciones ###
+## Anual
 #-------------------------------- temp - historico --------------------------------# 
 ruta = getwd()
 aux = nc_open(paste(ruta, "/Datos_Obs1/tmp_cru_ts3.20_197601-200512_2.5_anu.nc", sep = ""))
 tas_obs = ncvar_get(aux, "tmp")
 nc_close(aux)
 
-# campo medio T observado 1975 - 2005
-tas_obs_mean_an = apply(tas_obs, c(1,2), mean, na.rm = T)
+#-------------------------------- sst - historico ---------------------------------#
 
-# sd
-sd_tas_obs_anu = array(NA, dim = c(144, 73,1))
-sd_tas_obs_anu[,,1] = apply(tas_obs, c(1,2), sd, na.rm = T)
+aux = nc_open("Datos_Obs1/sst.mnmean.v4_197601-200512_2.5_anu.nc")
+sst_obs = ncvar_get(aux, "sst")
+nc_close(aux)
 
-
-############################################ GRAFICOS ############################################
-aux = array(data = NA, dim = c(144, 73, 1)) # solo para evitar modificar funcion
-aux[,,1] = tas_obs_mean_an
-mapa(lista = aux, titulo = "Promedio T obs anual", nombre_fig = "prom_t_obs_an", escala = c(-30, 30)
-     ,label_escala = "C", resta = 0, brewer = "RdBu", revert = "si", niveles = 11
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-30, 30, by = 5)
-     , breaks_c_f = seq(-30, 30, by = 5), r = 1, salida = "/Salidas/TP1/")
-##################################################################################################
-
-
-#-------------------------------- precip - historico --------------------------------#
+#-------------------------------- precip - historico ------------------------------#
 aux = nc_open(paste(ruta, "/Datos_Obs1/precip.mon.total.v7_197601-200512_2.5_anu.nc", sep = ""))
 pp_obs = ncvar_get(aux, "precip")
 nc_close(aux)
 
-pp_obs_mean_an = apply(pp_obs, c(1,2), mean, na.rm = T)
-sd_pp_obs_anual = array(data = NA, dim = c(144, 73, 1))
-sd_pp_obs_anual = apply(pp_obs, c(1,2), sd, na.rm = T)
+## Mensual 
+
+aux = nc_open(paste(ruta, "/Datos_Obs1/precip.mon.total.v7.2.5-197601-200512.nc", sep = ""))
+pp_obs_m = ncvar_get(aux, "precip")
+nc_close(aux) # lat y lons corridas 0.25 --> interpolar
 
 
-############################################ GRAFICOS ############################################
-aux = array(data = NA, dim = c(144, 73, 1))
-aux[,,1] = pp_obs_mean_an
-mapa(lista = precip_mean_an*mask_arr, titulo = "Promedio PP obs anual", nombre_fig = "prom_pp_obs_an", escala = c(0, 2500)
-     ,label_escala = "C", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 9
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 2500, by = 250)
-     , breaks_c_f = seq(0, 2500, by = 150), r = 1, salida = "/Salidas/TP1/")
-##################################################################################################
-
-
-
-
-
-
+### Modelos ###
 
 ### CNRM-CM5 ###
 
-#-------------------------------- tas - historical - anual --------------------------------#
+## Anual
 
-tas_an = open_nc(file_pattern = "tas_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_anu.nc"
+#-------------------------------- tas - historical  -------------------------------#
+tas5_an = open_nc(file_pattern = "tas_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_anu.nc"
                  , model = "cnrm-cm5", members = 9, variable = "tas", mes_anual = "anual")
 
-# campo medio T 1976 - 2005 por miembros
-tas_mean_an = apply(tas_an, c(1,2,4), mean, na.rm = T)
-
-# sd - por miembros
-sd_tas = array(NA, dim = c(144, 73,1))
-sd_tas[,,1] = apply(tas_an, c(1,2), sd, na.rm = T)
-
-
-############################################ GRAFICOS ############################################
-mapa(lista = tas_mean_an*mask_arr, titulo = "Promedio T anual", nombre_fig = "prom_t_an", escala = c(-30, 30)
-     ,label_escala = "C", resta = 273, brewer = "RdBu", revert = "si", niveles = 11
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-30, 30, by = 5)
-     , breaks_c_f = seq(-30, 30, by = 5), r = 9, salida = "/Salidas/TP1/")
-
-
-mapa(lista = sd_tas, titulo = "sd T anual 1976 - 2005", nombre_fig = "sd_t_an", escala = c(0, 2.5)
-     ,label_escala = "ºC", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 2.5, by = 0.25)
-     , breaks_c_f = seq(0, 2.5, by = 0.5), r = 1, salida = "/Salidas/TP1/")
-##################################################################################################
-
-
-
-#-------------------------------- pr - historical - anual --------------------------------#
-
-precip_an = open_nc(file_pattern = "pr_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_anu.nc"
+#-------------------------------- pr - historical - -------------------------------#
+pp5_an = open_nc(file_pattern = "pr_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_anu.nc"
                     , model = "cnrm-cm5", members = 9, variable = "pr", mes_anual = "anual") 
-precip_mean_an = apply(precip_an[[1]], c(1,2,4), mean, na.rm = T)
-
-sd_precip_an = array(NA, dim = c(144, 73,1))
-sd_precip_an[,,1] = apply(precip_an[[1]], c(1,2), sd, na.rm = T)*mask
 
 
-############################################ GRAFICOS ############################################
-# !! eleccion de escala... valores muy altos
-mapa(lista = precip_mean_an*mask_arr, titulo = "Promedio PP anual", nombre_fig = "prom_pp_an", escala = c(0, 4600)
-     ,label_escala = "C", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 9
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 4500, by = 250)
-     , breaks_c_f = seq(0, 4500, by = 150), r = 9, salida = "/Salidas/TP1/")
+## Mensual
+
+#-------------------------------- pr - historical ---------------------------------#
+pp5_m = open_nc(file_pattern = "pr_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_mes.nc"
+                , model = "cnrm-cm5", members = 9, variable = "pr", mes_anual = "mes")
 
 
-# ver. escala.
-mapa(lista = sd_precip_an, titulo = "sd PP anual", nombre_fig = "sd_pp_an", escala = c(0, 500)
-     ,label_escala = "C", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 500, by = 100)
-     , breaks_c_f = seq(0, 500, by = 50), r = 1, salida = "/Salidas/TP1/")
-##################################################################################################
+### CNRM-CM6 ###
+
+## Anual
+
+#-------------------------------- tas - historical  -------------------------------#
+tas6_an = open_nc(file_pattern = "tas_Amon_CNRM-CM6-1_historical_r*_2.5_anu.nc"
+                  , model = "cnrm-cm6", members = 10, variable = "tas", mes_anual = "anual")
+
+#-------------------------------- pr - historical ---------------------------------#
+pp6_an = open_nc(file_pattern = "pr_Amon_CNRM-CM6-1_historical_r*_2.5_anu.nc"
+                 , model = "cnrm-cm6", members = 10, variable = "pr", mes_anual = "anual" )
+
+## Mensual
+
+#-------------------------------- pr - historical ---------------------------------#
+pp6_m = open_nc(file_pattern = "pr_Amon_CNRM-CM6-1_historical_r*_2.5_mes.nc"
+                        , model = "cnrm-cm6", members = 10, variable = "pr", mes_anual = "mes")
 
 
+#### Uniendo TAS y SST ####
+# es necesario enmascarar los datos de sst ya que el oceano ocupa partes de los continentes
+mask_arr = array(NA, dim = c(length(lon), length(lat), 30))
+#invierto mascara
+mask2 = mask
+mask2[which(is.na(mask2))] = 2 ; mask2[which(mask2 == 1)] = NA ; mask2[which(mask2 == 2)] = 1
 
-#-------------------------------- pr - historical - mensual --------------------------------#
-pp_mm = open_nc(file_pattern = "pr_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_mes.nc"
-                 , model = "cnrm-cm5", members = 9, variable = "pr", mes_anual = "mes")
-
-
-
-pp_prom_est = array(data = NA, dim = c(144, 73 ,4))
-for( i in 1:4){
-  pp_prom_est[,,i] = apply(pp_mm[[1]][,,i,], c(1,2), mean)
+mask_arr2 = array(NA, dim = c(length(lon), length(lat), 30))
+for(i in 1:30){
+  mask_arr2[,,i] = mask2
 }
 
+sst_obs = sst_obs*mask_arr2 ; sst_obs[which(is.na(sst_obs))] = 1
+tas_obs[which(is.na(tas_obs))]=1  # aun quedan puntos que no se anularon
+
+obs = tas_obs*sst_obs; obs[which(obs > 50)] = NA # datos obs. continentes y oceanos
+
+## > pp es solamente contienental < ##
+
+
+##### Calculos #####
+
+ensamble_tas5_an = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T)
+ensamble_pp5_an = apply(pp5_an[[1]], c(1,2,3), mean, na.rm = T)
+ensamble_tas6_an = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
+ensamble_pp6_an = apply(pp6_an[[1]], c(1,2,3), mean, na.rm = T)
+
+# campos medioas r y ensamble
+
+mods = list()
+mods[[1]] = tas5_an[[1]]; mods[[2]] = tas6_an[[1]]; mods[[3]] = pp5_an[[1]]; mods[[4]] = pp6_an[[1]]
+mods[[5]] = ensamble_tas5_an; mods[[6]] = ensamble_tas6_an
+mods[[7]] = ensamble_pp5_an; mods[[8]] = ensamble_pp6_an
+
+calc_means = list()
+
+for(i in 0:3){
+
+    calc_means[[i + 1 + i*1]] = apply(mods[[i+1]], c(1,2), mean, na.rm = T) # promedio del ensamble
+    calc_means[[i + 2 + i*1]] = apply(mods[[i+1]], c(1,2,4), mean, na.rm = T) # promedio para cada miembro
+  
+}
+
+sd_s = list()
+for(i in 0:3){
+  
+  sd_s[[i + 1 + i*1]] = apply(mods[[i+5]], c(1,2), sd, na.rm = T) # sd del ensamble en funcion de los años
+
+  sd_s[[i + 2 + i*1]] = apply(calc_means[[i+ 2 + i*1]], c(1,2), sd, na.rm = T) # sd del ensamble entre miembros
+  
+}
+
+#tas5_an_mean = apply(tas5_an[[1]], c(1,2), mean, na.rm = T) 
+#tas5_an_r_means = apply(tas5_an[[1]], c(1,2,4), mean, na.rm = T)
+#tas6_an_mean = apply(tas6_an[[1]], c(1,2), mean, na.rm = T) 
+#tas6_an_r_means = apply(tas6_an[[1]], c(1,2,4), mean, na.rm = T) 
+#pp5_an_mean = apply(pp5_an[[1]], c(1,2), mean, na.rm = T)
+#pp5_an_r_means = apply(pp5_an[[1]], c(1,2,4), mean, na.rm = T)
+#pp6_an_mean = apply(pp6_an[[1]], c(1,2), mean, na.rm = T)
+#pp6_an_r_means = apply(pp6_an[[1]], c(1,2,4), mean, na.rm = T)
+
+# SD
+#sd5_ens_tas = apply(ensamble_tas5_an, c(1,2), sd, na.rm = T)
+#sd5_r_tas = apply(tas5_an_r_means, c(1,2), sd, na.rm = T)
+#sd6_ens_tas = apply(ensamble_tas6_an, c(1,2), sd, na.rm = T)
+#sd6_r_tas = apply(tas6_an_r_means, c(1,2), sd, na.rm = T)
+#sd5_ens_pp = apply(ensamble_pp5_an, c(1,2), sd, na.rm = T)
+#sd5_r_pp = apply(pp5_an_r_means, c(1,2), sd, na.rm = T)
+#sd6_ens_pp = apply(ensamble_pp6_an, c(1,2), sd, na.rm = T)
+#sd6_r_pp = apply(pp6_an_r_means, c(1,2), sd, na.rm = T)
+
+
+# Bias
+# Corr
+# subregiones
+
+#yapa
+# estaciones pp
+# para esto hay q ver si es posoible interpolar la grilla, o mas bien "trasladar"
+
+
+
+
+
+# esto puede servir despues.
+lat=which((latitud>=-60)&(latitud<=15))
+lon=which((longitud>=275)&(longitud<=330))
 
