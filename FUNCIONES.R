@@ -25,11 +25,16 @@ open_nc = function(file_pattern, model, variable, members, mes_anual){
       nc_close(v_nc)
     }             
     
+    W = list()
+    W[[1]] = V
+  
+    return(W)
+    
   } else {
     
     
     V =  array(data = NA, dim = c(144, 73, 4, r)) # --> quedan los miembros. (se puede hacer el ensamble en el futuro, operando sobre V (o cambiar todo..))
-    V2 = array(data = NA, dim = c(144, 73, 4, 29, r))  ## --> por si es necesario mas adelante.
+    V2 = array(data = NA, dim = c(144, 73, 4, 29, r))  ## --> por si es necesario
     for(m in 1:r){
       
       v_nc = nc_open(t[m])
@@ -67,12 +72,14 @@ open_nc = function(file_pattern, model, variable, members, mes_anual){
       
     }
     
+    W = list()
+    W[[1]] = V
+    W[[2]] = V2
+    return(W)
+    
   }
   
-  W = list()
-  W[[1]] = V
-  W[[2]] = V2
-  return(W)
+  
 }
     
 
@@ -90,6 +97,11 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
   library(mapproj)
   library(metR)
   ruta = getwd()
+  
+  #topo = metR::GetTopography(lon.west = 0.5, lon.east = 357.5, lat.north = 90,  lat.south = -90,  resolution = 1/res) # mapa topografia
+  #topo2 = topo #
+  #topo2[which(topo2$h<altura)]=NA
+  
   
   num = seq(1, r, by = 1)
   
@@ -121,6 +133,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
     
     if(revert == "si"){
       if(contour == "si"){
+        #g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
         g = ggplot() + theme_minimal()+
           xlab("Longitud") + ylab("Latitud") + 
           theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
@@ -129,11 +142,19 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
           
           geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp),alpha = 1, na.fill = -10000, breaks = breaks_c_f) +
           
-          scale_fill_gradientn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", guide = "legend", breaks = escala_dis) +
+          #geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
           
-          guides(fill = guide_legend(reverse = TRUE)) +
+          scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                            guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+          
+          
+          #scale_fill_gradientn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", guide = "legend", breaks = escala_dis) +
+          
+          
+          #guides(fill = guide_legend(reverse = TRUE)) +
           
           geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+        
           ggtitle(paste(titulo, " r" , num[i], sep = ""))+
           scale_x_discrete(limits = seq(0,360, by = 60))+
           scale_y_discrete(limits = seq(-90, 90, by = 30))+
