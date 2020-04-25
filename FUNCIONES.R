@@ -261,3 +261,40 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
 
   
   
+#### CORR ####
+corr = function(mod, obs, lon, lat, cf){
+  corr =  array(data = NA, dim = c(lon, lat,2))
+  a = 1- cf
+  for(i in 1:lon){
+    for(j in 1:lat){
+      
+      # si cada serie [i,j,] no tiene una cantidad de al menos 3 valores no NA, cor.test da error y corta el ciclo
+      if(is.na(obs[i,j,1])){
+        
+        corr[i,j,2] = NA
+        
+      } else {
+        
+        l = cor.test(mod[i,j,], obs[i,j,], method = "pearson", conf.level = cf, alternative = "two.sided")
+        
+        corr[i,j,1] = l$estimate
+        
+        # esto con lo de arriba deberia no hacer falta, pero en caso de que dos valores sean iguales el resultado de p.value es NA
+        # seria muy raro que pase.
+        if(is.na(l$p.value)){
+          
+          corr[i,j,2] = NA
+          
+        } else if(l$p.value < a){
+          
+          corr[i,j,2] = 1
+        }
+        
+      }
+      
+    }
+  }
+  
+  return(corr)
+  
+}
