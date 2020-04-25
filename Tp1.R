@@ -100,9 +100,10 @@ for(i in 1:30){
 }
 
 sst_obs = sst_obs*mask_arr2 ; sst_obs[which(is.na(sst_obs))] = 1
-tas_obs[which(is.na(tas_obs))]=1  # aun quedan puntos que no se anularon
+tas_obs[which(is.na(tas_obs))]= 1  # aun quedan puntos que no se anularon
 
-obs = tas_obs*sst_obs; obs[which(obs > 50)] = NA # datos obs. continentes y oceanos
+obs_t = tas_obs*sst_obs; obs_t[which(obs_t > 50)] = NA # datos obs. continentes y oceanos
+obs_t[which(obs_t == 1)] = NA 
 
 ## > pp es solamente contienental < ##
 
@@ -139,29 +140,96 @@ for(i in 0:3){
   
 }
 
-#tas5_an_mean = apply(tas5_an[[1]], c(1,2), mean, na.rm = T) 
-#tas5_an_r_means = apply(tas5_an[[1]], c(1,2,4), mean, na.rm = T)
-#tas6_an_mean = apply(tas6_an[[1]], c(1,2), mean, na.rm = T) 
-#tas6_an_r_means = apply(tas6_an[[1]], c(1,2,4), mean, na.rm = T) 
-#pp5_an_mean = apply(pp5_an[[1]], c(1,2), mean, na.rm = T)
-#pp5_an_r_means = apply(pp5_an[[1]], c(1,2,4), mean, na.rm = T)
-#pp6_an_mean = apply(pp6_an[[1]], c(1,2), mean, na.rm = T)
-#pp6_an_r_means = apply(pp6_an[[1]], c(1,2,4), mean, na.rm = T)
-
-# SD
-#sd5_ens_tas = apply(ensamble_tas5_an, c(1,2), sd, na.rm = T)
-#sd5_r_tas = apply(tas5_an_r_means, c(1,2), sd, na.rm = T)
-#sd6_ens_tas = apply(ensamble_tas6_an, c(1,2), sd, na.rm = T)
-#sd6_r_tas = apply(tas6_an_r_means, c(1,2), sd, na.rm = T)
-#sd5_ens_pp = apply(ensamble_pp5_an, c(1,2), sd, na.rm = T)
-#sd5_r_pp = apply(pp5_an_r_means, c(1,2), sd, na.rm = T)
-#sd6_ens_pp = apply(ensamble_pp6_an, c(1,2), sd, na.rm = T)
-#sd6_r_pp = apply(pp6_an_r_means, c(1,2), sd, na.rm = T)
-
+#calc[[1 - 8]]          sd_s[[1 - 8]]
+#tas5_an_mean  (1)         #sd5_ens_tas 
+#tas5_an_r_means (2)       #sd5_r_tas 
+#tas6_an_mean (3)          #sd6_ens_tas
+#tas6_an_r_means (4)        #sd6_r_tas 
+#pp5_an_mean  (5)          #sd5_ens_pp
+#pp5_an_r_means (6)        #sd5_r_pp 
+#pp6_an_mean  (7)          #sd6_ens_pp 
+#pp6_an_r_means (8)        #sd6_r_pp  
 
 # Bias
+# CNRM5 # ensamble y miembros
+## T ##
+bias5_t_ens = (calc_means[[1]] - 273) - apply(obs_t, c(1,2), mean, na.rm = T)
+
+bias5_t_r = array(data = NA, dim = c(144, 73, 9))
+for(i in 1:9){
+  
+  bias5_t_r[,,i] = (calc_means[[2]][,,i] - 273) - apply(obs_t, c(1,2), mean, na.rm = T)
+  
+}
+
+sd_bias5_t_r = apply(bias5_t_r, c(1,2), sd, na.rm = T)
+
+## pp ##
+bias5_pp_ens =  (calc_means[[5]]*mask) - apply(pp_obs, c(1,2), mean, na.rm = T)
+
+bias5_pp_r = array(data = NA, dim = c(144, 73, 9))
+for(i in 1:9){
+  
+  bias5_pp_r[,,i] = ((calc_means[[6]][,,i]*mask)/apply(pp_obs, c(1,2), mean, na.rm = T))*100 - 100
+  
+}
+
+sd_bias5_pp_r = apply(bias5_pp_r, c(1,2), sd, na.rm = T)
+
+
+# CNRM6 # ensamble y miembros
+## T ##
+bias6_t_ens = (calc_means[[3]] - 273) - apply(obs_t, c(1,2), mean, na.rm = T)
+
+bias6_t_r = array(data = NA, dim = c(144, 73, 10))
+for(i in 1:10){
+  
+  bias6_t_r[,,i] = (calc_means[[4]][,,i] - 273) - apply(obs_t, c(1,2), mean, na.rm = T)
+  
+}
+
+sd_bias6_t_r = apply(bias6_t_r, c(1,2), sd, na.rm = T)
+
+
+## pp ##
+bias6_pp_ens =  (calc_means[[7]]*mask) - apply(pp_obs, c(1,2), mean, na.rm = T)
+
+bias6_pp_r = array(data = NA, dim = c(144, 73, 10))
+
+for(i in 1:10){
+  
+  bias6_pp_r[,,i] = ((calc_means[[8]][,,i]*mask)/apply(pp_obs, c(1,2), mean, na.rm = T))*100 -100
+  
+}
+
+sd_bias6_pp_r = apply(bias6_pp_r, c(1,2), sd, na.rm = T)
+
+
+
 # Corr
+# CNRM5
+aux = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T)
+cor5_t = corr(mod = aux, obs = tas_obs,lon = 144, lat = 73, cf = 0.95)
+
+mask_arr = array(NA, dim = c(144, 73, 30))
+for(i in 1:30){
+  mask_arr[,,i] = mask
+}
+
+aux = apply(pp5_an[[1]], c(1,2,3), mean, na.rm = T)*mask_arr
+cor5_pp = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
+
+# CNRM6
+aux = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
+cor6_t = corr(mod = aux, obs = tas_obs,lon = 144, lat = 73, cf = 0.95)
+
+
+aux = apply(pp6_an[[1]], c(1,2,3), mean, na.rm = T)*mask_arr
+cor6_pp = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
+
 # subregiones
+#SAn 73.75-71.25,.51.25-36.75 ---> 75 - 70; -50 - -35
+
 
 #yapa
 # estaciones pp
