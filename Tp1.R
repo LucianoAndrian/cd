@@ -165,7 +165,7 @@ for(i in 1:9){
 sd_bias5_t_r = apply(bias5_t_r, c(1,2), sd, na.rm = T)
 
 ## pp ##
-bias5_pp_ens =  (calc_means[[5]]*mask) - apply(pp_obs, c(1,2), mean, na.rm = T)
+bias5_pp_ens =  (calc_means[[5]]*mask)/(apply(pp_obs, c(1,2), mean, na.rm = T))*100-100
 
 bias5_pp_r = array(data = NA, dim = c(144, 73, 9))
 for(i in 1:9){
@@ -192,7 +192,7 @@ sd_bias6_t_r = apply(bias6_t_r, c(1,2), sd, na.rm = T)
 
 
 ## pp ##
-bias6_pp_ens =  (calc_means[[7]]*mask) - apply(pp_obs, c(1,2), mean, na.rm = T)
+bias6_pp_ens =  (calc_means[[7]]*mask)/(apply(pp_obs, c(1,2), mean, na.rm = T))*100-100
 
 bias6_pp_r = array(data = NA, dim = c(144, 73, 10))
 
@@ -230,8 +230,58 @@ cor6_pp = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
 # subregiones
 #SAn 73.75-71.25,.51.25-36.75 ---> 75 - 70; -50 - -35
 
+aux_lats = list(); aux_lons = list()
+aux_lons[[1]] = which((lon>=(-75+360))&(lon<=(-70+360))); aux_lats[[1]] = which((lat>=-50)&(lat<=-35))
+aux_lons[[2]] = which((lon>=(-60+360))&(lon<=(-50+360))); aux_lats[[2]] = which((lat>=-35)&(lat<=5))
+aux_lons[[3]] = which((lon>=(-170+360))&(lon<=(-120+360))); aux_lats[[3]] = which((lat>=-5)&(lat<=5))
 
-#yapa
+regiones_means_t5 = list(); regiones_means_t6 = list()
+regiones_means_pp5 = list(); regiones_means_pp6 = list()
+
+regiones_sd_t5 = list(); regiones_sd_t6 = list()
+regiones_sd_pp5 = list(); regiones_sd_pp6 = list()
+
+regiones_bias_t5 = list(); regiones_bias_t6 = list()
+regiones_bias_pp5 = list(); regiones_bias_pp6 = list()
+
+for(i in 1:3){
+  
+  regiones_means_t5[[i]] = calc_means[[1]][aux_lons[[i]], aux_lats[[i]]] - 273
+  regiones_means_t6[[i]] = calc_means[[3]][aux_lons[[i]], aux_lats[[i]]] - 273
+  
+  regiones_means_pp5[[i]] = calc_means[[5]][aux_lons[[i]], aux_lats[[i]]] 
+  regiones_means_pp6[[i]] = calc_means[[7]][aux_lons[[i]], aux_lats[[i]]] 
+  
+  regiones_sd_t5[[i]] = sd_s[[1]][aux_lons[[i]], aux_lats[[i]]]
+  regiones_sd_t6[[i]] = sd_s[[3]][aux_lons[[i]], aux_lats[[i]]]
+  
+  regiones_sd_pp5[[i]] = sd_s[[5]][aux_lons[[i]], aux_lats[[i]]]
+  regiones_sd_pp5[[i]] = sd_s[[7]][aux_lons[[i]], aux_lats[[i]]]
+  
+  regiones_bias_t5[[i]] = (calc_means[[1]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(obs_t[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
+  regiones_bias_t6[[i]] = (calc_means[[3]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(obs_t[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
+  
+  regiones_bias_pp5[[i]] = (calc_means[[5]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
+  regiones_bias_pp6[[i]] = (calc_means[[7]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
+  
+  
+}
+
+# series temporales
+# ver porque dan medio raro...
+ts.plot(apply(obs_t,c(3), mean, na.rm = T))
+aux = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T)
+aux = apply(aux ,c(3), mean, na.rm =T)
+
+aux2 = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(aux2 ,c(3), mean, na.rm =T)
+
+
+plot.ts(aux-273, ylim = c(0,10))
+lines(apply(obs_t,c(3), mean, na.rm = T), col = "red")
+lines(aux2-273)
+
+
 # estaciones pp
 # para esto hay q ver si es posoible interpolar la grilla, o mas bien "trasladar"
 
@@ -240,6 +290,6 @@ cor6_pp = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
 
 
 # esto puede servir despues.
-lat=which((latitud>=-60)&(latitud<=15))
-lon=which((longitud>=275)&(longitud<=330))
+which((lat>=-35)&(lat<=5))
+which((lon>=(-75+360))&(lon<=(-70+360)))
 
