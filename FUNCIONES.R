@@ -85,7 +85,7 @@ open_nc = function(file_pattern, model, variable, members, mes_anual){
 
 
 #### MAPA ####
-mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, revert, niveles, contour, lon, lat, escala_dis, breaks_c_f, r, salida){
+mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, revert, niveles, contour, lon, lat, escala_dis, breaks_c_f, r, na_fill, salida){
   
   library(ncdf4)
   library(maps)
@@ -101,6 +101,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
   #topo = metR::GetTopography(lon.west = 0.5, lon.east = 357.5, lat.north = 90,  lat.south = -90,  resolution = 1/res) # mapa topografia
   #topo2 = topo #
   #topo2[which(topo2$h<altura)]=NA
+  
   
   
   num = seq(1, r, by = 1)
@@ -131,6 +132,8 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
     
     mapa <- map_data("world2", colour = "black")
     
+    title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
+    
     if(revert == "si"){
       if(contour == "si"){
         #g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
@@ -140,7 +143,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
           
           geom_tile(data = data, aes(x = lon, y = lat, fill = temp), alpha=0.8, na.rm = T) +
           
-          geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp),alpha = 1, na.fill = -10000, breaks = breaks_c_f) +
+          geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp),alpha = 1, na.fill = na_fill , breaks = breaks_c_f) +
           
           #geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
           
@@ -154,8 +157,8 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
           #guides(fill = guide_legend(reverse = TRUE)) +
           
           geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
-        
-          ggtitle(paste(titulo, " r" , num[i], sep = ""))+
+          
+          ggtitle(title)+
           scale_x_discrete(limits = seq(0,360, by = 60))+
           scale_y_discrete(limits = seq(-90, 90, by = 30))+
           theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
@@ -165,7 +168,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
                 plot.title = element_text(hjust = 0.5))
         
         
-        ggsave(paste(ruta, salida, nombre_fig, "_r", num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+        ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
       } else {
         g = ggplot() + theme_minimal() +
           xlab("Longitud") + ylab("Latitud") + 
@@ -175,12 +178,12 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
           
           #geom_contour_fill(data=data, aes(x = lon, y= lat, z = temp),alpha=1, na.fill = -10000, breaks = breaks_c_f)
           
-          scale_fill_gradientn(limits = escala, name = label_escala, colours = rev(brewer.pal(n = niveles, brewer)), na.value = "white", guide = "legend", breaks = escala_dis) +
-          
-          guides(fill = guide_legend(reverse = TRUE)) +
+          scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                            guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
           
           geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
-          ggtitle(paste(titulo, " r" , num[i], sep = ""))+
+          
+          ggtitle(title)+
           scale_x_discrete(limits = seq(0,360, by = 60))+
           scale_y_discrete(limits = seq(-90, 90, by = 30))+
           theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
@@ -189,8 +192,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
                 panel.ontop = TRUE,
                 plot.title = element_text(hjust = 0.5))
         
-        
-        ggsave(paste(ruta, salida, nombre_fig, "_r", num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+        ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
         
       }
       
@@ -203,17 +205,17 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
           
           geom_tile(data = data,aes(x = lon, y = lat, fill = temp), alpha = 0.9, na.rm = T) +
           
-          geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp), alpha = 1, na.fill = -10000, breaks = breaks_c_f) +
+          geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp), alpha = 1, na.fill = na_fill, breaks = breaks_c_f) +
           
           #stat_subset(data=data, aes(x = lon, y = lat, z = temp, subset = temp <= rc), shape = 20, size = 1, color = "black", alpha = 0.3, geom = "point")+
           #geom_contour(data = data, aes(x = lon, y = lat, z = temp), color = "blue", size = 0.666, breaks = rc )+
           
-          scale_fill_gradientn(limits = escala, name = label_escala, colours = brewer.pal(n = niveles,brewer), na.value = "white", guide = "legend",breaks = escala_dis) +
-          
-          guides(fill = guide_legend(reverse = TRUE)) +
+          scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                            guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
           
           geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
-          ggtitle(paste(titulo, " r" , num[i], sep = ""))+
+          
+          ggtitle(title)+
           scale_x_discrete(limits = seq(0,360, by = 60))+
           scale_y_discrete(limits = seq(-90, 90, by = 30))+
           theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
@@ -223,7 +225,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
                 plot.title = element_text(hjust = 0.5))
         
         
-        ggsave(paste(ruta, salida, nombre_fig, "_r", num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+        ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
       } else {
         g = ggplot() + theme_minimal() +
           xlab("Longitud") + ylab("Latitud") + 
@@ -233,12 +235,12 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
           
           #geom_contour_fill(data=data,aes(x = lon, y= lat, z = temp),alpha=1, na.fill = -10000)+
           
-          scale_fill_gradientn(limits = escala,name = label_escala, colours = brewer.pal(n = niveles, brewer), na.value = "white", guide = "legend",breaks = escala_dis)+
-          
-          guides(fill = guide_legend(reverse = TRUE))+
+          scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                            guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
           
           geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
-          ggtitle(paste(titulo, " r" , num[i], sep = ""))+
+          
+          ggtitle(title)+
           scale_x_discrete(limits = seq(0,360, by = 60))+
           scale_y_discrete(limits = seq(-90, 90, by = 30))+
           theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
@@ -248,7 +250,7 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
                 plot.title = element_text(hjust = 0.5))
         
         
-        ggsave(paste(ruta, salida, nombre_fig, "_r", num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+        ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
         
       }
       
@@ -259,8 +261,13 @@ mapa = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, 
 
 
 
+
+
+
+
   
   
+
 #### CORR ####
 corr = function(mod, obs, lon, lat, cf){
   corr =  array(data = NA, dim = c(lon, lat,2))
