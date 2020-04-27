@@ -9,7 +9,7 @@ lon = read.table("lon.txt")[,1]
 lat = read.table("lat.txt")[,1]
 
 # esto no anda ahora... porque? no hay porque
-#topo = metR::GetTopography(0, 180, 90,  -90, resolution = 1/2) # mapa topografia
+#topo = metR::GetTopography(1, 358, 89,  -89, resolution = 1) # mapa topografia
 #topo2 = topo #
 #topo2[which(topo2$h<1500)]=NA # altura para la cual tapa el grafico
 
@@ -32,8 +32,8 @@ nc_close(aux)
 
 aux = nc_open("Datos_Obs1/sst.mnmean.v4_197601-200512_2.5_anu.nc")
 sst_obs = ncvar_get(aux, "sst")
-nc_close(aux)
 
+nc_close(aux)
 #-------------------------------- precip - historico ------------------------------#
 aux = nc_open(paste(ruta, "/Datos_Obs1/precip.mon.total.v7_197601-200512_2.5_anu.nc", sep = ""))
 pp_obs = ncvar_get(aux, "precip")
@@ -110,17 +110,12 @@ obs_t[which(obs_t == 1)] = NA
 
 ##### Calculos #####
 
-ensamble_tas5_an = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T)
-ensamble_pp5_an = apply(pp5_an[[1]], c(1,2,3), mean, na.rm = T)
-ensamble_tas6_an = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
-ensamble_pp6_an = apply(pp6_an[[1]], c(1,2,3), mean, na.rm = T)
-
 # campos medioas r y ensamble
 
 mods = list()
 mods[[1]] = tas5_an[[1]]; mods[[2]] = tas6_an[[1]]; mods[[3]] = pp5_an[[1]]; mods[[4]] = pp6_an[[1]]
-mods[[5]] = ensamble_tas5_an; mods[[6]] = ensamble_tas6_an
-mods[[7]] = ensamble_pp5_an; mods[[8]] = ensamble_pp6_an
+mods[[5]] = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T); mods[[6]] = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
+mods[[7]] = apply(pp5_an[[1]], c(1,2,3), mean, na.rm = T); mods[[8]] = apply(pp6_an[[1]], c(1,2,3), mean, na.rm = T)
 
 calc_means = list()
 
@@ -232,7 +227,7 @@ cor6_pp = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
 
 aux_lats = list(); aux_lons = list()
 aux_lons[[1]] = which((lon>=(-75+360))&(lon<=(-70+360))); aux_lats[[1]] = which((lat>=-50)&(lat<=-35))
-aux_lons[[2]] = which((lon>=(-60+360))&(lon<=(-50+360))); aux_lats[[2]] = which((lat>=-35)&(lat<=5))
+aux_lons[[2]] = which((lon>=(-60+360))&(lon<=(-50+360))); aux_lats[[2]] = which((lat>=-35)&(lat<=-22.5))
 aux_lons[[3]] = which((lon>=(-170+360))&(lon<=(-120+360))); aux_lats[[3]] = which((lat>=-5)&(lat<=5))
 
 regiones_means_t5 = list(); regiones_means_t6 = list()
@@ -268,14 +263,58 @@ for(i in 1:3){
 }
 
 # series temporales
-# ver porque dan medio raro...
-ts.plot(apply(obs_t,c(3), mean, na.rm = T))
-aux = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T)
-aux = apply(aux ,c(3), mean, na.rm =T)
+# Anomalia
+
+mask_arr = array(NA, dim = c(144, 73, 30, 10))
+for(i in 1:30){
+  for(j in 1:10){
+    mask_arr[,,i,j] = mask
+  }
+}
+
+mask_arr2 = array(NA, dim = c(length(lon), length(lat), 30, 10))
+for(i in 1:30){
+  for(j in 1:10){
+    mask_arr2[,,i,j] = mask2
+  }
+  
+}
+
+# globales
+
+anom_t_obs =  apply(obs_t,c(3), mean, na.rm = T) - mean(obs_t, na.rm = T)
+anom_t_obs_cont = apply(tas_obs,c(3), mean, na.rm = T) - mean(tas_obs, na.rm = T)
+amon_t_obs_oce = apply(sst_obs*mask_arr2[,,,1],c(3), mean, na.rm = T) - mean(sst_obs*mask_arr2[,,,1], na.rm = T)
+
+anom_pp_obs = apply(pp_obs,c(3), mean, na.rm = T) - mean(pp_obs, na.rm = T)
+
+anom_t5 = apply(tas5_an[[1]], c(3), mean, na.rm = T) - mean(tas5_an[[1]], na.rm = T)
+anom_t5_cont = apply(tas5_an[[1]]*mask_arr[,,,1:9], c(3), mean, na.rm = T) - mean(tas5_an[[1]]*mask_arr[,,,1:9], na.rm = T)
+anom_t5_oce = apply(tas5_an[[1]]*mask_arr2[,,,1:9], c(3), mean, na.rm = T) - mean(tas5_an[[1]]*mask_arr2[,,,1:9], na.rm = T)
+anom_t5_r = apply(tas5_an[[1]], c(3,4), mean, na.rm = T) - apply(tas5_an[[1]], c(4),mean, na.rm = T)
+
+anom_pp5 = apply(pp5_an[[1]]*mask_arr[,,,1:9], c(3), mean, na.rm = T) - mean(pp5_an[[1]]*mask_arr[,,,1:9], na.rm = T)
+anom_pp6 = apply(pp6_an[[1]]*mask_arr, c(3), mean, na.rm = T) - mean(pp6_an[[1]]*mask_arr, na.rm = T)
+
+
+anom_t6 = apply(tas6_an[[1]], c(3), mean, na.rm = T)- mean(tas6_an[[1]], na.rm = T)
+anom_t6_cont = apply(tas6_an[[1]]*mask_arr, c(3), mean, na.rm = T) - mean(tas6_an[[1]]*mask_arr, na.rm = T)
+anom_t6_oce = apply(tas6_an[[1]]*mask_arr2, c(3), mean, na.rm = T) - mean(tas6_an[[1]]*mask_arr2, na.rm = T)
+anom_t6_r = apply(tas6_an[[1]], c(3,4), mean, na.rm = T) - apply(tas6_an[[1]], c(4),mean, na.rm = T)
+
+
+# en las regiones, solo SESA
+
+anom_t_obs_sesa =  apply(obs_t[aux_lons[[2]], aux_lats[[2]],],c(3), mean, na.rm = T) - mean(obs_t[aux_lons[[2]], aux_lats[[2]],], na.rm = T)
+anom_t5_sesa = apply(tas5_an[[1]][aux_lons[[2]], aux_lats[[2]],,], c(3), mean, na.rm = T) - mean(tas5_an[[1]][aux_lons[[2]], aux_lats[[2]],,], na.rm = T)
+anom_t6_sesa = apply(tas6_an[[1]][aux_lons[[2]], aux_lats[[2]],,], c(3), mean, na.rm = T) - mean(tas6_an[[1]][aux_lons[[2]], aux_lats[[2]],,], na.rm = T)
+
+anom_pp_obs_sesa = apply(pp_obs[aux_lons[[2]], aux_lats[[2]],],c(3), mean, na.rm = T) - mean(pp_obs[aux_lons[[2]], aux_lats[[2]],], na.rm = T)
+anom_pp5_sesa = apply(pp5_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,1:9], c(3), mean, na.rm = T) - mean(pp5_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,1:9], na.rm = T)
+anom_pp6_sesa = apply(pp6_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,], c(3), mean, na.rm = T) - mean(pp6_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,], na.rm = T)
 
 aux2 = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
 aux2 = apply(aux2 ,c(3), mean, na.rm =T)
-
 
 plot.ts(aux-273, ylim = c(0,10))
 lines(apply(obs_t,c(3), mean, na.rm = T), col = "red")
@@ -286,10 +325,77 @@ lines(aux2-273)
 # para esto hay q ver si es posoible interpolar la grilla, o mas bien "trasladar"
 
 
+#### GRAFICOS ####
+# T5 ensamble
+aux = array(data = calc_means[[1]], c(144,73,1)) 
+mapa(lista = aux, titulo = "Temperatura media ensamble CNRM-CM5 1975 - 2005", nombre_fig = "tas5.ens.mean"
+     , escala = c(-30, 30), label_escala = "ºC", resta = 273, brewer = "RdBu", revert = "si", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-30, 30, by = 5), breaks_c_f = seq(-30, 30, by = 2.5), r = 1,na_fill = -10000, salida = "/Salidas/TP1/")
+
+# r.s
+mapa(lista = calc_means[[2]], titulo = "Temperatura media CNRM-CM5 1975 - 2005", nombre_fig = "tas5.mean.r"
+     , escala = c(-30, 30), label_escala = "ºC", resta = 273, brewer = "RdBu", revert = "si", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-30, 30, by = 5), breaks_c_f = seq(-30, 30, by = 2.5), r = 9, salida = "/Salidas/TP1/")
+
+# sd
+aux = array(data = sd_s[[1]], c(144,73,1)) 
+mapa(lista = aux, titulo = "Temperatura desvio ensamble CNRM-CM5 1975 - 2005", nombre_fig = "sd_tas5.ens.mean"
+     , escala = c(0, 1), label_escala = "", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, salida = "/Salidas/TP1/")
+
+# sd emtre miembros de ensambles T
+#aux = array(data = sd_s[[2]], c(144,73,1)) 
+#mapa(lista = aux, titulo = "Temperatura desvio ensamble CNRM-CM5 1975 - 2005", nombre_fig = "prueba"
+#     , escala = c(0, 1), label_escala = "", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
+#     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, salida = "/Salidas/TP1/")
+
+# bias
+aux = array(data = bias5_t_ens, c(144,73,1)) 
+aux[which(abs(aux)>7)] = NA
+mapa(lista = aux, titulo = "Temperatura Bias ensamble CNRM-CM5 1975 - 2005", nombre_fig = "bias5_t.ens"
+     , escala = c(-5, 5), label_escala = "ºC", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-5, 5, by = 1), breaks_c_f = seq(-5, 5, by = 0.5), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
+
+# correlaciones
+aux = array(data = cor5_t[,,1]*cor5_t[,,2], c(144,73,1)) 
+mapa(lista = aux, titulo = "Correlaciòn temperatura CNRM-CM5 vs observaciones  1975 - 2005", nombre_fig = "cor5_t.ens"
+     , escala = c(0, 1), label_escala = "R", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
 
 
 
-# esto puede servir despues.
-which((lat>=-35)&(lat<=5))
-which((lon>=(-75+360))&(lon<=(-70+360)))
+# pp5 emsamble
+aux = array(data = calc_means[[5]], c(144,73,1)) 
+mapa(lista = aux, titulo = "Precipitacíon media ensamble CNRM-CM5 1975 - 2005", nombre_fig = "pp5.ens.mean"
+     , escala = c(0, 3500), label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 3500, by = 250), breaks_c_f = seq(0, 3500, by = 250), r = 1, salida = "/Salidas/TP1/")
+#r.s
+mapa(lista = calc_means[[6]], titulo = "Precipitación media CNRM-CM5 1975 - 2005", nombre_fig = "pp5.mean.r"
+     , escala = c(0, 3500), label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 3500, by = 250), breaks_c_f = seq(0, 3500, by = 250), r = 9, salida = "/Salidas/TP1/")
 
+aux = array(data = sd_s[[3]], c(144,73,1)) 
+mapa(lista = aux, titulo = "Precipitación desvio ensamble CNRM-CM5 1975 - 2005", nombre_fig = "sd_pp5.ens.mean"
+     , escala = c(0, 1), label_escala = "", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, salida = "/Salidas/TP1/")
+
+#aux = array(data = sd_s[[4]], c(144,73,1)) 
+#mapa(lista = aux, titulo = "Temperatura desvio ensamble CNRM-CM5 1975 - 2005", nombre_fig = "prueba"
+#     , escala = c(0, 1), label_escala = "", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
+#     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, salida = "/Salidas/TP1/")
+
+
+aux = array(data = bias5_pp_ens, c(144,73,1)) 
+aux[which(aux > 100)] = 105;aux[which(aux < -100)] = -105;  
+mapa(lista = aux, titulo = "Precipitación Bias % ensamble CNRM-CM5 1975 - 2005", nombre_fig = "bias5_pp.ens"
+     , escala = c(-100, 100), label_escala = "mm", resta = 0, brewer = "BrBG", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-100, 100, by = 20), breaks_c_f = seq(-100, 100, by = 10), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
+
+aux = array(data = cor5_pp[,,1]*cor5_pp[,,2], c(144,73,1)) 
+mapa(lista = aux, titulo = "Correlaciòn precipitación CNRM-CM5 vs observaciones  1975 - 2005", nombre_fig = "cor5_pp.ens"
+     , escala = c(-1, 1), label_escala = "R", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+     , contour = "no", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.2), breaks_c_f = seq(-1, 1, by = 0.2), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
+
+
+# subregion
+# configurar funcion, para hacer el mapa en la region que corresponda.
