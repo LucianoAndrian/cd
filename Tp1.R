@@ -2,6 +2,7 @@
 #rm(list = ls())
 library(ncdf4)
 library(fields)
+library(ggplot2)
 
 source("FUNCIONES.R")
 
@@ -256,8 +257,8 @@ for(i in 1:3){
   regiones_bias_t5[[i]] = (calc_means[[1]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(obs_t[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
   regiones_bias_t6[[i]] = (calc_means[[3]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(obs_t[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
   
-  regiones_bias_pp5[[i]] = (calc_means[[5]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
-  regiones_bias_pp6[[i]] = (calc_means[[7]][aux_lons[[i]], aux_lats[[i]]] - 273) - apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
+  regiones_bias_pp5[[i]] = (calc_means[[5]][aux_lons[[i]], aux_lats[[i]]])/apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)*100 - 100
+  regiones_bias_pp6[[i]] = (calc_means[[7]][aux_lons[[i]], aux_lats[[i]]])/apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)*100 - 100
   
   
 }
@@ -313,12 +314,6 @@ anom_pp_obs_sesa = apply(pp_obs[aux_lons[[2]], aux_lats[[2]],],c(3), mean, na.rm
 anom_pp5_sesa = apply(pp5_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,1:9], c(3), mean, na.rm = T) - mean(pp5_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,1:9], na.rm = T)
 anom_pp6_sesa = apply(pp6_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,], c(3), mean, na.rm = T) - mean(pp6_an[[1]][aux_lons[[2]], aux_lats[[2]],,]*mask_arr[aux_lons[[2]],aux_lats[[2]],,], na.rm = T)
 
-aux2 = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
-aux2 = apply(aux2 ,c(3), mean, na.rm =T)
-
-plot.ts(aux-273, ylim = c(0,10))
-lines(apply(obs_t,c(3), mean, na.rm = T), col = "red")
-lines(aux2-273)
 
 
 # estaciones pp
@@ -398,4 +393,13 @@ mapa(lista = aux, titulo = "Correlaciòn precipitación CNRM-CM5 vs observacione
 
 
 # subregion
-# configurar funcion, para hacer el mapa en la region que corresponda.
+
+aux = array(data = regiones_bias_t5[[1]], dim = c(3, 7, 1))
+aux2 = array(data = regiones_bias_t5[[2]], dim = c(5, 6, 1))
+aux3 = array(data = regiones_bias_t5[[3]], dim = c(21, 5, 1))
+
+mapa_reg(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "probando", nombre_fig = "prueba"
+     , escala = c(-4, 4), label_escala = "m", resta = 0,revert = "si", brewer = "RdBu", niveles = 9
+     ,  lons = lon, lats = lat, aux_lons = aux_lons, aux_lats = aux_lats, 
+     escala_dis = seq(-4, 4, by = 0.5), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
+
