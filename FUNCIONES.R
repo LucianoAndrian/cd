@@ -305,3 +305,181 @@ corr = function(mod, obs, lon, lat, cf){
   return(corr)
   
 }
+#### MAPA_SA ####
+mapa_reg = function(lista, lista2, lista3, titulo, nombre_fig, escala, label_escala, resta, revert, brewer, niveles,  lons, lats, aux_lons, aux_lats, escala_dis, r, na_fill, salida){
+  
+  # por ahora atada con alambre
+  
+  # grafica subregiones (lista, lista2....)
+  # requiere las lat y lon de esas regiones dadas en lista
+  # para agregar mas regiones, por ahora hay q editar la funcion.
+  
+  # dependiendo de como se haya seleccionado las region previo a la funcion, puede haber problemas en la conversion a data frame para el ggplot
+  
+  library(ncdf4)
+  library(maps)
+  library(ncdf4)
+  require(fields)
+  require(mapdata)
+  library(ggplot2)
+  library(RColorBrewer)
+  library(mapproj)
+  library(metR)
+  ruta = getwd()
+  
+ 
+  lon = lons[aux_lons[[1]]]
+  lat = lats[aux_lats[[1]]]
+  
+  lon2 = lons[aux_lons[[2]]]
+  lat2 = lats[aux_lats[[2]]]
+  
+  lon3 = lons[aux_lons[[3]]]
+  lat3 = lats[aux_lats[[3]]]
+  
+  num = seq(1, r, by = 1)
+  
+  g = list()
+  for(i in 1:r){
+    
+    # esto para las todas las listas.. a lo loco (se puede definir una lista para cada data frame)
+
+    value = array(lista[,,i], dim = length(lon)*length(lat))
+    data = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+    
+    l=0
+    while(l<length(lon)*length(lat)){
+      data[seq(l:l+length(lon)),1]<-lon
+      l=l+length(lon)
+    }
+    
+    for(j in 1:length(lat)){
+      lat_v = array(lat[j],dim=length(lon))
+      data[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+    } 
+    
+    
+    data[,3]<-value -resta
+    
+    data<-as.data.frame(data)
+    colnames(data)<-c("lon", "lat", "temp")
+    
+    
+    ### lista2 ###
+    value = array(lista2[,,i], dim = length(lon2)*length(lat2))
+    data2 = matrix(data = NA, nrow = length(lon2)*length(lat2), ncol = 3)
+    
+    l=0
+    while(l<length(lon2)*length(lat2)){
+      data2[seq(l:l+length(lon2)),1]<-lon2
+      l=l+length(lon2)
+    }
+    
+    for(j in 1:length(lat2)){
+      lat2_v = array(lat2[j],dim=length(lon2))
+      data2[(length(lon2)*j-(length(lon2)-1)):(j*length(lon2)),2]<-lat2_v
+    } 
+    
+    
+    data2[,3]<-value -resta
+    
+    data2<-as.data.frame(data2)
+    
+    colnames(data2)<-c("lon", "lat", "temp")
+    
+   
+    
+    
+    ### lista3 ###
+    value = array(lista3[,,i], dim = length(lon3)*length(lat3))
+    data3 = matrix(data = NA, nrow = length(lon3)*length(lat3), ncol = 3)
+    
+    l=0
+    while(l<length(lon3)*length(lat3)){
+      data3[seq(l:l+length(lon3)),1]<-lon3
+      l=l+length(lon3)
+    }
+    
+    for(j in 1:length(lat3)){
+      lat3_v = array(lat3[j],dim=length(lon3))
+      data3[(length(lon3)*j-(length(lon3)-1)):(j*length(lon3)),2]<-lat3_v
+    } 
+    
+    
+    data3[,3]<-value -resta
+    
+    data3<-as.data.frame(data3)
+    
+    colnames(data3)<-c("lon", "lat", "temp")
+    
+    
+    mapa <- map_data("world", regions = c("Brazil", "Uruguay", "Argentina", "French Guiana", "Suriname", "Colombia", "Venezuela",
+                                          "Bolivia", "Ecuador", "Chile", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua", "falkland islands",
+                                          "Martinique", "Kiribati"), 
+                     colour = "black")
+    
+    title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
+    
+    if(revert == "si"){
+      
+      g = ggplot() + theme_minimal() +
+        xlab("Longitud") + ylab("Latitud") + 
+        theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank())+
+        
+        geom_tile(data=data,aes(x = lon , y = lat,fill = temp),alpha=0.9, na.rm = T) +
+        geom_tile(data=data2,aes(x = lon , y = lat,fill = temp),alpha=0.9, na.rm = T) +
+        geom_tile(data=data3,aes(x = lon , y = lat,fill = temp),alpha=0.9, na.rm = T) +
+        
+        
+        scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                          guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+        
+        geom_polygon(data = mapa, aes(x = long + 360, y = lat, group =group),fill = NA, color = "black") + # + 360  el mapa( o las data's - 360) 
+        
+        ggtitle(title)+
+        scale_x_continuous(limits = c(180,327))+ # seq?
+        #scale_y_discrete(limits = seq(-90, 90, by = 30))
+        #scale_x_discrete(limits = seq(0,360, by = 60))+
+        #scale_y_continuous(limits = seq(-90, 20, by = 30))+
+        theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+              axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              panel.border = element_rect(colour = "black", fill = NA, size = 3),
+              panel.ontop = TRUE,
+              plot.title = element_text(hjust = 0.5))
+      
+      ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 15  , units = "cm")
+      
+    } else {
+      
+      g = ggplot() + theme_minimal() +
+        xlab("Longitud") + ylab("Latitud") + 
+        theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank())+
+        
+        geom_tile(data=data,aes(x = lon , y = lat,fill = temp),alpha=0.9, na.rm = T) +
+        geom_tile(data=data2,aes(x = lon , y = lat,fill = temp),alpha=0.9, na.rm = T) +
+        geom_tile(data=data3,aes(x = lon , y = lat,fill = temp),alpha=0.9, na.rm = T) +
+        
+        
+        scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                          guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+        
+        geom_polygon(data = mapa, aes(x = long + 360, y = lat, group =group),fill = NA, color = "black") + # + 360  el mapa( o las data's - 360) 
+        
+        ggtitle(title)+
+        scale_x_continuous(limits = c(180,327))+ # seq?
+        #scale_y_discrete(limits = seq(-90, 90, by = 30))
+        #scale_x_discrete(limits = seq(0,360, by = 60))+
+        #scale_y_continuous(limits = seq(-90, 20, by = 30))+
+        theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+              axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              panel.border = element_rect(colour = "black", fill = NA, size = 3),
+              panel.ontop = TRUE,
+              plot.title = element_text(hjust = 0.5))
+      
+      ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 15  , units = "cm")
+    }
+
+    
+  }
+  
+}
