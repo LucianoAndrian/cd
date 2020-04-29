@@ -483,3 +483,31 @@ mapa_reg = function(lista, lista2, lista3, titulo, nombre_fig, escala, label_esc
   }
   
 }
+
+
+# grafico_ts
+grafico_ts = function(data1, data2, data3, data4, nombre_fig, titulo, ylab){
+ 
+  
+  # se puede agregar la posicion del legend como parametro si hace falta
+    
+    aux = matrix(data = NA, nrow = 30, 3)
+    
+    aux[,1] = data1
+    aux[,2] = data2
+    aux[,3] = data3
+    aux2 = data.frame(1976:2005, aux)
+    
+    colnames(aux2) = c("Year", "Observado", "CNRM-CM5", "CNRM-CM6") # esto puede no ser necesario.
+    
+    df.ts = ts(aux2[-1], start = 1976, frequency = 1)
+    png(filename = nombre_fig, width = 850, height = 520, units = "px")
+    plot(df.ts, plot.type = "single", col = 1:ncol(df.ts), lwd = 4, ylab = ylab, main = titulo)
+    abline(h = 0, lwd = 0.5)
+    legend("topleft", colnames(df.ts), col=1:ncol(aux2), lty=1, cex=2, lwd = 3)
+    dev.off()
+    
+    
+
+  
+}
