@@ -9,7 +9,11 @@ source("FUNCIONES.R")
 lon = read.table("lon.txt")[,1]
 lat = read.table("lat.txt")[,1]
 
-
+mask = as.matrix(read.table("mask.txt"))
+mask_arr = array(NA, dim = c(length(lon), length(lat), 9))
+for(i in 1:9){
+  mask_arr[,,i] = mask
+}
 
 #### Apertura de archivos ####
 ### Observaciones ###
@@ -116,7 +120,6 @@ mapa(lista = aux, titulo = "SD Temperatura media observada GPCC 1975 - 2005", no
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
 
 
-
 pp.mean.obs = apply(pp_obs, c(1,2), mean, na.rm = T)
 pp.sd.obs = apply(pp_obs, c(1,2), sd, na.rm = T)
 
@@ -132,11 +135,11 @@ mapa(lista = aux, titulo = "SD Precipitación media observado GPCC 1975 - 2005",
 
 
 
-## ENSAMBLES DE MODELOS CON LOS 30 AÑOS ##
-t5.ens = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T) - 273
-t6.ens = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T) - 273
-pp5.ens = apply(pp5_an[[1]], c(1,2,3), mean, na.rm = T) 
-pp6.ens = apply(pp6_an[[1]], c(1,2,3), mean, na.rm = T)
+## ENSAMBLES DE MODELOS ##
+t5.ens = apply(tas5_an[[1]], c(1,2,4), mean, na.rm = T) - 273
+t6.ens = apply(tas6_an[[1]], c(1,2,4), mean, na.rm = T) - 273
+pp5.ens = apply(pp5_an[[1]], c(1,2,4), mean, na.rm = T) 
+pp6.ens = apply(pp6_an[[1]], c(1,2,4), mean, na.rm = T)
 
 
 ## MEDIAS Y DESVIOS DE LOS MODELOS ##
@@ -154,15 +157,27 @@ mapa(lista = aux, titulo = "Temperatura media CNRM-CM6 1975 - 2005", nombre_fig 
      , escala = c(-30,30), label_escala = "ºC", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(-30, 30, by = 5), breaks_c_f = seq(-30, 30, by = 5), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
 
+# T.SD CON LOS MIEMBROS
+t5.sd.r = apply(tas5_an[[1]], c(1,2,4), sd, na.rm = T)
+t6.sd.r = apply(tas6_an[[1]], c(1,2,4), sd, na.rm = T)
 
-t5.sd = apply(t5.ens, c(1,2), sd, na.rm = T)
-t6.sd = apply(t6.ens, c(1,2), sd, na.rm = T)
+mapa(lista =  t5.sd.r , titulo = "SD Temperatura media CNRM-CM5 1975 - 2005", nombre_fig = "t5.sd.r"
+     , escala = c(0,1), label_escala = "ºC", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 9, na_fill = 0, salida = "/Salidas/TP1/")
+
+
+mapa(lista =  t6.sd.r , titulo = "SD Temperatura media CNRM-CM6 1975 - 2005", nombre_fig = "t6.sd.r"
+     , escala = c(0,1), label_escala = "ºC", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 10, na_fill = 0, salida = "/Salidas/TP1/")
+
+
+t5.sd = apply(t5.sd.r, c(1,2), mean, na.rm = T)
+t6.sd = apply(t6.sd.r, c(1,2), mean, na.rm = T)
 
 aux = array(t5.sd, c(144,73,1))
 mapa(lista = aux, titulo = "SD Temperatura media CNRM-CM5 1975 - 2005", nombre_fig = "t5.sd"
      , escala = c(0,1), label_escala = "ºC", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
-
 
 aux = array(t6.sd, c(144,73,1))
 mapa(lista = aux, titulo = "SD Temperatura media CNRM-CM6 1975 - 2005", nombre_fig = "t6.sd"
@@ -185,9 +200,20 @@ mapa(lista = aux, titulo = "Precipitacíon media CNRM-CM6 1975 - 2005", nombre_f
      , escala = c(0, 3500), label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 3500, by = 250), breaks_c_f = seq(0, 3500, by = 250), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
 
+pp5.sd.r = apply(pp5_an[[1]], c(1,2,4), sd, na.rm = T)
+pp6.sd.r = apply(pp6_an[[1]], c(1,2,4), sd, na.rm = T)
 
-pp5.sd = apply(pp5.ens, c(1,2), sd, na.rm = T)
-pp6.sd = apply(pp6.ens, c(1,2), sd, na.rm = T)
+mapa(lista = pp5.sd.r, titulo = "SD Precipitación media CNRM-CM5 1975 - 2005", nombre_fig = "pp5.sd.r"
+     , escala = c(0, 250), label_escala = "", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 250, by = 25), breaks_c_f = seq(0, 250, by = 25), r = 9, na_fill = -10000, salida = "/Salidas/TP1/")
+
+mapa(lista = pp6.sd.r, titulo = "SD Precipitación media CNRM-CM6 1975 - 2005", nombre_fig = "pp6.sd.r"
+     , escala = c(0, 250), label_escala = "", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 10
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 250, by = 25), breaks_c_f = seq(0, 250, by = 25), r = 10, na_fill = -10000, salida = "/Salidas/TP1/")
+
+
+pp5.sd = apply(pp5.sd.r, c(1,2), mean, na.rm = T)
+pp6.sd = apply(pp6.sd.r, c(1,2), mean, na.rm = T)
 
 aux = array(pp5.sd, c(144,73,1))
 mapa(lista = aux, titulo = "SD Precipitación media CNRM-CM5 1975 - 2005", nombre_fig = "pp5.sd"
@@ -201,10 +227,22 @@ mapa(lista = aux, titulo = "SD Precipitación media CNRM-CM6 1975 - 2005", nombr
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 250, by = 25), breaks_c_f = seq(0, 250, by = 25), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
 
 
+
+
 ##### Bias Modelos #####
 # temp
-t5.bias = apply(t5.ens - obs_t, c(1,2), sum, na.rm = T)/30
-t6.bias = apply(t6.ens - obs_t, c(1,2), sum, na.rm = T)/30
+t5.bias = array(data = NA, c(144,73,9))
+t6.bias = array(data = NA, c(144,73,10))
+for(i in 1:9){
+  t5.bias[,,i] = apply((tas5_an[[1]][,,,i]- 273) - obs_t, c(1,2), sum, na.rm = T)/30
+}
+
+for(i in 1:10){
+  t6.bias[,,i] = apply((tas6_an[[1]][,,,i] -273) - obs_t, c(1,2), sum, na.rm = T)/30
+}
+
+t5.bias = apply(t5.bias, c(1,2), mean, na.rm = T)
+t6.bias = apply(t6.bias, c(1,2), mean, na.rm = T)
 
 aux = array(t5.bias, c(144,73,1)) 
 aux[which(abs(aux)>7)] = NA
@@ -221,21 +259,25 @@ mapa(lista = aux, titulo = "Bias Temperatura ensamble CNRM-CM6 1975 - 2005", nom
 
 
 # pp (bias %, ojo que aveces da pa la mierda)
+pp5.bias = array(data = NA, c(144,73,9))
+for(i in 1:9){
+  aux = (pp5_an[[1]][,,,i]/pp_obs)*100-100
+  pp5.bias[,,i] = apply(aux, c(1,2), sum, na.rm = T)/30
+}
 
-aux = (pp5.ens/pp_obs)*100-100
-pp.bias5 = apply(aux, c(1,2), sum, na.rm = T)/30
-
-aux = array(pp.bias5, c(144,73,1))
+aux = array(pp5.bias, c(144,73,1))
 mapa(lista = aux, titulo = "Bias % Precipitación ensamble CNRM-CM5 1975 - 2005", nombre_fig = "pp5.bias"
      , escala = c(-150, 150), label_escala = "", resta = 0, brewer = "BrBG", revert = "no", niveles = 9
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(-150, 150, by = 25), breaks_c_f = seq(-150, 150, by = 25), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
 
 
+pp6.bias = array(data = NA, c(144,73,10))
+for(i in 1:10){
+  aux = (pp6_an[[1]][,,,i]/pp_obs)*100-100
+  pp6.bias[,,i] = apply(aux, c(1,2), sum, na.rm = T)/30
+}
 
-aux = (pp6.ens/pp_obs)*100 - 100
-pp.bias6 = apply(aux, c(1,2), sum, na.rm = T)/30
-
-aux = array(pp.bias6, c(144,73,1))
+aux = array(pp6.bias, c(144,73,1))
 mapa(lista = aux, titulo = "Bias % Precipitación ensamble CNRM-CM6 1975 - 2005", nombre_fig = "pp6.bias"
      , escala = c(-150, 150), label_escala = "", resta = 0, brewer = "BrBG", revert = "no", niveles = 9
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(-150, 150, by = 25), breaks_c_f = seq(-150, 150, by = 25), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
@@ -244,45 +286,74 @@ mapa(lista = aux, titulo = "Bias % Precipitación ensamble CNRM-CM6 1975 - 2005"
 #### Correlacions temporales ####
 
 # temp
-aux = apply(tas5_an[[1]], c(1,2,3), mean, na.rm = T)
-t5.cor = corr(mod = aux, obs = tas_obs,lon = 144, lat = 73, cf = 0.95)
-aux = apply(tas6_an[[1]], c(1,2,3), mean, na.rm = T)
-t6.cor = corr(mod = aux, obs = tas_obs,lon = 144, lat = 73, cf = 0.95)
+t5.cor = array(data = NA, c(144,73,9))
+t5.cor2 = array(data = NA, c(144,73,9))
+for(i in 1:9){
+  aux = corr(mod = tas5_an[[1]][,,,i], obs = obs_t,lon = 144, lat = 73, cf = 0.95)
+  t5.cor[,,i] = aux [,,1]
+  t5.cor2[,,i] = aux[,,2]
+}
 
+aux = t5.cor * t5.cor2
+aux = apply(aux, c(1,2), mean, na.rm= T)
+aux = array(aux, c(144,73,1))
 
-aux = array(t5.cor[,,1]*t5.cor[,,2], c(144,73,1)) 
 mapa(lista = aux, titulo = "Correlaciòn temperatura CNRM-CM5 vs observaciones  1975 - 2005", nombre_fig = "t5.cor"
-     , escala = c(0, 1), label_escala = "R", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
+     , escala = c(-1, 1), label_escala = "R", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.1), breaks_c_f = seq(-1, 1, by = 0.1), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
 
+t6.cor = array(data = NA, c(144,73,10))
+t6.cor2 = array(data = NA, c(144,73,10))
+for(i in 1:10){
+  aux = corr(mod = tas6_an[[1]][,,,i], obs = obs_t,lon = 144, lat = 73, cf = 0.95)
+  t6.cor[,,i] = aux [,,1]
+  t6.cor2[,,i] = aux[,,2]
+}
 
-aux = array(t6.cor[,,1]*t6.cor[,,2], c(144,73,1)) 
+aux = t6.cor * t6.cor2
+aux = apply(aux, c(1,2), mean, na.rm= T)
+aux = array(aux, c(144,73,1))
+
 mapa(lista = aux, titulo = "Correlaciòn temperatura CNRM-CM6 vs observaciones  1975 - 2005", nombre_fig = "t6.cor"
-     , escala = c(0, 1), label_escala = "R", resta = 0, brewer = "YlOrRd", revert = "no", niveles = 9
-     , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 1, by = 0.1), breaks_c_f = seq(0, 1, by = 0.1), r = 1, na_fill = -10000, salida = "/Salidas/TP1/")
-
+     , escala = c(-1, 1), label_escala = "R", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+     , contour = "si", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.1), breaks_c_f = seq(-1, 1, by = 0.1), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
 
 
 # pp
-mask_arr = array(NA, dim = c(144, 73, 30))
-for(i in 1:30){
-  mask_arr[,,i] = mask
+mask_arr = array(mask, dim = c(144, 73, 1))
+
+pp5.cor = array(data = NA, c(144,73,9))
+pp5.cor2 = array(data = NA, c(144,73,9))
+for(i in 1:9){
+  aux = corr(mod = pp5_an[[1]][,,,i], obs = obs_t,lon = 144, lat = 73, cf = 0.95)
+  pp5.cor[,,i] = aux [,,1]
+  pp5.cor2[,,i] = aux[,,2]
 }
 
-aux = apply(pp5_an[[1]], c(1,2,3), mean, na.rm = T)*mask_arr
-pp5.cor = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
-aux = apply(pp6_an[[1]], c(1,2,3), mean, na.rm = T)*mask_arr
-pp6.cor = corr(mod = aux, obs = pp_obs, lon = 144, lat = 73, cf = 0.95)
+aux = pp5.cor * pp5.cor2
+aux = apply(aux, c(1,2), mean, na.rm= T)
+aux = array(aux, c(144,73,1))*mask_arr
 
-aux = array(pp5.cor[,,1]*pp5.cor[,,2], c(144,73,1)) 
 mapa(lista = aux, titulo = "Correlaciòn precipitación CNRM-CM5 vs observaciones  1975 - 2005", nombre_fig = "pp5.cor"
      , escala = c(-1, 1), label_escala = "R", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
-     , contour = "no", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.2), breaks_c_f = seq(-1, 1, by = 0.2), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
+     , contour = "no", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.1), breaks_c_f = seq(-1, 1, by = 0.1), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
 
-aux = array(pp6.cor[,,1]*pp6.cor[,,2], c(144,73,1)) 
+
+pp6.cor = array(data = NA, c(144,73,10))
+pp6.cor2 = array(data = NA, c(144,73,10))
+for(i in 1:10){
+  aux = corr(mod = pp6_an[[1]][,,,i], obs = obs_t,lon = 144, lat = 73, cf = 0.95)
+  pp6.cor[,,i] = aux [,,1]
+  pp6.cor2[,,i] = aux[,,2]
+}
+
+aux = pp6.cor * pp6.cor2
+aux = apply(aux, c(1,2), mean, na.rm= T)
+aux = array(aux, c(144,73,1))*mask_arr
+
 mapa(lista = aux, titulo = "Correlaciòn precipitación CNRM-CM6 vs observaciones  1975 - 2005", nombre_fig = "pp6.cor"
      , escala = c(-1, 1), label_escala = "R", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
-     , contour = "no", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.2), breaks_c_f = seq(-1, 1, by = 0.2), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
+     , contour = "no", lon = lon, lat = lat, escala_dis = seq(-1, 1, by = 0.1), breaks_c_f = seq(-1, 1, by = 0.1), r = 1, na_fill = 0, salida = "/Salidas/TP1/")
 
 
 
@@ -318,14 +389,6 @@ for(i in 1:3){
   
   regiones_sd_pp5[[i]] = pp5.sd[aux_lons[[i]], aux_lats[[i]]]
   regiones_sd_pp6[[i]] = pp6.sd[aux_lons[[i]], aux_lats[[i]]]
-  
-  regiones_bias_t5[[i]] = (t5.med[aux_lons[[i]], aux_lats[[i]]]) - apply(obs_t[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
-  regiones_bias_t6[[i]] = (t6.med[aux_lons[[i]], aux_lats[[i]]]) - apply(obs_t[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)
-  
-  regiones_bias_pp5[[i]] = apply((pp5.med[aux_lons[[i]], aux_lats[[i]]])/apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)*100 - 100, c(1,2), sum, na.rm = T)/30
-  regiones_bias_pp6[[i]] = apply((pp6.med[aux_lons[[i]], aux_lats[[i]]])/apply(pp_obs[aux_lons[[i]], aux_lats[[i]],], c(1,2), mean, na.rm = T)*100 - 100, c(1,2), sum, na.rm = T)/30
-  
-  
 }
 
 aux = array(data = regiones_means_t6[[1]], dim = c(3, 7, 1))
@@ -397,27 +460,45 @@ for(i in 1:30){
 # globales
 
 anom_t_obs =  apply(obs_t,c(3), mean, na.rm = T) - mean(obs_t, na.rm = T)
-anom_t_obs_cont = apply(tas_obs,c(3), mean, na.rm = T) - mean(tas_obs, na.rm = T)
-anom_t_obs_oce = apply(sst_obs*mask_arr2[,,,1],c(3), mean, na.rm = T) - mean(sst_obs*mask_arr2[,,,1], na.rm = T)
 
 anom_pp_obs = apply(pp_obs,c(3), mean, na.rm = T) - mean(pp_obs, na.rm = T)
+aux = array(data = NA, c(30,9))
+for(i in 1:9){
+  aux[,i] = apply(tas5_an[[1]][,,,i], c(3), mean, na.rm = T) - mean(t5.med, na.rm = T)
+  
+}
 
-anom_t5 = apply(tas5_an[[1]], c(3), mean, na.rm = T) - mean(tas5_an[[1]], na.rm = T)
-anom_t5_cont = apply(tas5_an[[1]]*mask_arr[,,,1:9], c(3), mean, na.rm = T) - mean(tas5_an[[1]]*mask_arr[,,,1:9], na.rm = T)
-anom_t5_oce = apply(tas5_an[[1]]*mask_arr2[,,,1:9], c(3), mean, na.rm = T) - mean(tas5_an[[1]]*mask_arr2[,,,1:9], na.rm = T)
-anom_t5_r = apply(tas5_an[[1]], c(3,4), mean, na.rm = T) - apply(tas5_an[[1]], c(4),mean, na.rm = T)
-
-anom_pp5 = apply(pp5_an[[1]]*mask_arr[,,,1:9], c(3), mean, na.rm = T) - mean(pp5_an[[1]]*mask_arr[,,,1:9], na.rm = T)
-anom_pp6 = apply(pp6_an[[1]]*mask_arr, c(3), mean, na.rm = T) - mean(pp6_an[[1]]*mask_arr, na.rm = T)
+anom_t5 = apply(aux, c(1), mean) - 273
 
 
-anom_t6 = apply(tas6_an[[1]], c(3), mean, na.rm = T)- mean(tas6_an[[1]], na.rm = T)
-anom_t6_cont = apply(tas6_an[[1]]*mask_arr, c(3), mean, na.rm = T) - mean(tas6_an[[1]]*mask_arr, na.rm = T)
-anom_t6_oce = apply(tas6_an[[1]]*mask_arr2, c(3), mean, na.rm = T) - mean(tas6_an[[1]]*mask_arr2, na.rm = T)
-anom_t6_r = apply(tas6_an[[1]], c(3,4), mean, na.rm = T) - apply(tas6_an[[1]], c(4),mean, na.rm = T)
+aux = array(data = NA, c(30,10))
+for(i in 1:10){
+  aux[,i] = apply(tas6_an[[1]][,,,i], c(3), mean, na.rm = T) - mean(t6.med, na.rm = T)
+  
+}
 
+anom_t6 = apply(aux, c(1), mean)- 273
+
+
+aux = array(data = NA, c(30,9))
+for(i in 1:9){
+  aux[,i] = apply(pp5_an[[1]][,,,i], c(3), mean, na.rm = T) - mean(pp5.med, na.rm = T)
+  
+}
+
+amon_pp5 = apply(aux, c(1), mean)
+
+
+aux = array(data = NA, c(30,10))
+for(i in 1:10){
+  aux[,i] = apply(pp6_an[[1]][,,,i], c(3), mean, na.rm = T) - mean(pp6.med, na.rm = T)
+  
+}
+
+amon_pp6 = apply(aux, c(1), mean)
 
 # en las regiones
+#QUEDA IGUAL, NO CAMBIA
 anom_t_obs_reg = list()
 anom_t5_reg = list()
 anom_t6_reg = list()
@@ -484,9 +565,13 @@ for(i in 1:3){
 #### MAE ####
 # solo ensambles
 # (apply(abs(prom_est_mods_t - prom_est_obs[,,,,1]), c(1,2,4), sum, na.rm = T)/29) 
+aux = array(data = NA, c(144,73,9))
+for(i in 1:9){
+  aux[,,i] = apply(abs((tas5_an[[1]][,,,i] -273) - obs_t), c(1,2), sum, na.rm = T)/30
+}
 
-t5.mae = apply(abs(t5.ens - obs_t), c(1,2), sum, na.rm = T)/30
-t6.mae = apply(abs(t6.ens - obs_t), c(1,2), sum, na.rm = T)/30
+
+t5.mae = apply(aux, c(1,2), mean, na.rm = T)
 
 
 aux = array(data = t5.mae, c(144, 73, 1))
@@ -494,6 +579,14 @@ mapa(lista = aux, titulo = "Error absoluto medio T CNRM-CM5 1975 - 2005", nombre
      , escala = c(0, 5), label_escala = "ºC", resta = 0, brewer = "Reds", revert = "no", niveles = 9
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 5, by = 1), breaks_c_f = seq(0, 5, by = 1), r = 1,na_fill = -10000, salida = "/Salidas/TP1/")
 
+
+aux = array(data = NA, c(144,73,10))
+for(i in 1:10){
+  aux[,,i] = apply(abs((tas6_an[[1]][,,,i] - 273) - obs_t), c(1,2), sum, na.rm = T)/30
+}
+
+
+t6.mae = apply(aux, c(1,2), mean, na.rm = T)
 
 aux = array(data = t6.mae, c(144, 73, 1))
 mapa(lista = aux, titulo = "Error absoluto medio T CNRM-CM6 1975 - 2005", nombre_fig = "t6.mae_escala1"
@@ -503,14 +596,31 @@ mapa(lista = aux, titulo = "Error absoluto medio T CNRM-CM6 1975 - 2005", nombre
 
 
 # MAPE PP # da muy raro, valores muuy chicos
+aux = array(data = NA, c(144,73,9))
+for(i in 1:9){
+  aux[,,i] = apply(abs(pp5_an[[1]][,,,i] - pp_obs), c(1,2), sum, na.rm = T)/30
+}
 
-pp5.mae = ((apply((abs(pp5.ens - pp_obs)/abs(pp_obs))*100, c(1,2), sum, na.rm = T))/30)*mask
-pp6.mae = ((apply((abs(pp6.ens - pp_obs)/abs(pp_obs))*100, c(1,2), sum, na.rm = T))/30)*mask
+
+pp5.mae = apply(aux, c(1,2), mean, na.rm = T)*mask
+
+
+
 
 aux = array(data = pp5.mae, c(144, 73, 1))
 mapa(lista = aux, titulo = "Error absoluto medio % pp CNRM-CM5 1975 - 2005", nombre_fig = "pp5.mape"
      , escala = c(0, 150), label_escala = "", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 7
      , contour = "si", lon = lon, lat = lat, escala_dis = seq(0, 150, by = 25), breaks_c_f = seq(0, 150, by = 25), r = 1,na_fill = -10000, salida = "/Salidas/TP1/")
+
+
+aux = array(data = NA, c(144,73,10))
+for(i in 1:10){
+  aux[,,i] = apply(abs(pp6_an[[1]][,,,i] - pp_obs), c(1,2), sum, na.rm = T)/30
+}
+
+
+pp6.mae = apply(aux, c(1,2), mean, na.rm = T)*mask
+
 
 aux = array(data = pp6.mae, c(144, 73, 1))
 mapa(lista = aux, titulo = "Error absoluto medio % pp CNRM-CM6 1975 - 2005", nombre_fig = "pp6.mape"
