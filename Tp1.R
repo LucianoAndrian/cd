@@ -598,7 +598,7 @@ mapa(lista = aux, titulo = "Error absoluto medio T CNRM-CM6 1975 - 2005", nombre
 # MAPE PP # da muy raro, valores muuy chicos
 aux = array(data = NA, c(144,73,9))
 for(i in 1:9){
-  aux[,,i] = apply(abs(pp5_an[[1]][,,,i] - pp_obs), c(1,2), sum, na.rm = T)/30
+  aux[,,i] = apply((abs(pp5_an[[1]][,,,i] - pp_obs)/abs(pp_obs))*100, c(1,2), sum, na.rm = T)/30
 }
 
 
@@ -615,7 +615,7 @@ mapa(lista = aux, titulo = "Error absoluto medio % pp CNRM-CM5 1975 - 2005", nom
 
 aux = array(data = NA, c(144,73,10))
 for(i in 1:10){
-  aux[,,i] = apply(abs(pp6_an[[1]][,,,i] - pp_obs), c(1,2), sum, na.rm = T)/30
+  aux[,,i] = apply((abs(pp6_an[[1]][,,,i] - pp_obs)/abs(pp_obs))*100, c(1,2), sum, na.rm = T)/30
 }
 
 
