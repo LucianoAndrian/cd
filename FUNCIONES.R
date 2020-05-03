@@ -599,7 +599,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
                               guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
 
-            geom_hline(yintercept = 0, color = "black")+
+           
             
             geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
             
@@ -610,7 +610,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
                   panel.ontop = TRUE,
-                  plot.title = element_text(hjust = 0.5))
+                  plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
           ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
@@ -630,7 +630,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
                               guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
             
-            geom_hline(yintercept = 0, color = "black")+
+           
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
@@ -640,9 +640,9 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
                   panel.ontop = TRUE,
-                  plot.title = element_text(hjust = 0.5))
+                  plot.title = element_text(hjust = 0.5))+ geom_hline(yintercept = 0, color = "black")
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
           
         }
         
@@ -664,7 +664,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
                               guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
             
-            geom_hline(yintercept = 0, color = "black")+
+           
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
@@ -674,10 +674,10 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
                   panel.ontop = TRUE,
-                  plot.title = element_text(hjust = 0.5))
+                  plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
           
         } else {
           g = ggplot() + theme_minimal() +
@@ -693,7 +693,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
                               guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
             
-            geom_hline(yintercept = 0, color = "black")+
+            
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
@@ -703,10 +703,10 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
                   panel.ontop = TRUE,
-                  plot.title = element_text(hjust = 0.5))
+                  plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
           
         }
         
@@ -818,7 +818,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   panel.ontop = TRUE,
                   plot.title = element_text(hjust = 0.5))
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
           
         }
         
@@ -853,7 +853,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   plot.title = element_text(hjust = 0.5))
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
         } else {
           g = ggplot() + theme_minimal() +
             xlab("Longitud") + ylab("Latitud") + 
@@ -881,7 +881,382 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   plot.title = element_text(hjust = 0.5))
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 15  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        }
+        
+      }
+    }
+    
+  }
+  
+}
+#### MAPA_TOPO2 ####
+mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, brewer, revert, niveles, contour
+                     , lon, lat, escala_dis, breaks_c_f, r, na_fill, topo, altura, salida){
+  
+  library(ncdf4)
+  library(maps)
+  library(ncdf4)
+  require(fields)
+  require(mapdata)
+  library(ggplot2)
+  library(RColorBrewer)
+  library(mapproj)
+  library(metR)
+  ruta = getwd()
+  
+  load("RDatas/topo_india.RData")
+  load("RDatas/topo_sa.RData")
+  
+  if(topo == "topo1"){
+    
+    topo2 = topo_india
+    
+    topo2[which(topo2$h<altura)]=NA
+    
+    num = seq(1, r, by = 1)
+    
+    g = list()
+    for(i in 1:r){
+      
+      #u = array(u[,,i], dim = length(lon)*length(lat))
+      
+      #v = array(v[,,i], dim = length(lon)*length(lat))
+      
+      value = array(lista[,,i], dim = length(lon)*length(lat))
+      data = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data[,3]<-value -resta
+      
+      data<-as.data.frame(data)
+      
+      #data = cbind(data, u)
+      #data = cbind(data, v)
+      
+      #colnames(data)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data)<-c("lon", "lat", "temp")
+      
+      
+      mapa <- map_data("world2", region = c("India", "Sri Lanka", "Bangladesh", "Nepal", "Bhutan", "Pakistan"
+                                            ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
+                                            , "Malasya", "United Arab Emirates", "Singapur", "Myanmar"), colour = "black")
+      
+      title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
+      
+      if(revert == "si"){
+        if(contour == "si"){
+          g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+            #g = ggplot() + theme_minimal()+
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+            
+            geom_tile(data = data, aes(x = lon, y = lat, fill = temp), alpha=0.8, na.rm = T) +
+            
+            geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp),alpha = 1, na.fill = na_fill , breaks = breaks_c_f) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+            
+            
+            geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
+          
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        } else {
+          g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+            #g = ggplot() + theme_minimal() +
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank())+
+            
+            geom_tile(data=data,aes(x = lon, y = lat,fill = temp),alpha=0.9, na.rm = T) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+            geom_hline(yintercept = 0, color = "black")+
+            geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5))
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        }
+        
+      } else {
+        if(contour == "si"){
+          g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+            #g = ggplot() + theme_minimal() +
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+            
+            geom_tile(data = data,aes(x = lon, y = lat, fill = temp), alpha = 0.9, na.rm = T) +
+            
+            geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp), alpha = 1, na.fill = na_fill, breaks = breaks_c_f) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+           
+            geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
+          
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        } else {
+          g = ggplot() + theme_minimal() +
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+            
+            geom_tile(data = data,aes(x = lon, y = lat,fill = temp),alpha = 0.9, na.rm = T) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+           
+            geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
+          
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        }
+        
+      }
+    }
+    
+  } else {
+    topo2 = topo_sa
+    
+    topo2[which(topo2$h<altura)]=NA
+    
+    num = seq(1, r, by = 1)
+    
+    g = list()
+    for(i in 1:r){
+      
+      #u = array(u[,,i], dim = length(lon)*length(lat))
+      
+      #v = array(v[,,i], dim = length(lon)*length(lat))
+      
+      value = array(lista[,,i], dim = length(lon)*length(lat))
+      data = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data[,3]<-value -resta
+      
+      data<-as.data.frame(data)
+      #data = cbind(data, u)
+      #data = cbind(data, v)
+      
+      #colnames(data)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data)<-c("lon", "lat", "temp")
+      
+      mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela",
+                                            "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
+                                            "Martinique"), colour = "black")
+      
+      
+      title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
+      
+      if(revert == "si"){
+        if(contour == "si"){
+          g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+            #g = ggplot() + theme_minimal()+
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+            
+            geom_tile(data = data, aes(x = lon, y = lat, fill = temp), alpha=0.8, na.rm = T) +
+            
+            geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp),alpha = 1, na.fill = na_fill , breaks = breaks_c_f) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+            geom_hline(yintercept = 0, color = "black")+
+            geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5))
+          
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        } else {
+          g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+            #g = ggplot() + theme_minimal() +
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank())+
+            
+            geom_tile(data=data,aes(x = lon, y = lat,fill = temp),alpha=0.9, na.rm = T) +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+            geom_hline(yintercept = 0, color = "black")+
+            geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5))
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          
+        }
+        
+      } else {
+        if(contour == "si"){
+          g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+            #g = ggplot() + theme_minimal() +
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+            
+            geom_tile(data = data,aes(x = lon, y = lat, fill = temp), alpha = 0.9, na.rm = T) +
+            
+            geom_contour_fill(data = data, aes(x = lon, y = lat, z = temp), alpha = 1, na.fill = na_fill, breaks = breaks_c_f) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+            geom_hline(yintercept = 0, color = "black")+
+            geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5))
+          
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+        } else {
+          g = ggplot() + theme_minimal() +
+            xlab("Longitud") + ylab("Latitud") + 
+            theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+            
+            geom_tile(data = data,aes(x = lon, y = lat,fill = temp),alpha = 0.9, na.rm = T) +
+            
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            
+            #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
+            
+            scale_fill_stepsn(limits = escala, name = label_escala, colours = brewer.pal(n=niveles,brewer), na.value = "white", breaks = escala_dis,
+                              guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
+            
+            geom_hline(yintercept = 0, color = "black")+
+            geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
+            
+            ggtitle(title)+
+            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+                  axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                  panel.border = element_rect(colour = "black", fill = NA, size = 3),
+                  panel.ontop = TRUE,
+                  plot.title = element_text(hjust = 0.5))
+          
+          
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
           
         }
         
