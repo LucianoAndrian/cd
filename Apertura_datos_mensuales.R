@@ -79,7 +79,7 @@ rm(t6.85_2049)
 #-------------------------------- tas - 2070 - 2099 ---------------------------------#
 t6.85_2099 = open_nc(file_pattern = "tas_Amon_CNRM-CM6-1_ssp585_r*_2070-2099_2.5.nc"
                      , model = "cnrm-cm6", variable = "tas", mes_anual = "mes")
-save(t6.85_2099, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/t6.26_2099.RData")
+save(t6.85_2099, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/t6.85_2099.RData")
 rm(t6.85_2099)
 
 
@@ -112,7 +112,7 @@ rm(pp6.26_2099)
 #-------------------------------- pr - 2020 - 2049 ---------------------------------#
 pp6.85_2049 = open_nc(file_pattern = "pr_Amon_CNRM-CM6-1_ssp585_r*_2020-2049_2.5_mes.nc"
                       , model = "cnrm-cm6", variable = "pr", mes_anual = "mes")
-save(pp6.85_2049, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/pp6.26_2085.RData")
+save(pp6.85_2049, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/pp6.85_2049.RData")
 rm(pp6.85_2049)
 
 #-------------------------------- pr - 2070 - 2099 ---------------------------------#
@@ -225,7 +225,7 @@ rm(v6.26_2099)
 #--- SSP585 ---#
 #-------------------------------- va - 2020 - 2049 ---------------------------------#
 v6.85_2049 = open_nc(file_pattern = "va850_Amon_CNRM-CM6-1_ssp585_r*_2020-2049_2.5.nc"
-                     , model = "cnrm-cm6", variable = "va", mes_anval = "mes")
+                     , model = "cnrm-cm6", variable = "va", mes_anual = "mes")
 save(v6.85_2049, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/v6.85_2049.RData")
 rm(v6.85_2049)
 
