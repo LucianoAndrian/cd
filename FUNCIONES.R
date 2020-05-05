@@ -1266,3 +1266,169 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
   }
   
 }
+#### DRAWMONSOON ####
+# grafica los campos medios de las variables de los monzones asiaticos y sudamericanos a partir de los arrays de tp2
+DrawMonsoon = function(modelo){
+  
+  source("FUNCIONES.R")
+  
+  modelo = toupper(modelo)
+  
+  lon = read.table("lon.txt")[,1]
+  lat = read.table("lat.txt")[,1]
+  
+  if(modelo == "CNRM-CM5"){
+    
+    load("RDatas/M5.RData")
+    aux = M5
+    rm(M5)
+    zona = c("asia", "sa")
+    rcp = c("RCP2.6", "RCP8.5")
+    rcp.fig = c("26", "85")
+    var = c("Precipitacion media", "Temperatura media")
+    var.fig = c("pp5", "t5")
+    periodo = c("2020 - 2049",  "2070 - 2099")
+    periodo.fig = c("49", "99")
+    seasons = c("JJA", "DJF")
+    topo = c("topo1", "topo2")
+    
+    
+    
+    for(z in 1:2){
+      
+      for(i in 1:2){
+        
+        rcp.n = rcp[i] 
+        rcp.f = rcp.fig[i]
+        
+        for(j in 1:length(aux[1,1,1,,1,1])){  # esto por ahora es innecesario ya que siempre sera 1, pero si se agrega T mensual no hay q modificar nada
+          
+          v = var[j]
+          v.f = var.fig[j]
+          
+          if(j == 1){
+            escala = c(0,600)
+            resta = 0
+            label_escala = "mm"
+            colores = "YlGnBu"
+            revert = "no"
+            niveles = 9
+            breaks = seq(0,600, by = 50)
+          } else {
+            escala = c(0,35)
+            resta = 273
+            label_escala = "ºC"
+            colores = "Spectral"
+            revert = "si"
+            niveles = 11
+            breaks = seq(0, 35, by = 2.5)
+          }
+          
+          for(p in 1:2){
+            
+            per = periodo[p] 
+            p.f = periodo.fig[p]
+            
+            for(s in 1:2){
+              
+              seas = seasons[s]
+              
+              aux2 = array(data = aux[lons[[z]], lats[[z]], i, j, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+              
+              mapa_topo2(lista = aux2, titulo = paste(v, modelo, rcp.n, per, seas, sep = " "), nombre_fig = paste(v.f, ".", rcp.f, "_", p.f, "_", zona[z], ".", seas, sep = "" )
+                         , escala = escala, label_escala = label_escala, resta = resta, brewer = colores, revert = revert, niveles = niveles
+                         , contour = "si", lon = lon[lons[[z]]], lat = lat[lats[[z]]], escala_dis = breaks, breaks_c_f = breaks, r = 1, na_fill = -10000
+                         , topo = topo[z], altura = 1500, salida = "/Salidas/TP2/")
+              
+            }
+          }
+        }
+      }
+      
+    }
+    
+  } else {
+    
+    
+    load("RDatas/M6.RData")
+    aux = M6
+    load("RDatas/V6.RData")
+    auxV = V6
+    rm(M6, V6)
+    zona = c("asia", "sa")
+    rcp = c("SSP1-2.6", "SSP5-8.5")
+    rcp.fig = c("26", "85")
+    var = c("Precipitacion media", "Temperatura media", "Humedad media")
+    var.fig = c("pp6", "t6", "hu6")
+    periodo = c("2020 - 2049",  "2070 - 2099")
+    periodo.fig = c("49", "99")
+    seasons = c("JJA", "DJF")
+    topo = c("topo1", "topo2")
+    
+    for(z in 1:2){
+      
+      for(i in 1:2){
+        
+        rcp.n = rcp[i] 
+        rcp.f = rcp.fig[i]
+        
+        for(j in 1:length(aux[1,1,1,,1,1])){  # esto por ahora es innecesario ya que siempre sera 1, pero si se agrega T mensual no hay q modificar nada
+          
+          v = var[j]
+          v.f = var.fig[j]
+          
+          if(j == 1){
+            escala = c(0,600)
+            resta = 0
+            label_escala = "mm"
+            colores = "YlGnBu"
+            revert = "no"
+            niveles = 9
+            breaks = seq(0,600, by = 50)
+          } else if(j == 2 ){
+            escala = c(0,35)
+            resta = 273
+            label_escala = "ºC"
+            colores = "Spectral"
+            revert = "si"
+            niveles = 11
+            breaks = seq(0, 35, by = 2.5)
+          } else {
+            
+            escala = c(0,0.02)
+            resta = 0
+            label_escala = "?"
+            colores = "PuBuGn"
+            revert = "no"
+            niveles = 9
+            breaks = seq(0, 0.02, by = 0.002)
+          }
+          
+          
+          for(p in 1:2){
+            
+            per = periodo[p] 
+            p.f = periodo.fig[p]
+            
+            for(s in 1:2){
+              
+              seas = seasons[s]
+              
+              
+              
+              aux2 = array(data = aux[lons[[z]], lats[[z]], i, j, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+              auxu = array(data = auxV[lons[[z]], lats[[z]], i, 1, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+              auxv = array(data = auxV[lons[[z]], lats[[z]], i, 2, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+              
+              mapa_topo(lista = aux2, u = auxu, v = auxv , titulo = paste(v, modelo, rcp.n, per, seas, sep = " "), nombre_fig = paste(v.f, ".", rcp.f, "_", p.f, "_", zona[z], ".", seas, sep = "" )
+                        , escala = escala, label_escala = label_escala, resta = resta, brewer = colores, revert = revert, niveles = niveles
+                        , contour = "si", lon = lon[lons[[z]]], lat = lat[lats[[z]]], escala_dis = breaks, breaks_c_f = breaks, r = 1, na_fill = -10000
+                        , topo = topo[z], altura = 1500, salida = "/Salidas/TP2/")
+              
+            }
+          }
+        }
+      }
+    }
+  }
+}
