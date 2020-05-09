@@ -576,8 +576,12 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
   
         
         mapa <- map_data("world2", region = c("India", "Sri Lanka", "Bangladesh", "Nepal", "Bhutan", "Pakistan"
-                                              ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
-                                              , "Malasya", "United Arab Emirates", "Singapur", "Myanmar"), colour = "black")
+                                                 ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
+                                                 , "Malasya", "United Arab Emirates", "Singapur", "Myanmar", "Iran", 
+                                                 "Turkmenistan", "Afghanistan", "Tajikistan", "Uzbekistan", "Kyrgyzstan", "China", "Mongolia", 
+                                                 "Bangladesh", "North Korea", "South Korea",  "Taiwan", "Laos", "Thailand", "Vietnam", "Cambodia", 
+                                                 "Malasya", "Indonesia", "Philippines"), colour = "black")
+        
      
       title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
       
@@ -604,8 +608,8 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -613,7 +617,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         } else {
           g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
@@ -634,15 +638,15 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
                   panel.ontop = TRUE,
                   plot.title = element_text(hjust = 0.5))+ geom_hline(yintercept = 0, color = "black")
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         }
         
@@ -668,8 +672,8 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -677,7 +681,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         } else {
           g = ggplot() + theme_minimal() +
@@ -697,8 +701,8 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -706,7 +710,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
                   plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         }
         
@@ -751,10 +755,10 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
       colnames(data)<-c("lon", "lat", "temp", "u", "v")
       
         
-        mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela",
-                                              "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
-                                              "Martinique"), colour = "black")
-    
+      mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela","Argentina", "Chile", "Uruguay",
+                                            "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
+                                            "Martinique"), colour = "black")
+      
       
       title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
       
@@ -780,7 +784,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
             scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -810,7 +814,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
             scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -844,7 +848,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
             scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -872,7 +876,7 @@ mapa_topo = function(lista, u, v, titulo, nombre_fig, escala, label_escala, rest
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
             scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -952,7 +956,10 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
       
       mapa <- map_data("world2", region = c("India", "Sri Lanka", "Bangladesh", "Nepal", "Bhutan", "Pakistan"
                                             ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
-                                            , "Malasya", "United Arab Emirates", "Singapur", "Myanmar"), colour = "black")
+                                            , "Malasya", "United Arab Emirates", "Singapur", "Myanmar", "Iran", 
+                                            "Turkmenistan", "Afghanistan", "Tajikistan", "Uzbekistan", "Kyrgyzstan", "China", "Mongolia", 
+                                            "Bangladesh", "North Korea", "South Korea", "Taiwan", "Laos", "Thailand", "Vietnam", "Cambodia", 
+                                            "Malasya", "Indonesia", "Philippines"), colour = "black")
       
       title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
       
@@ -979,8 +986,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -988,7 +995,7 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
                   plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         } else {
           g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
@@ -1009,15 +1016,15 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
                   panel.ontop = TRUE,
                   plot.title = element_text(hjust = 0.5))
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         }
         
@@ -1043,8 +1050,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -1052,7 +1059,7 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
                   plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         } else {
           g = ggplot() + theme_minimal() +
@@ -1072,8 +1079,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(40, 102, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-10, 35, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -1081,7 +1088,7 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
                   plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
           
           
-          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+          ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
           
         }
         
@@ -1126,9 +1133,10 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
       #colnames(data)<-c("lon", "lat", "temp", "u", "v")
       colnames(data)<-c("lon", "lat", "temp")
       
-      mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela",
+      mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela","Argentina", "Chile", "Uruguay",
                                             "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
                                             "Martinique"), colour = "black")
+      
       
       
       title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
@@ -1155,8 +1163,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-60, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -1176,7 +1184,7 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             
             #geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black", skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)+
             
-            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black") +
+            geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black", show.legend = F) +
             
             scale_fill_stepsn(limits = escala, name = label_escala, colours = rev(brewer.pal(n=niveles,brewer)), na.value = "white", breaks = escala_dis,
                               guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) +
@@ -1185,8 +1193,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-60, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -1219,8 +1227,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-60, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -1247,8 +1255,8 @@ mapa_topo2 = function(lista, titulo, nombre_fig, escala, label_escala, resta, br
             geom_polygon(data = mapa, aes(x = long,y = lat, group =group),fill = NA, color = "black") +
             
             ggtitle(title)+
-            scale_x_longitude(breaks = seq(280, 330, by = 10), name = "longitud")+
-            scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+            scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
+            scale_y_latitude(breaks = seq(-60, 20, by = 10), name = "Latitud")+
             theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
                   axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
                   panel.border = element_rect(colour = "black", fill = NA, size = 3),
@@ -1431,4 +1439,418 @@ DrawMonsoon = function(modelo){
       }
     }
   }
+}
+#### MAPA_CONT ####
+mapa_cont = function(lista, lista2, lista3, titulo, nombre_fig,
+                      lon, lat, r, topo, altura, salida){
+  
+  library(ncdf4)
+  library(maps)
+  library(ncdf4)
+  require(fields)
+  require(mapdata)
+  library(ggplot2)
+  library(RColorBrewer)
+  library(mapproj)
+  library(metR)
+  ruta = getwd()
+  
+  load("RDatas/topo_india.RData")
+  load("RDatas/topo_sa.RData")
+  
+  
+  if(topo == "topo1"){
+    
+    topo2 = topo_india
+    
+    topo2[which(topo2$h<altura)]=NA
+    
+    num = seq(1, r, by = 1)
+    
+    g = list()
+    for(i in 1:r){
+      
+      #u = array(u[,,i], dim = length(lon)*length(lat))
+      
+      #v = array(v[,,i], dim = length(lon)*length(lat))
+      
+      value = array(lista[,,i], dim = length(lon)*length(lat))
+      data = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data[,3]<-value 
+      data<-as.data.frame(data)
+      
+      #data = cbind(data, u)
+      #data = cbind(data, v)
+      
+      #colnames(data)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data)<-c("lon", "lat", "temp")
+      
+      value = array(lista2[,,i], dim = length(lon)*length(lat))
+      data2 = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data2[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data2[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data2[,3]<-value 
+      data2<-as.data.frame(data2)
+      
+      #data2 = cbind(data2, u)
+      #data2 = cbind(data2, v)
+      
+      #colnames(data2)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data2)<-c("lon", "lat", "temp2")
+      
+      value = array(lista3[,,i], dim = length(lon)*length(lat))
+      data3 = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data3[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data3[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data3[,3]<-value 
+      data3<-as.data.frame(data3)
+      
+      #data3 = cbind(data3, u)
+      #data3 = cbind(data3, v)
+      
+      #colnames(data3)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data3)<-c("lon", "lat", "temp3")
+      
+      
+      mapa <- map_data("world2", region = c("India", "Sri Lanka", "Bangladesh", "Nepal", "Bhutan", "Pakistan"
+                                            ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
+                                            , "Malasya", "United Arab Emirates", "Singapur", "Myanmar", "Iran", 
+                                            "Turkmenistan", "Afghanistan", "Tajikistan", "Uzbekistan", "Kyrgyzstan", "China", "Mongolia", 
+                                            "Bangladesh", "North Korea", "South Korea",  "Taiwan", "Laos", "Thailand", "Vietnam", "Cambodia", 
+                                            "Malasya", "Indonesia", "Philippines"), colour = "black")
+      
+      title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
+      g =ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+        #g = ggplot() + theme_minimal()+
+        xlab("Longitud") + ylab("Latitud") + 
+        theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+        
+        geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = "forestgreen", alpha = 0.5, color = "black") +
+        
+        geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black", show.legend = F) +
+        
+        stat_contour(data = data, aes(x = lon, y = lat, z = temp), color = "yellow1", size = 1, breaks = 180 )+
+        stat_contour(data = data2, aes(x = lon, y = lat, z = temp2), color = "orange1", size = 1, breaks = 180 )+
+        stat_contour(data = data3, aes(x = lon, y = lat, z = temp3), color = "red1", size = 1, breaks = 180 )+
+        
+        ggtitle(title)+
+        scale_x_longitude(breaks = seq(40, 140, by = 10), name = "longitud")+
+        scale_y_latitude(breaks = seq(-10, 55, by = 10), name = "Latitud")+
+        theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+              axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              panel.border = element_rect(colour = "black", fill = NA, size = 3),
+              panel.ontop = TRUE,
+              plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
+      
+      
+      
+      
+      ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 30, height = 20  , units = "cm")
+    } 
+    
+  } else {
+    
+    topo2 = topo_sa
+    
+    topo2[which(topo2$h<altura)]=NA
+    
+    num = seq(1, r, by = 1)
+    
+    g = list()
+    for(i in 1:r){
+      
+      #u = array(u[,,i], dim = length(lon)*length(lat))
+      
+      #v = array(v[,,i], dim = length(lon)*length(lat))
+      
+      value = array(lista[,,i], dim = length(lon)*length(lat))
+      data = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data[,3]<-value 
+      
+      data<-as.data.frame(data)
+      #data = cbind(data, u)
+      #data = cbind(data, v)
+      
+      #colnames(data)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data)<-c("lon", "lat", "temp")
+      
+      
+      value = array(lista2[,,i], dim = length(lon)*length(lat))
+      data2 = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data2[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data2[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data2[,3]<-value 
+      data2<-as.data.frame(data2)
+      
+      #data2 = cbind(data2, u)
+      #data2 = cbind(data2, v)
+      
+      #colnames(data2)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data2)<-c("lon", "lat", "temp2")
+      
+      value = array(lista3[,,i], dim = length(lon)*length(lat))
+      data3 = matrix(data = NA, nrow = length(lon)*length(lat), ncol = 3)
+      
+      l=0
+      while(l<length(lon)*length(lat)){
+        data3[seq(l:l+length(lon)),1]<-lon
+        l=l+length(lon)
+      }
+      
+      for(j in 1:length(lat)){
+        lat_v = array(lat[j],dim=length(lon))
+        data3[(length(lon)*j-(length(lon)-1)):(j*length(lon)),2]<-lat_v
+      } 
+      
+      
+      data3[,3]<-value 
+      data3<-as.data.frame(data3)
+      
+      #data3 = cbind(data3, u)
+      #data3 = cbind(data3, v)
+      
+      #colnames(data3)<-c("lon", "lat", "temp", "u", "v")
+      colnames(data3)<-c("lon", "lat", "temp3")
+      
+      
+      mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela","Argentina", "Chile", "Uruguay",
+                                            "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
+                                            "Martinique"), colour = "black")
+      
+      
+      title = ifelse(test = r>1, yes = paste(titulo, " r" , num[i], sep = ""), no = titulo)
+      
+      g = ggplot(topo2, aes(lon, lat)) + theme_minimal()+
+        #g = ggplot() + theme_minimal()+
+        xlab("Longitud") + ylab("Latitud") + 
+        theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+        
+        geom_polygon(data = mapa, aes(x = long ,y = lat, group =group),fill = "forestgreen", alpha = 0.5, color = "black") +
+        
+        geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black", show.legend = F) +
+        
+        stat_contour(data = data, aes(x = lon, y = lat, z = temp), color = "yellow1", size = 1, breaks = 180 )+
+        stat_contour(data = data2, aes(x = lon, y = lat, z = temp2), color = "orange1", size = 1, breaks = 180 )+
+        stat_contour(data = data3, aes(x = lon, y = lat, z = temp3), color = "red1", size = 1, breaks = 180 )+
+        
+        geom_hline(yintercept = 0, color = "black")+
+        
+        ggtitle(title)+
+        scale_x_longitude(breaks = seq(250, 330, by = 10), name = "longitud")+
+        scale_y_latitude(breaks = seq(-35, 20, by = 10), name = "Latitud")+
+        theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+              axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              panel.border = element_rect(colour = "black", fill = NA, size = 3),
+              panel.ontop = TRUE,
+              plot.title = element_text(hjust = 0.5))
+      
+      
+      ggsave(paste(ruta, salida, nombre_fig, num[i], ".jpg", sep = ""), plot = g, width = 25, height = 20  , units = "cm")
+      
+      
+      
+    }
+  }
+  
+}
+#### AREAMONSOON ####
+AreaMonsoon = function(variable){
+  
+  if( variable == "pp5.his"){
+    
+    load("RDatas/pp5.his.RData")
+    data = pp5.his
+    rm(pp5.his)
+    
+  } else if( variable == "pp6.his"){
+    
+    load("RDatas/pp6.his.RData")
+    data = pp6.his
+    rm(pp6.his)
+    
+  } else if(variable == "pp5.26_49"){
+    # tiene una sola corrida!!
+    
+    load("RDatas/pp5.26_2049.RData")
+    data = pp5.26_2049
+    rm(pp5.26_2049)
+    
+    pp_anual = apply(data[[1]], c(1,2,4), mean, na.rm = T)
+    
+    
+    d = dim(data[[1]])[4]
+    
+    pp_seasons_r = array(data = NA, c(144,73,2,d))
+    pp_seasons_r[,,1,] = apply(data[[1]][,,2,], c(1,2), mean, na.rm = T) #JJA
+    pp_seasons_r[,,2,] = apply(data[[1]][,,4,], c(1,2), mean, na.rm = T) #DJF
+    
+    aux = abs( pp_seasons_r[,,2,] - pp_seasons_r[,,1,])
+    aux2 = pp_seasons_r[,,1,]/pp_anual[,,1]
+    aux3 = pp_seasons_r[,,2,]/pp_anual[,,1]
+    
+    aux2[which(aux2<0.55)] = NA # modifico un poco el criterio. uso el de ...
+    aux2[which(!is.na(aux2))] = 1
+    aux3[which(aux3<0.55)] = NA
+    aux3[which(!is.na(aux3))] = 1
+    
+    areas = list()
+    areas[[1]] = apply(aux*aux2, c(1,2), mean, na.rm = T)
+    areas[[2]] = apply(aux*aux3, c(1,2), mean, na.rm = T)
+    
+    return(areas)
+    break()
+    
+  } else if(variable == "pp5.26_99"){
+    # tiene una sola corrida 
+    
+    load("RDatas/pp5.26_2099.RData")
+    data = pp5.26_2099
+    rm(pp5.26_2099)
+    
+    pp_anual = apply(data[[1]], c(1,2,4), mean, na.rm = T)
+    
+    
+    d = dim(data[[1]])[4]
+    
+    pp_seasons_r = array(data = NA, c(144,73,2,d))
+    pp_seasons_r[,,1,] = apply(data[[1]][,,2,], c(1,2), mean, na.rm = T) #JJA
+    pp_seasons_r[,,2,] = apply(data[[1]][,,4,], c(1,2), mean, na.rm = T) #DJF
+    
+    aux = abs( pp_seasons_r[,,2,] - pp_seasons_r[,,1,])
+    aux2 = pp_seasons_r[,,1,]/pp_anual[,,1]
+    aux3 = pp_seasons_r[,,2,]/pp_anual[,,1]
+    
+    aux2[which(aux2<0.55)] = NA # modifico un poco el criterio. uso el de ...
+    aux2[which(!is.na(aux2))] = 1
+    aux3[which(aux3<0.55)] = NA
+    aux3[which(!is.na(aux3))] = 1
+    
+    areas = list()
+    areas[[1]] = apply(aux*aux2, c(1,2), mean, na.rm = T)
+    areas[[2]] = apply(aux*aux3, c(1,2), mean, na.rm = T)
+    
+    return(areas)
+    break()
+    
+  } else if(variable == "pp6.26_49"){
+    
+    load("RDatas/pp6.26_2049.RData")
+    data = pp6.26_2049
+    rm(pp6.26_2049)
+    
+  } else if(variable == "pp6.26_99"){
+    
+    load("RDatas/pp6.26_2099.RData")
+    data = pp6.26_2099
+    rm(pp6.26_2099)
+    
+  } else if(variable == "pp5.85_49"){
+    
+    load("RDatas/pp5.85_2049.RData")
+    data = pp5.85_2049
+    rm(pp5.85_2049)
+    
+  } else if(variable == "pp5.85_99"){
+    
+    load("RDatas/pp5.85_2099.RData")
+    data = pp5.85_2099
+    rm(pp5.85_2099)
+    
+  } else if(variable == "pp6.85_49"){
+    
+    load("RDatas/pp6.85_2049.RData")
+    data = pp6.85_2049
+    rm(pp6.85_2049)
+    
+  } else if(variable == "pp6.85_99"){
+    
+    load("RDatas/pp6.85_2099.RData")
+    data = pp6.85_2099
+    rm(pp6.85_2099)
+    
+  }
+  
+  pp_anual = apply(data[[1]], c(1,2,4), mean, na.rm = T)
+  
+  
+  d = dim(data[[1]])[4]
+  
+  pp_seasons_r = array(data = NA, c(144,73,2,d))
+  pp_seasons_r[,,1,] = apply(data[[1]][,,2,], c(1,2,3), mean, na.rm = T) #JJA
+  pp_seasons_r[,,2,] = apply(data[[1]][,,4,], c(1,2,3), mean, na.rm = T) #DJF
+  
+  aux = abs( pp_seasons_r[,,2,] - pp_seasons_r[,,1,])
+  aux2 = pp_seasons_r[,,1,]/pp_anual
+  aux3 = pp_seasons_r[,,2,]/pp_anual
+  
+  aux2[which(aux2<0.55)] = NA # modifico un poco el criterio. uso el de ...
+  aux2[which(!is.na(aux2))] = 1
+  aux3[which(aux3<0.55)] = NA
+  aux3[which(!is.na(aux3))] = 1
+  
+  areas = list()
+  areas[[1]] = apply(aux*aux2, c(1,2), mean, na.rm = T)
+  areas[[2]] = apply(aux*aux3, c(1,2), mean, na.rm = T)
+  
+  return(areas)
+  
 }
