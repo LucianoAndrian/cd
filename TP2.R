@@ -15,8 +15,8 @@ mask = as.matrix(read.table("mask.txt"))
 # seleccion de latitudes para Asia y SA
 lats = list()
 lons = list()
-lats[[1]] = seq(which(lat == -10),which(lat == 35)); lons[[1]] = seq(which(lon == 40), which(lon == 102.5))
-lats[[2]] = seq(which(lat == -35),which(lat == 20)); lons[[2]] = seq(which(lon == 270), which(lon == 330))
+lats[[1]] = seq(which(lat == -10),which(lat == 55)); lons[[1]] = seq(which(lon == 40), which(lon == 140))
+lats[[2]] = seq(which(lat == -60),which(lat == 20)); lons[[2]] = seq(which(lon == 250), which(lon == 355))
 
 
 #--- HISTORICO ----#
@@ -104,13 +104,13 @@ aux = array(pp5.his_seasons[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(
 mapa_topo2(lista = aux, titulo = "Precipitación media 1975 - 2005  - JJA", nombre_fig = "pp5.his_asia.jja", escala = c(0,600)
            , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
            , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-           , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+           , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 aux = array(pp5.his_seasons[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(lats[[1]]),1))
 mapa_topo2(lista = aux, titulo = "Precipitación media 1975 - 2005  - DFJ", nombre_fig = "pp5.his_asia.djf", escala = c(0,600)
            , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
            , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-           , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+           , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 
 #### CNRM-CM6 ####
@@ -121,7 +121,7 @@ aux = array(t6.his_seasons[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(l
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Temperatura media CNRM-CM6 1975 - 2005  - JJA", nombre_fig = "t6.his_asia.jja", escala = c(0,35)
           , label_escala = "mm", resta = 273, brewer = "Spectral", revert = "si", niveles = 11, contour = "si"
           , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 35, by = 2.5), breaks_c_f = seq(0, 35, by = 2.5), r = 1, na_fill = -1000
-          , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 auxv = array(V.his.djf[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(lats[[1]]),1))
 auxu = array(V.his.djf[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(lats[[1]]),1))
@@ -129,7 +129,7 @@ aux = array(t6.his_seasons[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(l
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Temperatura media CNRM-CM6 1975 - 2005  - DJF", nombre_fig = "t6.his_asia.djf", escala = c(0,35)
           , label_escala = "mm", resta = 273, brewer = "Spectral", revert = "si", niveles = 11, contour = "si"
           , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 35, by = 2.5), breaks_c_f = seq(0, 35, by = 2.5), r = 1, na_fill = -1000
-          , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 #--- Precipitacion ---#
 
@@ -139,7 +139,7 @@ aux = array(pp6.his_seasons[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Precipitación media CNRM-CM6 1975 - 2005  - JJA", nombre_fig = "pp6.his_asia.jja", escala = c(0,600)
           , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-          , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 auxv = array(V.his.djf[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(lats[[1]]),1))
 auxu = array(V.his.djf[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(lats[[1]]),1))
@@ -147,7 +147,7 @@ aux = array(pp6.his_seasons[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Precipitación media CNRM-CM6 1975 - 2005  - DJF", nombre_fig = "pp6.his_asia.djf", escala = c(0,600)
           , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-          , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 #--- Humedad ---#
 auxv = array(V.his.jja[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(lats[[1]]),1))
@@ -156,7 +156,7 @@ aux = array(hu6.his_seasons[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Humedad específica media CNRM-CM6 1975 - 2005  - JJA", nombre_fig = "hu6.his_asia.jja", escala = c(0,0.02)
           , label_escala = "mm", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 0.02, by = 0.002), breaks_c_f = seq(0, 0.02, by = 0.002), r = 1, na_fill = -1000
-          , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 
 auxv = array(V.his.djf[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(lats[[1]]),1))
@@ -165,7 +165,7 @@ aux = array(hu6.his_seasons[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Humedad específica media CNRM-CM6 1975 - 2005  - DJF", nombre_fig = "hu6.his_asia.djf", escala = c(0,0.02)
           , label_escala = "mm", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 0.02, by = 0.002), breaks_c_f = seq(0, 0.02, by = 0.002), r = 1, na_fill = -1000
-          , topo = "topo1", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 
 
@@ -181,13 +181,13 @@ aux = array(pp5.his_seasons[lons[[2]], lats[[2]],1], c(length(lons[[2]]),length(
 mapa_topo2(lista = aux, titulo = "Precipitación media 1975 - 2005  - JJA", nombre_fig = "pp5.his_sa.jja", escala = c(0,600)
            , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
            , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-           , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+           , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 aux = array(pp5.his_seasons[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(lats[[2]]),1))
 mapa_topo2(lista = aux, titulo = "Precipitación media 1975 - 2005  - DJF", nombre_fig = "pp5.his_sa.djf", escala = c(0,600)
            , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
            , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-           , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+           , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 
 #### CNRM-CM6 ####
@@ -198,7 +198,7 @@ aux = array(t6.his_seasons[lons[[2]], lats[[2]],1], c(length(lons[[2]]),length(l
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Temperatura media CNRM-CM6 1975 - 2005  - JJA", nombre_fig = "t6.his_sa.jja", escala = c(0,35)
           , label_escala = "mm", resta = 273, brewer = "Spectral", revert = "si", niveles = 11, contour = "si"
           , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 35, by = 2.5), breaks_c_f = seq(0, 35, by = 2.5), r = 1, na_fill = -1000
-          , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 
 auxv = array(V.his.djf[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(lats[[2]]),1))
@@ -207,7 +207,7 @@ aux = array(t6.his_seasons[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(l
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Temperatura media CNRM-CM6 1975 - 2005  - DFJ", nombre_fig = "t6.his_sa.djf", escala = c(0,35)
           , label_escala = "mm", resta = 273, brewer = "Spectral", revert = "si", niveles = 11, contour = "si"
           , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 35, by = 2.5), breaks_c_f = seq(0, 35, by = 2.5), r = 1, na_fill = -1000
-          , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 
 
@@ -218,7 +218,7 @@ aux = array(pp6.his_seasons[lons[[2]], lats[[2]],1], c(length(lons[[2]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Precipitación media CNRM-CM6 1975 - 2005  - JJA", nombre_fig = "pp6.his_sa.jja", escala = c(0,600)
           , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-          , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 auxv = array(V.his.djf[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(lats[[2]]),1))
 auxu = array(V.his.djf[lons[[2]], lats[[2]],1], c(length(lons[[2]]),length(lats[[2]]),1))
@@ -226,7 +226,7 @@ aux = array(pp6.his_seasons[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Precipitación media CNRM-CM6 1975 - 2005  - DJF", nombre_fig = "pp6.his_sa.djf", escala = c(0,600)
           , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
-          , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 
 #--- Humedad ---#
@@ -236,7 +236,7 @@ aux = array(hu6.his_seasons[lons[[2]], lats[[2]],1], c(length(lons[[2]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Humedad específica media CNRM-CM6 1975 - 2005  - JJA", nombre_fig = "hu6.his_sa.jja", escala = c(0,0.02)
           , label_escala = "mm", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 0.02, by = 0.002), breaks_c_f = seq(0, 0.02, by = 0.002), r = 1, na_fill = -1000
-          , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 auxv = array(V.his.djf[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(lats[[2]]),1))
 auxu = array(V.his.djf[lons[[2]], lats[[2]],1], c(length(lons[[2]]),length(lats[[2]]),1))
@@ -244,7 +244,7 @@ aux = array(hu6.his_seasons[lons[[2]], lats[[2]],2], c(length(lons[[2]]),length(
 mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Humedad específica media CNRM-CM6 1975 - 2005  - DJF", nombre_fig = "hu6.his_sa.djf", escala = c(0,0.02)
           , label_escala = "?", resta = 0, brewer = "PuBuGn", revert = "no", niveles = 9, contour = "si"
           , lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(0, 0.02, by = 0.002), breaks_c_f = seq(0, 0.02, by = 0.002), r = 1, na_fill = -1000
-          , topo = "topo2", altura = 1000, salida = "/Salidas/TP2/")
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
 
 
@@ -524,5 +524,86 @@ save(V6, file = "RDatas/V6.RData")
 DrawMonsoon("cnrm-cm5")
 DrawMonsoon("cnrm-cm6")
 
-#--- Dominio ---#
+#### Dominio ####
 # Dominio calculado con el criterio de ....
+
+
+#--- historico ---#
+
+area5.his = AreaMonsoon(variable = "pp5.his")
+area6.his = AreaMonsoon(variable = "pp6.his")
+
+# 2.6
+
+area5.26_49 = AreaMonsoon(variable = "pp5.26_49")
+area5.26_99 = AreaMonsoon(variable = "pp5.26_99")
+
+area6.26_49 = AreaMonsoon(variable = "pp6.26_49")
+area6.26_99 = AreaMonsoon(variable = "pp6.26_99")
+
+
+# 8.5
+
+area5.85_49 = AreaMonsoon(variable = "pp5.85_49")
+area5.85_99 = AreaMonsoon(variable = "pp5.85_99")
+
+area6.85_49 = AreaMonsoon(variable = "pp6.85_49")
+area6.85_99 = AreaMonsoon(variable = "pp6.85_99")
+
+#### GRAFICOS ####
+#--- ASIA ---#
+aux = array(area5.his[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux2 = array(area5.26_49[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux3 = array(area5.26_99[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM5 RCP2.6", nombre_fig = "area5.26_asia",  lon = lon[lons[[1]]], lat = lat[lats[[1]]], r = 1
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
+
+aux = array(area6.his[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux2 = array(area6.26_49[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux3 = array(area6.26_99[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM5 SSP1-2.6", nombre_fig = "area6.26_asia",  lon = lon[lons[[1]]], lat = lat[lats[[1]]], r = 1
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
+
+
+aux = array(area5.his[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux2 = array(area5.85_49[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux3 = array(area5.85_99[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM5 RCP8.5", nombre_fig = "area5.85_asia",  lon = lon[lons[[1]]], lat = lat[lats[[1]]], r = 1
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
+
+
+aux = array(area6.his[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux2 = array(area6.85_49[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+aux3 = array(area6.85_99[[1]][lons[[1]], lats[[1]]], c(length(lons[[1]]),length(lats[[1]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM5 SS5-8.5", nombre_fig = "area6.85_asia",  lon = lon[lons[[1]]], lat = lat[lats[[1]]], r = 1
+          , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
+
+
+
+#--- SA ---#
+aux = array(area6.his[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux2 = array(area6.26_49[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux3 = array(area6.26_99[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM SSP1-2.6", nombre_fig = "area6.26_SA",  lon = lon[lons[[2]]], lat = lat[lats[[2]]], r = 1
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
+
+
+aux = array(area5.his[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux2 = array(area5.26_49[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux3 = array(area5.26_99[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM RCP2.6", nombre_fig = "area5.26_SA",  lon = lon[lons[[2]]], lat = lat[lats[[2]]], r = 1
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
+
+
+aux = array(area6.his[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux2 = array(area6.85_49[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux3 = array(area6.85_99[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM SSP5-8.5", nombre_fig = "area6.85_SA",  lon = lon[lons[[2]]], lat = lat[lats[[2]]], r = 1
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
+
+aux = array(area5.his[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux2 = array(area5.85_49[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+aux3 = array(area5.85_99[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
+mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM RCP8.5", nombre_fig = "area5.85_SA",  lon = lon[lons[[2]]], lat = lat[lats[[2]]], r = 1
+          , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
+#####
