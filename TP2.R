@@ -606,4 +606,54 @@ aux2 = array(area5.85_49[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(
 aux3 = array(area5.85_99[[2]][lons[[2]], lats[[2]]], c(length(lons[[2]]),length(lats[[2]]),1))
 mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CNRM-CM RCP8.5", nombre_fig = "area5.85_SA",  lon = lon[lons[[2]]], lat = lat[lats[[2]]], r = 1
           , topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
-#####
+#### Intensidad ####
+
+# ver km... la grilla es regular? (seria km ~ 555)
+# la suma esta bien? -->(ojo con puntos de grilla q cumplen el criterio pero no forman parte de la zona ppal, solo pasa en Asia)
+
+i5.26 = MonsoonIntensity(area.his = area5.his,area.49 = area5.26_49, area.99 = area5.26_99, lons, lats, km = 1)
+i5.85 = MonsoonIntensity(area.his = area5.his,area.49 = area5.85_49, area.99 = area5.85_99, lons, lats, km = 1)
+
+i6.26 = MonsoonIntensity(area.his = area6.his,area.49 = area6.26_49, area.99 = area6.26_99, lons, lats, km = 1)
+i6.85 = MonsoonIntensity(area.his = area6.his,area.49 = area6.85_49, area.99 = area6.85_99, lons, lats, km = 1)
+
+#### Analisis por mes ####
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
