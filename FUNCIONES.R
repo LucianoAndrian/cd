@@ -1854,3 +1854,42 @@ AreaMonsoon = function(variable){
   return(areas)
   
 }
+#### MONSOONINTENSITY ####
+MonsoonIntensity = function(area.his, area.49, area.99, lons, lats, km){
+  
+  # experimental...
+  # funca con salidas de AreaMonsoon
+  
+  zona = list()
+  zona[[1]] = area.his[[1]][lons[[1]], lats[[1]]] 
+  zona[[2]] = area.his[[2]][lons[[2]], lats[[2]]]
+  zona[[3]] = area.49[[1]][lons[[1]], lats[[1]]] 
+  zona[[4]] = area.49[[2]][lons[[2]], lats[[2]]] 
+  zona[[5]] = area.99[[1]][lons[[1]], lats[[1]]] 
+  zona[[6]] = area.99[[2]][lons[[2]], lats[[2]]] 
+  
+  intensidad = matrix(data = NA, nrow = 3, ncol = 2)
+  colnames(intensidad) = c("Asia", "SA")
+  row.names(intensidad) = c("His", "2049", "2099")
+  i = 1
+  j = 1
+  k = 1
+  while(i <= 6){
+    zona[[i]][which(zona[[i]]<180)] = NA
+    if( (i/2)%%1 == 0){
+      
+      intensidad[j,2] = sum(zona[[i]], na.rm = T)/(length(which(!is.na(zona[[i]])))*km) # aca agregar km2 --> es grilla regular?
+      j = j + 1
+      
+    } else {
+      
+      intensidad[k,1] = sum(zona[[i]], na.rm = T)/(length(which(!is.na(zona[[i]])))*km) # aca agregar km2 --> es grilla regular?
+      k = k + 1
+    }
+    
+    i = i + 1
+  }
+  
+  return(as.data.frame(intensidad))
+  
+} 
