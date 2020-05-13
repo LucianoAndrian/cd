@@ -611,33 +611,75 @@ mapa_cont(lista = aux, lista2 = aux2, lista3 = aux3, titulo = "Area Monzonica CN
 # ver km... la grilla es regular? (seria km ~ 555)
 # la suma esta bien? -->(ojo con puntos de grilla q cumplen el criterio pero no forman parte de la zona ppal, solo pasa en Asia)
 
-i5.26 = MonsoonIntensity(area.his = area5.his,area.49 = area5.26_49, area.99 = area5.26_99, lons, lats, km = 1)
-i5.85 = MonsoonIntensity(area.his = area5.his,area.49 = area5.85_49, area.99 = area5.85_99, lons, lats, km = 1)
+i5.26 = MonsoonIntensity(area.his = area5.his, area.49 = area5.26_49, area.99 = area5.26_99, lons, lats, km = 1)
+i5.85 = MonsoonIntensity(area.his = area5.his, area.49 = area5.85_49, area.99 = area5.85_99, lons, lats, km = 1)
 
-i6.26 = MonsoonIntensity(area.his = area6.his,area.49 = area6.26_49, area.99 = area6.26_99, lons, lats, km = 1)
-i6.85 = MonsoonIntensity(area.his = area6.his,area.49 = area6.85_49, area.99 = area6.85_99, lons, lats, km = 1)
+i6.26 = MonsoonIntensity(area.his = area6.his, area.49 = area6.26_49, area.99 = area6.26_99, lons, lats, km = 1)
+i6.85 = MonsoonIntensity(area.his = area6.his, area.49 = area6.85_49, area.99 = area6.85_99, lons, lats, km = 1)
 
-#### Analisis por mes ####
+## grafico ##
+aux = list()
+aux[[1]] = data.frame(Periodos = c(2000, 2050, 2100), i5.26)
+aux[[2]] = data.frame(Periodos = c(2000, 2050, 2100), i5.85)
+aux[[3]] = data.frame(Periodos = c(2000, 2050, 2100), i6.26)
+aux[[4]] = data.frame(Periodos = c(2000, 2050, 2100), i6.85)
+titulo = c("CNRM-CM5 RCP2.6", "CNRM-CM5 RCP5", "CNRM-CM6 SSP1-2.6", "CNRM-CM6 SSP5-8.5")
+png(filename = "intensidades.jpg", width = 850, height = 520, units = "px")
+par(mfrow=c(2,2))
+for(i in 1:4){
+  
+  
+  df.ts = ts(aux[[i]][-1], start = 2000, deltat = 50)
+  plot(df.ts, plot.type = "single", col = 1:ncol(df.ts), lwd = 4, ylab = "mm/p.grilla", main = titulo[i])
+  abline(h = 0, lwd = 0.5)
+  legend("topleft", colnames(df.ts), col=1:ncol(aux2), lty=1, cex=1.5, lwd = 1)
+  
+  
+  
+}
+dev.off()
+
+
+#### Analisis final monzoon ####
+# los meses estan en [[3]] de los Rdata, estan promedidaso los miembros y anios de marzo a feb.
+ 
+pp6.sep = PPMeses(modelo = "6", mes = 7)  # asia
+
+pp6.nov = PPMeses(modelo = "6", mes = 9)  # SA
+pp6.mar = PPMeses(modelo = "6", mes = 1)  # SA
+
+aux = (pp6.sep[[4]] - pp6.sep[[1]])
+aux2 = array(aux[lons[[1]], lats[[1]]], dim = c(144, 73, 1))
+
+mapa_topo2(lista = aux2, titulo = "CM6 Dif. PP 2020 - 2049 vs Periodo Historico - Septiembre", nombre_fig = "pp.dif49_sep", escala = c(-200, 200)
+           , label_escala = "mm", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+           , contour = "si", lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(-200, 200, 25)
+           , breaks_c_f = seq(-200, 200, 25), r = 1, na_fill = -1000, topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 
 
 
+aux = (pp6.sep[[5]] - pp6.sep[[1]])
+aux2 = array(aux[lons[[1]], lats[[1]]], dim = c(144, 73, 1))
+
+mapa_topo2(lista = aux2, titulo = "CM6 Dif. PP 2070 - 2099 vs Periodo Historico - Septiembre", nombre_fig = "pp.dif99_sep", escala = c(-200, 200)
+           , label_escala = "mm", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+           , contour = "si", lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(-200, 200, 25)
+           , breaks_c_f = seq(-200, 200, 25), r = 1, na_fill = -1000, topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 
 
+###
+aux = (pp6.mar[[5]] - pp6.mar[[1]])
 
+aux2 = array(aux[lons[[2]], lats[[2]]], dim = c(144, 73, 1))
 
+mapa_topo2(lista = aux2, titulo = "CM6 Dif. PP 2020 - 2049 vs Periodo Historico - Marzo", nombre_fig = "pp.dif99_mar", escala = c(-100, 100)
+           , label_escala = "mm", resta = 0, brewer = "RdBu", revert = "si", niveles = 9
+           , contour = "si", lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(-100, 100, 20)
+           , breaks_c_f = seq(-100, 100, 20), r = 1, na_fill = -1000, topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
-
-
-
-
-
-
-
-
-
-
+#####
 
 
 
