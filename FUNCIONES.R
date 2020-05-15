@@ -1970,3 +1970,78 @@ PPMeses = function(modelo, mes){
   }
   
 }
+#### Derivada ####
+# derivadas por algo asi como diferencias finitas
+Dy = function(arr, dy){
+  
+  dUy = arr*0
+  a = length(arr[,1])
+  b = length(arr[1,])
+  i = 1
+  while(i<a){
+    j = 1
+    while(j<b){
+      if(j == b-1){
+        dUy[i,j]=(arr[i,b]-arr[i,j])/dy
+      } else {
+        dUy[i,j]=(arr[i,j+1]-arr[i,j])/dy
+      }
+      j=j+1
+    }
+    i=i+1
+    
+  }
+  return(dUy)
+}
+
+
+Dx = function(arr,dx, es){
+  
+  if(es == "no"){
+    
+    dUx = arr*0
+    a = length(arr[,1])
+    b = length(arr[1,])
+    i = 1
+    
+    while(i<a){
+      j = 1
+      while(j<b){
+        if(j == a-1){
+          dUx[i,j]=(arr[a,j]-arr[i,j])/dx
+        } else {
+          dUx[i,j]=(arr[i+1,j]-arr[i,j])/dx
+        }
+        j=j+1
+      }
+      i=i+1
+      
+    }
+    return(dUx) 
+    
+  } else {
+    # este es por las dudas.
+    dUx = arr*0
+    a = length(arr[,1])
+    b = length(arr[1,])
+    i = 1
+    
+    while(i<a){
+      j = 1
+      while(j<b){
+        if(j == a-1){
+          dUx[i,j]=(arr[a,j]-arr[i,j])/(dx*cos(lat[i]*pi/180))/2
+        } else {
+          dUx[i,j]=(arr[i+1,j]-arr[i,j])/(dx*cos(lat[i]*pi/180))/2
+        }
+        j=j+1
+      }
+      i=i+1
+      
+    }
+    return(dUx) 
+  }
+  
+}
+
+
