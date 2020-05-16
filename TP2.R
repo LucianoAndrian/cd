@@ -18,72 +18,7 @@ lons = list()
 lats[[1]] = seq(which(lat == -10),which(lat == 55)); lons[[1]] = seq(which(lon == 40), which(lon == 140))
 lats[[2]] = seq(which(lat == -60),which(lat == 20)); lons[[2]] = seq(which(lon == 250), which(lon == 355))
 
-
-#--- HISTORICO ----#
-#### Temperatura #### 
-#CNRM-CM5 no tiene datos mensuales
-
-# CNRM-CM6
-
-
-load("RDatas/t6.his.RData")
-
-# usando t6.his[[2]] ya se encuentran promediados los anios (esto da lo mismo q hacerlo sobre cada miembro)
-t6.his_seasons = array(data = NA, c(144,73,2))
-t6.his_seasons[,,1] = apply(t6.his[[1]][,,2,], c(1,2), mean, na.rm = T) #JJA
-t6.his_seasons[,,2] = apply(t6.his[[1]][,,4,], c(1,2), mean, na.rm = T) #DJF
-
-
-rm(t6.his)
-
-
-
-#### Viento ####
-# CNRM-CM6
-load("RDatas/u6.his.RData")
-load("RDatas/v6.his.RData")
-
-# JJA
-V.his.jja = array(data = NA, dim = c(144,73,2))
-V.his.jja[,,1] = apply(u6.his[[1]][,,2,], c(1,2), mean, na.rm = T)  # u850
-V.his.jja[,,2] = apply(v6.his[[1]][,,2,], c(1,2), mean, na.rm = T)  # v850
-
-# DJF
-V.his.djf = array(data = NA, dim = c(144,73,2))
-V.his.djf[,,1] = apply(u6.his[[1]][,,4,], c(1,2), mean, na.rm = T)  # u850
-V.his.djf[,,2] = apply(v6.his[[1]][,,4,], c(1,2), mean, na.rm = T)  # v850
-
-rm(u6.his, v6.his)
-
-##### Precipitacion ####
-
-# CNRM-CM5
-load("RDatas/pp5.his.RData")
-
-pp5.his_seasons = array(data = NA, c(144,73,2))
-pp5.his_seasons[,,1] = apply(pp5.his[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp5.his_seasons[,,2] = apply(pp5.his[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-# CNRM-CM6
-load("RDatas/pp6.his.RData")
-pp6.his_seasons = array(data = NA, c(144,73,2))
-pp6.his_seasons[,,1] = apply(pp6.his[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp6.his_seasons[,,2] = apply(pp6.his[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(pp5.his, pp6.his)
-
-
-#### Humedad ####
-
-# CNRM-CM6
-load("RDatas/hu6.his.RData")
-
-hu6.his_seasons = array(data = NA, c(144,73,2))
-hu6.his_seasons[,,1] = apply(hu6.his[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-hu6.his_seasons[,,2] = apply(hu6.his[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(hu6.his)
-
+source("TP2_carga.R")
 
 #### GRAFICOS  ####
 
@@ -250,229 +185,6 @@ mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Humedad específica media C
 
 
 
-
-
-#####
-
-
-#--- RCP2.6 ---#
-
-#### Temperatura ####
-# CNRM - CM5
-# no tiene datos mensuales
-
-# CNRM-CM6
-load("RDatas/t6.26_2049.RData")
-load("RDatas/t6.26_2099.RData")
-
-t6.26_49.seasons = array(data = NA, dim = c(144,73,2)) 
-t6.26_49.seasons[,,1] = apply(t6.26_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-t6.26_49.seasons[,,2] = apply(t6.26_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-t6.26_99.seasons = array(data = NA, dim = c(144,73,2)) 
-t6.26_99.seasons[,,1] = apply(t6.26_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-t6.26_99.seasons[,,2] = apply(t6.26_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(t6.26_2049, t6.26_2099)
-
-#### Precipitacion ####
-# CNRM-CM5
-load("RDatas/pp5.26_2049.RData")
-load("RDatas/pp5.26_2099.RData")
-
-pp5.26_49.seasons = array(data = NA, dim = c(144,73,2)) 
-pp5.26_49.seasons[,,1] = apply(pp5.26_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp5.26_49.seasons[,,2] = apply(pp5.26_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-pp5.26_99.seasons = array(data = NA, dim = c(144,73,2)) 
-pp5.26_99.seasons[,,1] = apply(pp5.26_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp5.26_99.seasons[,,2] = apply(pp5.26_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(pp5.26_2049, pp5.26_2099)
-
-# CNRM-CM6
-load("RDatas/pp6.26_2049.RData")
-load("RDatas/pp6.26_2099.RData")
-
-pp6.26_49.seasons = array(data = NA, dim = c(144,73,2)) 
-pp6.26_49.seasons[,,1] = apply(pp6.26_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp6.26_49.seasons[,,2] = apply(pp6.26_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-pp6.26_99.seasons = array(data = NA, dim = c(144,73,2)) 
-pp6.26_99.seasons[,,1] = apply(pp6.26_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp6.26_99.seasons[,,2] = apply(pp6.26_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-rm(pp6.26_2049, pp6.26_2099)
-
-#### Viento ####
-#CNRM-CM6
-load("RDatas/u6.26_2049.RData")
-load("RDatas/u6.26_2099.RData")
-load("RDatas/v6.26_2049.RData")
-load("RDatas/v6.26_2099.RData")
-load("RDatas/u6.85_2049.RData")
-load("RDatas/u6.85_2099.RData")
-load("RDatas/v6.85_2049.RData")
-load("RDatas/v6.85_2099.RData")
-
-u6.26_49.seasons = array(data = NA, dim = c(144,73,2)) 
-u6.26_49.seasons[,,1] = apply(u6.26_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-u6.26_49.seasons[,,2] = apply(u6.26_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-u6.26_99.seasons = array(data = NA, dim = c(144,73,2)) 
-u6.26_99.seasons[,,1] = apply(u6.26_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-u6.26_99.seasons[,,2] = apply(u6.26_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-u6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-u6.85_49.seasons[,,1] = apply(u6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-u6.85_49.seasons[,,2] = apply(u6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-u6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-u6.85_99.seasons[,,1] = apply(u6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-u6.85_99.seasons[,,2] = apply(u6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-
-# v
-v6.26_49.seasons = array(data = NA, dim = c(144,73,2)) 
-v6.26_49.seasons[,,1] = apply(v6.26_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-v6.26_49.seasons[,,2] = apply(v6.26_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-v6.26_99.seasons = array(data = NA, dim = c(144,73,2)) 
-v6.26_99.seasons[,,1] = apply(v6.26_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-v6.26_99.seasons[,,2] = apply(v6.26_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-v6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-v6.85_49.seasons[,,1] = apply(v6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-v6.85_49.seasons[,,2] = apply(v6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-v6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-v6.85_99.seasons[,,1] = apply(v6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-v6.85_99.seasons[,,2] = apply(v6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-
-
-
-
-
-rm(u6.26_2049, u6.26_2099, v6.26_2049, v6.26_2099, u6.85_2049, u6.85_2099, v6.85_2049, v6.85_2099)
-
-#### Humedad ####
-# CNRM-CM6
-load("RDatas/hu6.26_2049.RData")
-load("RDatas/hu6.26_2099.RData")
-
-hu6.26_49.seasons = array(data = NA, dim = c(144,73,2)) 
-hu6.26_49.seasons[,,1] = apply(hu6.26_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-hu6.26_49.seasons[,,2] = apply(hu6.26_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-hu6.26_99.seasons = array(data = NA, dim = c(144,73,2)) 
-hu6.26_99.seasons[,,1] = apply(hu6.26_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-hu6.26_99.seasons[,,2] = apply(hu6.26_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(hu6.26_2049, hu6.26_2099)
-
-
-#####
-#--- RCP8.5 ---#
-
-#### Temperatura ####
-# CNRM - CM5
-# no tiene datos mensuales
-
-# CNRM-CM6
-load("RDatas/t6.85_2049.RData")
-load("RDatas/t6.85_2099.RData")
-
-t6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-t6.85_49.seasons[,,1] = apply(t6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-t6.85_49.seasons[,,2] = apply(t6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-t6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-t6.85_99.seasons[,,1] = apply(t6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-t6.85_99.seasons[,,2] = apply(t6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(t6.85_2049, t6.85_2099)
-
-#### Precipitacion ####
-# CNRM-CM5
-load("RDatas/pp5.85_2049.RData")
-load("RDatas/pp5.85_2099.RData")
-
-pp5.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-pp5.85_49.seasons[,,1] = apply(pp5.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp5.85_49.seasons[,,2] = apply(pp5.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-pp5.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-pp5.85_99.seasons[,,1] = apply(pp5.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp5.85_99.seasons[,,2] = apply(pp5.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(pp5.85_2049, pp5.85_2099)
-
-# CNRM-CM6
-load("RDatas/pp6.85_2049.RData")
-load("RDatas/pp6.85_2099.RData")
-
-pp6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-pp6.85_49.seasons[,,1] = apply(pp6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp6.85_49.seasons[,,2] = apply(pp6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-pp6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-pp6.85_99.seasons[,,1] = apply(pp6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-pp6.85_99.seasons[,,2] = apply(pp6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-rm(pp6.85_2049, pp6.85_2099)
-
-#### Viento ####
-#CNRM-CM6
-load("RDatas/u6.85_2049.RData")
-load("RDatas/u6.85_2099.RData")
-load("RDatas/v6.85_2049.RData")
-load("RDatas/v6.85_2099.RData")
-
-u6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-u6.85_49.seasons[,,1] = apply(u6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-u6.85_49.seasons[,,2] = apply(u6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-u6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-u6.85_99.seasons[,,1] = apply(u6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-u6.85_99.seasons[,,2] = apply(u6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-# v
-v6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-v6.85_49.seasons[,,1] = apply(v6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-v6.85_49.seasons[,,2] = apply(v6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-
-v6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-v6.85_99.seasons[,,1] = apply(v6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-v6.85_99.seasons[,,2] = apply(v6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(u6.85_2049, u6.85_2099, v6.85_2049, v6.85_2099)
-
-#### Humedad ####
-# CNRM-CM6
-load("RDatas/hu6.85_2049.RData")
-load("RDatas/hu6.85_2099.RData")
-
-hu6.85_49.seasons = array(data = NA, dim = c(144,73,2)) 
-hu6.85_49.seasons[,,1] = apply(hu6.85_2049[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-hu6.85_49.seasons[,,2] = apply(hu6.85_2049[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-hu6.85_99.seasons = array(data = NA, dim = c(144,73,2)) 
-hu6.85_99.seasons[,,1] = apply(hu6.85_2099[[1]][,,2,], c(1,2), mean, na.rm = T) # JJA
-hu6.85_99.seasons[,,2] = apply(hu6.85_2099[[1]][,,4,], c(1,2), mean, na.rm = T) # DJF
-
-rm(hu6.85_2049, hu6.85_2099)
 
 
 #####
@@ -679,23 +391,129 @@ mapa_topo2(lista = aux2, titulo = "CM6 Dif. PP 2020 - 2049 vs Periodo Historico 
            , contour = "si", lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = seq(-100, 100, 20)
            , breaks_c_f = seq(-100, 100, 20), r = 1, na_fill = -1000, topo = "topo2", altura = 1500, salida = "/Salidas/TP2/")
 
-#####
+#### Advecciones de T y q ####
+# solo para CNRM-CM6
+#### Historico ####
+t6.his = list()
+hu6.his = list()
+t6.his[[1]] = Adv(variable = t6.his_seasons, u = V.his.jja[,,1], v = V.his.jja[,,2], i = 1)
+t6.his[[2]] = Adv(variable = t6.his_seasons, u = V.his.djf[,,1], v = V.his.djf[,,2], i = 2)
+
+hu6.his[[1]] = Adv(variable = hu6.his_seasons, u = V.his.jja[,,1], v = V.his.jja[,,2], i = 1)
+hu6.his[[2]] = Adv(variable = hu6.his_seasons, u = V.his.djf[,,1], v = V.his.djf[,,2], i = 2)
+
+topo = c("topo1", "topo2")
+
+aux = array(t6.his[[1]], dim = c(dim(t6.his[[1]]), 1))
+auxu = array(V.his.jja[lons[[1]],lats[[1]],1], dim = c(dim(t6.his[[1]]),1 ))
+auxv = array(V.his.jja[lons[[1]],lats[[1]],2], dim = c(dim(t6.his[[1]]),1 ))
+revert = "si"; color = "RdBu"; breaks = seq(-10, 10, by = 2); escala = c(-10, 10); vnom = "t6"
+mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Advección T periodo Historico"
+          , nombre_fig = "t6.his.adv_asia", escala = escala
+          , label_escala = "", resta = 0, brewer = color, revert = revert, niveles = 9
+          , contour = "si", lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = breaks
+          , breaks_c_f = breaks, r = 1, na_fill = 0, topo = topo[1], altura = 1500, salida = "/Salidas/TP2/")
 
 
+aux = array(t6.his[[2]], dim = c(dim(t6.his[[2]]), 1))
+auxu = array(V.his.djf[lons[[2]],lats[[2]],1], dim = c(dim(t6.his[[2]]),1 ))
+auxv = array(V.his.djf[lons[[2]],lats[[2]],2], dim = c(dim(t6.his[[2]]),1 ))
+revert = "si"; color = "RdBu"; breaks = seq(-10, 10, by = 2); escala = c(-10, 10); vnom = "t6"
+mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Advección T periodo Historico"
+          , nombre_fig = "t6.his.adv_sa", escala = escala
+          , label_escala = "", resta = 0, brewer = color, revert = revert, niveles = 9
+          , contour = "si", lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = breaks
+          , breaks_c_f = breaks, r = 1, na_fill = 0, topo = topo[2], altura = 1500, salida = "/Salidas/TP2/")
 
 
+aux = array(hu6.his[[1]], dim = c(dim(hu6.his[[1]]), 1))
+auxu = array(V.his.jja[lons[[1]],lats[[1]],1], dim = c(dim(hu6.his[[1]]),1 ))
+auxv = array(V.his.jja[lons[[1]],lats[[1]],2], dim = c(dim(hu6.his[[1]]),1 ))
+tq = "q"; revert = "no"; color = "BrBG"; breaks = seq(-0.010, 0.010, by = 0.002); escala = c(-0.010, 0.010); vnom = "hu6"
+mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Advección q perido Historico"
+          , nombre_fig = "hu6.his.adv_asia", escala = escala
+          , label_escala = "", resta = 0, brewer = color, revert = revert, niveles = 9
+          , contour = "si", lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = breaks
+          , breaks_c_f = breaks, r = 1, na_fill = 0, topo = topo[1], altura = 1500, salida = "/Salidas/TP2/")
 
 
+aux = array(hu6.his[[2]], dim = c(dim(hu6.his[[2]]), 1))
+auxu = array(V.his.djf[lons[[2]],lats[[2]],1], dim = c(dim(hu6.his[[2]]),1 ))
+auxv = array(V.his.djf[lons[[2]],lats[[2]],2], dim = c(dim(hu6.his[[2]]),1 ))
+tq = "q"; revert = "no"; color = "BrBG"; breaks = seq(-0.010, 0.010, by = 0.002); escala = c(-0.010, 0.010); vnom = "hu6"
+mapa_topo(lista = aux, u = auxu, v = auxv, titulo = "Advección periodo Historico"
+          , nombre_fig = "hu6.his.adv_sa", escala = escala
+          , label_escala = "", resta = 0, brewer = color, revert = revert, niveles = 9
+          , contour = "si", lon = lon[lons[[2]]], lat = lat[lats[[2]]], escala_dis = breaks
+          , breaks_c_f = breaks, r = 1, na_fill = 0, topo = topo[2], altura = 1500, salida = "/Salidas/TP2/")
+
+#### rcps #####
+adv.sa = array(data = NA, dim = c(43, 33, 8))
+adv.asia = array(data = NA, dim = c(41, 27, 8))
+ADV =list()
+ADV[[2]] = adv.sa
+ADV[[1]] = adv.asia
 
 
+u = list(); v = list()
 
+u[[1]] = u6.26_49.seasons; u[[2]] = u6.26_99.seasons
+u[[3]] = u6.85_49.seasons; u[[4]] = u6.85_99.seasons
+u[[5]] = u6.26_49.seasons; u[[6]] = u6.26_99.seasons # para no complicarla en el for
+u[[7]] = u6.85_49.seasons; u[[8]] = u6.85_99.seasons
 
+v[[1]] = v6.26_49.seasons; v[[2]] = v6.26_99.seasons
+v[[3]] = v6.85_49.seasons; v[[4]] = v6.85_99.seasons
+v[[5]] = v6.26_49.seasons; v[[6]] = v6.26_99.seasons
+v[[7]] = v6.85_49.seasons; v[[8]] = v6.85_99.seasons
 
+for(j in 1:2){
+  
+  # adv T
+  ADV[[j]][,,1] = Adv(variable = t6.26_49.seasons, u = u6.26_49.seasons[,,j], v = v6.26_49.seasons[,,j], i = j)
+  ADV[[j]][,,2] = Adv(variable = t6.26_99.seasons, u = u6.26_99.seasons[,,j], v = v6.26_99.seasons[,,j], i = j)
+  
+  ADV[[j]][,,3] = Adv(variable = t6.85_49.seasons, u = u6.85_49.seasons[,,j], v = v6.85_49.seasons[,,j], i = j)
+  
+  ADV[[j]][,,4] = Adv(variable = t6.85_99.seasons, u = u6.85_99.seasons[,,j], v = v6.85_99.seasons[,,j], i = j)
+  
+  ADV[[j]][,,5] = Adv(variable = hu6.26_49.seasons, u = u6.26_49.seasons[,,j], v = v6.26_49.seasons[,,j], i = j)
+  ADV[[j]][,,6] = Adv(variable = hu6.26_99.seasons, u = u6.26_99.seasons[,,j], v = v6.26_99.seasons[,,j], i = j)
+  
+  ADV[[j]][,,7] = Adv(variable = hu6.85_49.seasons, u = u6.85_49.seasons[,,j], v = v6.85_49.seasons[,,j], i = j)
+  ADV[[j]][,,8] = Adv(variable = hu6.85_99.seasons, u = u6.85_99.seasons[,,j], v = v6.85_99.seasons[,,j], i = j)
+  
+}
 
-
-
-
-
-
-
+topo = c("topo1", "topo2")
+for(z in 1:2){
+ 
+   for(j in 1:8){
+    
+    aux = array(ADV[[z]][,,j], dim = c(dim(ADV[[z]][,,1]),1))
+    auxu = array(u[[j]][lons[[z]],lats[[z]],z], c(dim(u[[j]])))
+    auxv = array(v[[j]][lons[[z]],lats[[z]],z], c(dim(v[[j]])))
+    
+    anio = ifelse(test = j%%2 == 0, yes = "99", no = "49")
+    
+    if(j > 4){
+      tq = "q"; revert = "no"; color = "BrBG"; breaks = seq(-0.010, 0.010, by = 0.002); escala = c(-0.010, 0.010); vnom = "hu6"
+    } else {
+      tq = "T"; revert = "si"; color = "RdBu"; breaks = seq(-10, 10, by = 2); escala = c(-10, 10); vnom = "t6"
+    }
+    
+    rcp = ifelse(test = j<=2 | j<=6 & j>=5, yes = "26", no = "85")
+    ssp = ifelse(test = j<=2 | j<=6 & j>=5, yes = "SSP1-2.6", no = "SSP5-8.5")
+  
+    
+    
+    mapa_topo(lista = aux, u = auxu, v = auxv, titulo = paste("Advección ", tq," y viento en 850hPa 2020 - 20", anio, " ", ssp, sep = "")
+              , nombre_fig = paste(vnom, ".", rcp, "_", anio,".adv_", nombre[z], sep = ""), escala = escala
+              , label_escala = "", resta = 0, brewer = color, revert = revert, niveles = 9
+              , contour = "si", lon = lon[lons[[z]]], lat = lat[lats[[z]]], escala_dis = breaks
+              , breaks_c_f = breaks, r = 1, na_fill = 0, topo = topo[z], altura = 1500, salida = "/Salidas/TP2/")
+    
+    
+  }
+}
 
