@@ -2045,3 +2045,14 @@ Dx = function(arr,dx, es){
 }
 
 
+
+#### Adveccion ####
+Adv = function(variable, u, v, i){
+  
+  v.dx = Dx(arr = variable[lons[[i]], lats[[i]], i], dx = 2.5, es = "no")
+  v.dy = Dy(arr = variable[lons[[i]], lats[[i]], i], dy = 2.5)
+    
+  adv = -1*(u[lons[[i]],lats[[i]]]*v.dx + v[lons[[i]],lats[[i]]]*v.dy)
+    
+  return(adv)
+}
