@@ -1572,7 +1572,7 @@ mapa_cont = function(lista, lista2, lista3, titulo, nombre_fig,
         
         geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black", show.legend = F) +
         
-        
+        stat_contour(data = data, aes(x = lon, y = lat, z = temp), color = "yellow1", size = 1, breaks = 180 )+
         stat_contour(data = data2, aes(x = lon, y = lat, z = temp2), color = "orange1", size = 1, breaks = 180 )+
         stat_contour(data = data3, aes(x = lon, y = lat, z = temp3), color = "red1", size = 1, breaks = 180 )+
         
