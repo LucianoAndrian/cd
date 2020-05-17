@@ -36,13 +36,13 @@ source("TP2_carga.R")
 #--- Precipitacion ---#
 
 aux = array(pp5.his_seasons[lons[[1]], lats[[1]],1], c(length(lons[[1]]),length(lats[[1]]),1))
-mapa_topo2(lista = aux, titulo = "Precipitación media 1975 - 2005  - JJA", nombre_fig = "pp5.his_asia.jja", escala = c(0,600)
+mapa_topo2(lista = aux, titulo = "Precipitación media CNRM-CM5 1975 - 2005  - JJA", nombre_fig = "pp5.his_asia.jja", escala = c(0,600)
            , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
            , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
            , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
 
 aux = array(pp5.his_seasons[lons[[1]], lats[[1]],2], c(length(lons[[1]]),length(lats[[1]]),1))
-mapa_topo2(lista = aux, titulo = "Precipitación media 1975 - 2005  - DFJ", nombre_fig = "pp5.his_asia.djf", escala = c(0,600)
+mapa_topo2(lista = aux, titulo = "Precipitación media CNRM-CM5 1975 - 2005  - DFJ", nombre_fig = "pp5.his_asia.djf", escala = c(0,600)
            , label_escala = "mm", resta = 0, brewer = "YlGnBu", revert = "no", niveles = 9, contour = "si"
            , lon = lon[lons[[1]]], lat = lat[lats[[1]]], escala_dis = seq(0, 600, by = 50), breaks_c_f = seq(0, 600, by = 50), r = 1, na_fill = -1000
            , topo = "topo1", altura = 1500, salida = "/Salidas/TP2/")
@@ -517,3 +517,10 @@ for(z in 1:2){
   }
 }
 
+
+
+#### Graficos para presentacion ####
+# hacer con mapa_topo3, 
+# periodos historicos de pp marcando la zona monzonica. 
+# (esto mismo se podria hacer para el resto de los graficos q se van a usar de PP(3~4), tambien para los de adveccion)
+# ver, si en los de temp y hu, es conveniente marcar los maximos de pp o la zona monzonica de la misma forma
