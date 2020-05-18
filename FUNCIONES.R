@@ -1298,7 +1298,7 @@ DrawMonsoon = function(modelo){
     periodo = c("2020 - 2049",  "2070 - 2099")
     periodo.fig = c("49", "99")
     seasons = c("JJA", "DJF")
-    topo = c("topo1", "topo2")
+    topo = c("asia", "sa")
     
     
     
@@ -1319,7 +1319,7 @@ DrawMonsoon = function(modelo){
             resta = 0
             label_escala = "mm"
             colores = "YlGnBu"
-            revert = "no"
+            revert = F
             niveles = 9
             breaks = seq(0,600, by = 50)
           } else {
@@ -1327,7 +1327,7 @@ DrawMonsoon = function(modelo){
             resta = 273
             label_escala = "ºC"
             colores = "Spectral"
-            revert = "si"
+            revert = T
             niveles = 11
             breaks = seq(0, 35, by = 2.5)
           }
@@ -1336,19 +1336,27 @@ DrawMonsoon = function(modelo){
             
             per = periodo[p] 
             p.f = periodo.fig[p]
+            areaaux = AreaMonsoon(variable = paste(var.fig[j],".", rcp.fig[i], "_", periodo.fig[p], sep = ""))
             
-            for(s in 1:2){
-              
-              seas = seasons[s]
-              
-              aux2 = array(data = aux[lons[[z]], lats[[z]], i, j, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
-              
-              mapa_topo2(lista = aux2, titulo = paste(v, modelo, rcp.n, per, seas, sep = " "), nombre_fig = paste(v.f, ".", rcp.f, "_", p.f, "_", zona[z], ".", seas, sep = "" )
-                         , escala = escala, label_escala = label_escala, resta = resta, brewer = colores, revert = revert, niveles = niveles
-                         , contour = "si", lon = lon[lons[[z]]], lat = lat[lats[[z]]], escala_dis = breaks, breaks_c_f = breaks, r = 1, na_fill = -10000
-                         , topo = topo[z], altura = 1500, salida = "/Salidas/TP2/")
-              
+            if(z == 1){
+              seas = seasons[1]
+              s = 1
+            } else {
+              seas = seasons[2]
+              s = 2
             }
+            
+            auxa = array(areaaux[[z]][lons[[z]], lats[[z]]], c(length(lons[[1]]),length(lats[[1]]),1))
+            
+            aux2 = array(data = aux[lons[[z]], lats[[z]], i, j, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+            
+            mapa_topo3(variable = aux2, titulo = paste(v, modelo, rcp.n, per, seas, sep = " "), nombre.fig = paste(v.f, ".", rcp.f, "_", p.f, "_", zona[z], ".", seas, sep = "" )
+                       , escala = breaks, label.escala = label_escala, resta = resta, colorbar = colores, revert = revert, niveles = niveles
+                       , topo = topo[z], lon = lon[lons[[z]]], lat = lat[lats[[z]]], altura.topo = 1500, salida = "/Salidas/TP2/drawmonsoon/"
+                       , contour = T, variable2 = auxa, nivel.v2 = 180, color.v2 = "firebrick", x.label = "Longitud", y.label = "Latitud", width = 30)
+            
+            
+            
           }
         }
       }
@@ -1371,7 +1379,7 @@ DrawMonsoon = function(modelo){
     periodo = c("2020 - 2049",  "2070 - 2099")
     periodo.fig = c("49", "99")
     seasons = c("JJA", "DJF")
-    topo = c("topo1", "topo2")
+    topo = c("asia", "sa")
     
     for(z in 1:2){
       
@@ -1390,17 +1398,22 @@ DrawMonsoon = function(modelo){
             resta = 0
             label_escala = "mm"
             colores = "YlGnBu"
-            revert = "no"
+            revert = F
             niveles = 9
-            breaks = seq(0,600, by = 50)
+            breaks = seq(0,700, by = 50)
           } else if(j == 2 ){
             escala = c(0,35)
             resta = 273
             label_escala = "ºC"
             colores = "Spectral"
-            revert = "si"
+            revert = T
             niveles = 11
-            breaks = seq(0, 35, by = 2.5)
+            if(z == 1){
+              breaks = seq(0, 40, by = 2.5)
+            } else {
+              breaks = seq(0, 35, by = 2.5)
+            }
+            
           } else {
             if(z == 1){
               escala = c(0,0.03)
@@ -1409,13 +1422,13 @@ DrawMonsoon = function(modelo){
             } else {
               
               escala = c(0,0.02)
-              breaks = seq(0, 0.02, by = 0.002)
+              breaks = seq(0, 0.03, by = 0.002)
               
             }
             resta = 0
-            label_escala = "?"
+            label_escala = ""
             colores = "PuBuGn"
-            revert = "no"
+            revert = F
             niveles = 9
             
           }
@@ -1425,23 +1438,33 @@ DrawMonsoon = function(modelo){
             
             per = periodo[p] 
             p.f = periodo.fig[p]
+            areaaux = AreaMonsoon(variable = paste(var.fig[1], ".", rcp.fig[i], "_", periodo.fig[p], sep = ""))
             
-            for(s in 1:2){
-              
-              seas = seasons[s]
-              
-              
-              
-              aux2 = array(data = aux[lons[[z]], lats[[z]], i, j, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
-              auxu = array(data = auxV[lons[[z]], lats[[z]], i, 1, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
-              auxv = array(data = auxV[lons[[z]], lats[[z]], i, 2, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
-              
-              mapa_topo(lista = aux2, u = auxu, v = auxv , titulo = paste(v, modelo, rcp.n, per, seas, sep = " "), nombre_fig = paste(v.f, ".", rcp.f, "_", p.f, "_", zona[z], ".", seas, sep = "" )
-                        , escala = escala, label_escala = label_escala, resta = resta, brewer = colores, revert = revert, niveles = niveles
-                        , contour = "si", lon = lon[lons[[z]]], lat = lat[lats[[z]]], escala_dis = breaks, breaks_c_f = breaks, r = 1, na_fill = -10000
-                        , topo = topo[z], altura = 1500, salida = "/Salidas/TP2/")
-              
+            
+            if(z == 1){
+              seas = seasons[1]
+              s = 1
+            } else {
+              seas = seasons[2]
+              s = 2
             }
+            
+            
+            
+            auxa = array(areaaux[[z]][lons[[z]], lats[[z]]], c(length(lons[[1]]),length(lats[[1]]),1))
+            
+            aux2 = array(data = aux[lons[[z]], lats[[z]], i, j, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+            auxu = array(data = auxV[lons[[z]], lats[[z]], i, 1, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+            auxv = array(data = auxV[lons[[z]], lats[[z]], i, 2, p, s], dim = c(length(lons[[z]]), length(lats[[z]]),1))
+            
+            mapa_topo3(variable = aux2, viento = T, u = auxu, v = auxv
+                       , titulo = paste(v, modelo, rcp.n, per, seas, sep = " "), nombre.fig = paste(v.f, ".", rcp.f, "_", p.f, "_", zona[z], ".", seas, sep = "" )
+                       , escala = breaks, label.escala = label_escala, resta = resta, colorbar = colores, revert = revert, niveles = niveles
+                       , lon = lon[lons[[z]]], lat = lat[lats[[z]]], topo = topo[z], altura.topo = 1500, salida = "/Salidas/TP2/drawmonsoon/"
+                       , contour = T, variable2 = auxa, nivel.v2 = 180, color.v2 = "firebrick", x.label = "Longitud", y.label = "Latitud", width = 30)
+            
+            
+            
           }
         }
       }
