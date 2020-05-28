@@ -78,7 +78,7 @@ open_nc = function(file_pattern, model, variable, mes_anual){
     W = list()
     W[[1]] = V
     W[[2]] = V2
-    W[[3]] = v_anu_3_2 # para tener los meses # ! los años en este array van de marzo a febrero, comenzando en marzo del 1975 hasta febrero de 2005
+    W[[3]] = v_v
     return(W)
     
   }
@@ -1315,13 +1315,13 @@ DrawMonsoon = function(modelo){
           v.f = var.fig[j]
           
           if(j == 1){
-            escala = c(0,600)
+            escala = c(0,700)
             resta = 0
             label_escala = "mm"
             colores = "YlGnBu"
             revert = F
             niveles = 9
-            breaks = seq(0,600, by = 50)
+            breaks = seq(0,700, by = 50)
           } else {
             escala = c(0,35)
             resta = 273
@@ -1394,7 +1394,7 @@ DrawMonsoon = function(modelo){
           v.f = var.fig[j]
           
           if(j == 1){
-            escala = c(0,600)
+            escala = c(0,700)
             resta = 0
             label_escala = "mm"
             colores = "YlGnBu"
@@ -1421,7 +1421,7 @@ DrawMonsoon = function(modelo){
               
             } else {
               
-              escala = c(0,0.02)
+              escala = c(0,0.03)
               breaks = seq(0, 0.03, by = 0.002)
               
             }
@@ -2088,16 +2088,11 @@ Adv = function(variable, u, v, i){
   return(adv)
 }
 #### MAPA_TOPO3.0 ####
-
-# intento de optimizar funciones mapas, que se les fueron agregando cada vez mas cosas.
-# con esta, no haria falta mapa_topo y mapa_topo2
-# ver, new_scale para agregar varios contornos. Actualmente esta pensada para unos pocos con el unico fin de mostrar algo particular.
-
-mapa_topo3 = function(variable, variable2 = NULL, u = NULL, v = NULL, lon, lat, contour.fill = T, contour = F, viento = F
-                      , colorbar = "Spectral", niveles = 9, revert = F, escala = NULL, resta = 0, resta.v2 = 0, nivel.v2 = NULL, color.v2 = "red"
-                      , titulo = NULL, label.escala = "value", x.label = "x", y.label = "y"
-                      , topo = NULL, altura.topo = 0, r = 1, na.fill = NULL, nombre.fig = "fig", width = 25, height = 20, salida = NULL){
-
+mapa_topo3 = function(variable, variable.sig = NULL, variable.cont = NULL, u = NULL, v = NULL, lon, lat, contour.fill = T, contour = F, viento = F
+                      , colorbar = "Spectral", niveles = 9, revert = F, escala = NULL, resta = 0, resta.vsig = 0, resta.vcont = 0, nivel.vcont = NULL, color.vsig = "black", color.vcont = "red", alpha.vsig, sig = F
+                      , titulo = NULL, label.escala = "value", x.label = "x", y.label = "y", fill.mapa = F, colorbar.pos = "right"
+                      , mapa = NULL, altura.topo = 0, r = 1, na.fill = NULL, nombre.fig = "fig", width = 25, height = 20, salida = NULL){
+  
   library(maps)
   library(ncdf4)
   require(fields)
@@ -2108,67 +2103,89 @@ mapa_topo3 = function(variable, variable2 = NULL, u = NULL, v = NULL, lon, lat, 
   library(metR)
   
   ruta = getwd()
-
+  
   
   limites = c(min(escala), max(escala))
   
-  if(topo == "asia"){
+  if(mapa == "asia"){
     
-    load("RDatas/topo_india.RData")
-    topo2 = topo_india
-    rm(topo_india)
+    #load("RDatas/topo_india.RData")
+    #topo2 = topo_india
+    #rm(topo_india)
     
-    topo2[which(topo2$h<altura.topo)]=NA
-  
-    mapa <- map_data("world2", region = c("India", "Sri Lanka", "Bangladesh", "Nepal", "Bhutan", "Pakistan"
-                                          ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
-                                          , "Malasya", "United Arab Emirates", "Singapur", "Myanmar", "Iran", 
-                                          "Turkmenistan", "Afghanistan", "Tajikistan", "Uzbekistan", "Kyrgyzstan", "China", "Mongolia", 
-                                          "Bangladesh", "North Korea", "South Korea",  "Taiwan", "Laos", "Thailand", "Vietnam", "Cambodia", 
-                                          "Malasya", "Indonesia", "Philippines"), colour = "black")
+    #topo2[which(topo2$h<altura.topo)]=NA
+    
+    map <- map_data("world2", region = c("India", "Sri Lanka", "Bangladesh", "Nepal", "Bhutan", "Pakistan"
+                                         ,"Oman", "Yemen", "Somalia", "Eriopia", "Birmania"
+                                         , "Malasya", "United Arab Emirates", "Singapur", "Myanmar", "Iran", 
+                                         "Turkmenistan", "Afghanistan", "Tajikistan", "Uzbekistan", "Kyrgyzstan", "China", "Mongolia", 
+                                         "Bangladesh", "North Korea", "South Korea",  "Taiwan", "Laos", "Thailand", "Vietnam", "Cambodia", 
+                                         "Malasya", "Indonesia", "Philippines"), colour = "black")
     
     breaks.lon = seq(40, 140, by = 10)
     breaks.lat = seq(-10, 55, by = 10)
     
-  } else {
+  } else if(mapa == "mundo"){
     
-    load("RDatas/topo_sa.RData")
-    topo2 = topo_sa
-    rm(topo_sa)
+    map = map_data("world2", colour = "black")
+    
+    breaks.lon = seq(0, 360, by = 30)
+    breaks.lat = seq(-90, 90, by = 20)
+    
+    
+  } else if(mapa == "sa") {
+    
+    load("topo.RData")
+    topo2 = topo
+    rm(topo)
     
     topo2[which(topo2$h<altura.topo)]=NA
-
-    mapa <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela","Argentina", "Chile", "Uruguay",
-                                          "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
-                                          "Martinique"), colour = "black")
+    
+    map <- map_data("world2", region = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela","Argentina", "Chile", "Uruguay",
+                                         "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
+                                         "Martinique"), colour = "black")
     
     
     breaks.lon = seq(250, 350, by = 10)
     breaks.lat = seq(-60, 20, by = 10)
     
   }
-    
-    g = list()
-    num = seq(1, r, by = 1)
-    
-    for(i in 1:r){
   
-      data = expand.grid(lon = lon, lat = lat)
+  g = list()
+  num = seq(1, r, by = 1)
   
-      data[,3] = array(variable[,,i], dim = length(lon)*length(lat)) - resta
-      
-      colnames(data)<-c("lon", "lat", "var")
+  for(i in 1:r){
+    
+    data = expand.grid(lon = lon, lat = lat)
+    
+    data[,3] = array(variable[,,i], dim = length(lon)*length(lat)) - resta
+    
+    colnames(data)<-c("lon", "lat", "var")
+    
+    if(mapa == "SA"){
       
       g = ggplot(topo2, aes(lon, lat)) + theme_minimal() +
         xlab(x.label) + ylab(y.label) + 
         theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
         geom_tile(data = data, aes(x = lon, y = lat, fill = var), alpha = 0.8, na.rm = T) 
       
+      
+    } else {
+      
+      g = ggplot() + theme_minimal() +
+        xlab(x.label) + ylab(y.label) + 
+        theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+        geom_tile(data = data, aes(x = lon, y = lat, fill = var), alpha = 0.8, na.rm = T) 
+      
+    }
+    
+    if(colorbar.pos == "right"){
+      
       if(contour.fill == T & revert == T ){
         
-      g = g +  geom_contour_fill(data = data, aes(x = lon, y = lat, z = var),alpha = 1, na.fill = na.fill , breaks = escala) +
-        scale_fill_stepsn(limits = limites, name = label.escala, colours = rev(brewer.pal(n=niveles , colorbar)), na.value = "white", breaks = escala,
-                          guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) 
+        g = g +  geom_contour_fill(data = data, aes(x = lon, y = lat, z = var),alpha = 1, na.fill = na.fill , breaks = escala) +
+          scale_fill_stepsn(limits = limites, name = label.escala, colours = rev(brewer.pal(n=niveles , colorbar)), na.value = "white", breaks = escala,
+                            guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T))
       } else if(contour.fill == T & revert == F ){
         g = g +  geom_contour_fill(data = data, aes(x = lon, y = lat, z = var),alpha = 1, na.fill = na.fill , breaks = escala) +
           scale_fill_stepsn(limits = limites, name = label.escala, colours = brewer.pal(n=niveles , colorbar), na.value = "white", breaks = escala,
@@ -2181,45 +2198,122 @@ mapa_topo3 = function(variable, variable2 = NULL, u = NULL, v = NULL, lon, lat, 
                               guide = guide_colorbar(barwidth = 1, barheight = 20, title.position = "top", title.hjust = 0.5, raster = F, ticks = T)) 
       }
       
-      g = g + geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black", show.legend = F) 
       
-      if(viento == T){
-        
-        u = array(u[,,i], dim = length(lon)*length(lat))
-        v = array(v[,,i], dim = length(lon)*length(lat))
-        
-        data = cbind(data, u)
-        data = cbind(data, v)
-        
-        colnames(data)<-c("lon", "lat", "temp", "u", "v")
-        
-       g = g +  geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black"
-                        , skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)
-      } 
+    } else {
       
-      
-      g = g + geom_polygon(data = mapa, aes(x = long ,y = lat, group = group),fill = NA, color = "black") 
-      
-      if(contour == T){
+      if(contour.fill == T & revert == T ){
         
-        data2 = expand.grid(lon = lon, lat = lat)
-        data2[,3] = array(variable2[,,i], dim = length(lon)*length(lat)) - resta.v2
-        colnames(data2)<-c("lon", "lat", "cont")
-        
-        g = g +  stat_contour(data = data2, aes(x = lon, y = lat, z = cont), color = color.v2, size = 1, breaks = nivel.v2 )
-        
+        g = g +  geom_contour_fill(data = data, aes(x = lon, y = lat, z = var),alpha = 1, na.fill = na.fill , breaks = escala) +
+          scale_fill_stepsn(limits = limites, name = label.escala, colours = rev(brewer.pal(n=niveles , colorbar)), na.value = "white", breaks = escala,
+                            guide = guide_colorbar(barwidth = 35, barheight = 0.8, title.position = "left", title.hjust = 0.5, raster = F, ticks = T, direction = "horizontal")) 
+      } else if(contour.fill == T & revert == F ){
+        g = g +  geom_contour_fill(data = data, aes(x = lon, y = lat, z = var),alpha = 1, na.fill = na.fill , breaks = escala) +
+          scale_fill_stepsn(limits = limites, name = label.escala, colours = brewer.pal(n=niveles , colorbar), na.value = "white", breaks = escala,
+                            guide = guide_colorbar(barwidth = 35, barheight = 0.8, title.position = "left", title.hjust = 0.5, raster = F, ticks = T, direction = "horizontal")) 
+      } else if(contour.fill == F & revert == T){
+        g = g + scale_fill_stepsn(limits = limites, name = label.escala, colours = rev(brewer.pal(n=niveles , colorbar)), na.value = "white", breaks = escala,
+                                  guide = guide_colorbar(barwidth = 35, barheight = 0.8, title.position = "left", title.hjust = 0.5, raster = F, ticks = T, direction = "horizontal")) 
+      } else {
+        g + scale_fill_stepsn(limits = limites, name = label.escala, colours = brewer.pal(n=niveles , colorbar), na.value = "white", breaks = escala,
+                              guide = guide_colorbar(barwidth = 35, barheight = 0.8, title.position = "left", title.hjust = 0.5, raster = F, ticks = T, direction = "horizontal")) 
       }
-        
-       g = g + ggtitle(titulo) +
-        scale_x_longitude(breaks = breaks.lon, name = x.label)+
-        scale_y_latitude(breaks = breaks.lat, name = y.label)+
-        theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
-              axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-              panel.border = element_rect(colour = "black", fill = NA, size = 3),
-              panel.ontop = TRUE,
-              plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black")
       
-      ggsave(paste(ruta, salida, nombre.fig, num[i], ".jpg", sep = ""), plot = g, width = width, height = height, units = "cm")
       
     }
-}     
+    
+    if(sig == T){
+      
+      data2 = expand.grid(lon = lon, lat = lat)
+      data2[,3] = array(variable.sig[,,i], dim = length(lon)*length(lat)) - resta.vsig
+      colnames(data2)<-c("lon", "lat", "var")
+      
+      g = g +  geom_tile(data = subset(data2, is.na(var)),aes(x = lon, y = lat, fill = is.na(var)), alpha = alpha.vsig, fill = color.vsig, show.legend = F)
+      
+      
+    }
+    
+    
+    if(mapa == "SA"){
+      
+      g = g + geom_tile(aes(fill = h ), na.rm = T, alpha = 0.1, color = "black", show.legend = F) 
+      
+    }
+    
+    if(viento == T){
+      
+      u = array(u[,,i], dim = length(lon)*length(lat))
+      v = array(v[,,i], dim = length(lon)*length(lat))
+      
+      data = cbind(data, u)
+      data = cbind(data, v)
+      
+      colnames(data)<-c("lon", "lat", "temp", "u", "v")
+      
+      g = g +  geom_arrow(data = data, aes(x = lon, y = lat, dx = u*2, dy = v*2), color = "black"
+                          , skip.x = 0, skip.y = 0, arrow.length = 0.5, na.rm = T, show.legend = F)
+    } 
+    
+    
+    if(fill.mapa == T){
+      g = g + geom_polygon(data = map, aes(x = long ,y = lat, group = group),fill = "black", color = "black", alpha = 0.3) 
+    } else {
+      g = g + geom_polygon(data = map, aes(x = long ,y = lat, group = group),fill = NA, color = "black") 
+    }
+    
+    
+    
+    if(contour == T){
+      
+      data2 = expand.grid(lon = lon, lat = lat)
+      data2[,3] = array(variable.cont[,,i], dim = length(lon)*length(lat)) - resta.vcont
+      colnames(data2)<-c("lon", "lat", "cont")
+      
+      g = g +  stat_contour(data = data2, aes(x = lon, y = lat, z = cont), color = color.vcont, size = 1, breaks = nivel.vcont )
+      
+    }
+    
+    g = g + ggtitle(titulo) +
+      scale_x_longitude(breaks = breaks.lon, name = x.label)+
+      scale_y_latitude(breaks = breaks.lat, name = y.label)+
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, size = 3),
+            panel.ontop = TRUE,
+            plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = 0, color = "black") 
+    if(colorbar.pos == "bottom"){
+      g = g + theme(legend.position = "bottom")
+    }
+    
+    
+    ggsave(paste(ruta, salida, nombre.fig, num[i], ".jpg", sep = ""), plot = g, width = width, height = height, units = "cm")
+    
+  }
+}  
+#### OPEN_NCOBS.TP3 ####
+open_ncobs.tp3 = function(variable){
+  
+  # separando en estaciones, años de marzo a febrero, empezando en marzo del '76 hasta febrero del '05
+  aux = variable[,,(3+12):(2+12*30)] # tiene un año mas, +12
+  
+  v.obs_anio_mf = array(NA, dim = c(144, 73, 29, 12)) 
+  
+  for(j in 1:12){
+    for (i in 0:28){
+      v.obs_anio_mf[,,1+i,j] = aux[ , , j+12*i]
+    }
+  }
+  
+  #promediando Estaciones en orden MAM, JJA, SON, DJF
+  v.obs_seasons = array(NA, dim = c(144, 73, 4, 29))
+  i=1
+  while(i<=4){
+    v.obs_seasons[,,i,] = apply(v.obs_anio_mf[,,,(i + 2*i - 2):(i+2*i)], c(1,2,3), mean)
+    
+    i = i + 1
+  }
+  
+  return(v.obs_seasons)
+  
+}
+
+
