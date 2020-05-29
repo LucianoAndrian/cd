@@ -2323,8 +2323,8 @@ EntalpiaHR = function(t, hr, p){
   
   t[which(t<0 | t > 40)] = NA
   # OBS, usando HR
-  H.obs = (1.007*t + 0.026) + (2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t))+2))
-  q.porc = ((2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t))+2))/H.obs)*100
+  H.obs = (1.007*t + 0.026) + (2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t)+2))-0.378)
+  q.porc = ((2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)(1+0.00412*t)+2))-0.378)/H.obs)*100
   V = list()
   V[[1]] = H.obs
   V[[2]] = q.porc
@@ -2407,5 +2407,43 @@ EntalpiaQ = function(t){
   V[[1]] = H.mods
   V[[2]] = q.porc
   return(V)
+  
+}
+#### Energia ####
+RhQ = function(rh, p, t){
+  
+  t[which(t<0 | t >40)] = NA
+  p = p*100
+  
+  q = 0.622/(p/((rh/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t)+2))-0.378)
+ 
+  return(q) 
+  
+}
+
+Lv= function(t){
+  # "L" = Lv (original, Henderson - Sellers 1984)
+  if(mean(t)>273){
+    t = t - 273
+  }
+  
+  t[which(t<0 | t >40)] = NA
+  
+  Lv = 2502 - 2.378*t
+  return(Lv)
+  
+}
+
+S = function(t){
+  # s = cp.T + geopot, si geopot ~ 0 --> cp.T ~ 1.007*T - 0.0026
+  if(mean(t)>273){
+    t = t - 273
+  }
+  
+  t[which(t<0 | t >40)] = NA
+  
+  s = 1.007*t - 0.026
+  
+  return(s)
   
 }
