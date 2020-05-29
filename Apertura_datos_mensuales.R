@@ -235,3 +235,63 @@ v6.85_2099 = open_nc(file_pattern = "va850_Amon_CNRM-CM6-1_ssp585_r*_2070-2099_2
                      , model = "cnrm-cm6", variable = "va", mes_anual = "mes")
 save(v6.85_2099, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/v6.85_2099.RData")
 rm(v6.85_2099)
+
+#---- ETP ----# hay solo anual
+#---- historical ----#
+#-------------------------------- etp - his - anual ---------------------------------#
+etp6.his_an = open_nc(file_pattern = "evspsblpot_Emon_CNRM-CM6-1_historical_r*_2.5_anu.nc"
+                  , model = "cnrm-cm6", variable = "evspsblpot", mes_anual = "anual")
+
+save(etp6.his_an, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/etp6.his_an.RData")
+rm(etp6.his_an)
+
+#---- SSP126 ----#
+#-------------------------------- etp - 2049 - anual ---------------------------------#
+etp6.26_49 = open_nc(file_pattern = "evspsblpot_Emon_CNRM-CM6-1_ssp126_r*_2020-2049_2.5_anu.nc"
+                     , model = "cnrm-cm6", variable = "evspsblpot", mes_anual = "anual")
+
+save(etp6.26_49, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/etp6.26_49.RData")
+rm(etp6.26_49)
+
+#-------------------------------- etp - 2099 - anual ---------------------------------#
+etp6.26_99 = open_nc(file_pattern = "evspsblpot_Emon_CNRM-CM6-1_ssp126_r*_2070-2099_2.5_anu.nc"
+                     , model = "cnrm-cm6", variable = "evspsblpot", mes_anual = "anual")
+
+save(etp6.26_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/etp6.26_99.RData")
+rm(etp6.26_99)
+
+
+#---- ssp585 ----#
+#-------------------------------- etp - 2049 - anual ---------------------------------#
+etp6.85_49 = open_nc(file_pattern = "evspsblpot_Emon_CNRM-CM6-1_ssp585_r*_2020-2049_2.5_anu.nc"
+                     , model = "cnrm-cm6", variable = "evspsblpot", mes_anual = "anual")
+
+save(etp6.85_49, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/etp6.85_49.RData")
+rm(etp6.85_49)
+
+#-------------------------------- etp - 2099 - anual ---------------------------------#
+etp6.85_99 = open_nc(file_pattern = "evspsblpot_Emon_CNRM-CM6-1_ssp585_r*_2070-2099_2.5_anu.nc"
+                     , model = "cnrm-cm6", variable = "evspsblpot", mes_anual = "anual")
+
+save(etp6.85_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/etp6.85_99.RData")
+rm(etp6.85_99)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
