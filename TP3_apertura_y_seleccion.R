@@ -116,21 +116,91 @@ save(etp6.85_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.
 rm(etp6.85_99)
 
 
+# etp de CNRM-CM5#
+#---- historical ----#
+#-------------------------------- etp - his - anual ---------------------------------#
+etp5.his_an = open_nc(file_pattern = "etp_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_anu.nc"
+                      , model = "cnrm-cm5", variable = "etp", mes_anual = "anual")
+
+save(etp5.his_an, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/etp5.his_an.RData")
+rm(etp5.his_an)
+
+#---- SSP126 ----#
+#-------------------------------- etp - 2049 - anual ---------------------------------#
+etp5.26_49 = open_nc(file_pattern = "etp_Amon_CNRM-CM5_rcp26_r*_202001-204912_2.5_anu.nc"
+                     , model = "cnrm-cm5", variable = "etp", mes_anual = "anual")
+
+save(etp5.26_49, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/etp5.26_49.RData")
+rm(etp5.26_49)
+
+#-------------------------------- etp - 2099 - anual ---------------------------------#
+etp5.26_99 = open_nc(file_pattern = "etp_Amon_CNRM-CM5_rcp26_r*_207001-209912_2.5_anu.nc"
+                     , model = "cnrm-cm5", variable = "etp", mes_anual = "anual")
+
+save(etp5.26_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/etp5.26_99.RData")
+rm(etp5.26_99)
+
+
+#---- ssp585 ----#
+#-------------------------------- etp - 2049 - anual ---------------------------------#
+etp5.85_49 = open_nc(file_pattern =  "etp_Amon_CNRM-CM5_rcp26_r*_207001-209912_2.5_anu.nc"
+                     , model = "cnrm-cm5", variable = "etp", mes_anual = "anual")
+
+save(etp5.85_49, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/etp5.85_49.RData")
+rm(etp5.85_49)
+
+#-------------------------------- etp - 2099 - anual ---------------------------------#
+etp5.85_99 = open_nc(file_pattern = "etp_Amon_CNRM-CM5_rcp85_r*_202001-204912_2.5_anu.nc"
+                     , model = "cnrm-cm5", variable = "etp", mes_anual = "anual")
+
+save(etp5.85_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/etp5.85_99.RData")
+rm(etp5.85_99)
+
+
+
+# TEMP  CNRM-CM5  
 
 
 
 
+#---- historical ----#
+#-------------------------------- t - his - anual ---------------------------------#
+t5.his_an = open_nc(file_pattern = "tas_Amon_CNRM-CM5_historical_r*_197601-200512_2.5_anu.nc"
+                    , model = "cnrm-cm5", variable = "tas", mes_anual = "anual")
+
+save(t5.his_an, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/t5.his_an.RData")
+rm(t5.his_an)
+
+#---- SSP126 ----#
+#-------------------------------- t - 2049 - anual ---------------------------------#
+t5.26_49 = open_nc(file_pattern = "tas_Amon_CNRM-CM5_rcp26_r*_202001-204912_2.5_anu.nc"
+                   , model = "cnrm-cm5", variable = "tas", mes_anual = "anual")
+
+save(t5.26_49, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/t5.26_49.RData")
+rm(t5.26_49)
+
+#-------------------------------- t - 2099 - anual ---------------------------------#
+t5.26_99 = open_nc(file_pattern = "tas_Amon_CNRM-CM5_rcp26_r*_207001-209912_2.5_anu.nc"
+                   , model = "cnrm-cm5", variable = "tas", mes_anual = "anual")
+
+save(t5.26_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/t5.26_99.RData")
+rm(t5.26_99)
 
 
+#---- ssp585 ----#
+#-------------------------------- t - 2049 - anual ---------------------------------#
+t5.85_49 = open_nc(file_pattern =  "tas_Amon_CNRM-CM5_rcp85_r*_202001-204912_2.5_anu.nc"
+                   , model = "cnrm-cm5", variable = "tas", mes_anual = "anual")
 
+save(t5.85_49, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/t5.85_49.RData")
+rm(t5.85_49)
 
+#-------------------------------- t - 2099 - anual ---------------------------------#
+t5.85_99 = open_nc(file_pattern = "tas_Amon_CNRM-CM5_rcp85_r*_207001-209912_2.5_anu.nc"
+                   , model = "cnrm-cm5", variable = "tas", mes_anual = "anual")
 
-
-
-
-
-
-
+save(t5.85_99, file = "/home/auri/Facultad/Materias/c-dinamica/TPs/RDatas/TP3.RDatas/t5.85_99.RData")
+rm(t5.85_99)
 
 
 
