@@ -2317,3 +2317,95 @@ open_ncobs.tp3 = function(variable){
 }
 
 
+
+#### ENTALPIAs #####
+EntalpiaHR = function(t, hr, p){
+  
+  t[which(t<0 | t > 40)] = NA
+  # OBS, usando HR
+  H.obs = (1.007*t + 0.026) + (2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t))+2))
+  q.porc = ((2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t))+2))/H.obs)*100
+  V = list()
+  V[[1]] = H.obs
+  V[[2]] = q.porc
+  return(V)
+  
+}
+
+EntalpiaQ = function(t){
+  if(t == "t6.his"){
+    load("RDatas/TP3.RDatas/t6.his.RData")
+    load("RDatas/TP3.RDatas/hu6.his.RData")
+    t.aux = t6.his[[1]]
+    hu.aux = hu6.his[[1]]
+    rm(t6.his, hu6.his)
+    
+  } else if(t == "t6.26_49") {
+    load("RDatas/TP3.RDatas/t6.26_2049.RData")
+    load("RDatas/TP3.RDatas/hu6.26_2049.RData")
+    t.aux = t6.26_2049[[1]]
+    hu.aux = hu6.26_2049[[1]]
+    rm(t6.26_2049, hu6.26_2049)
+    
+  } else if(t == "t6.26_99") {
+    load("RDatas/TP3.RDatas/t6.26_2099.RData")
+    load("RDatas/TP3.RDatas/hu6.26_2099.RData")
+    t.aux = t6.26_2099[[1]]
+    hu.aux = hu6.26_2099[[1]]
+    rm(t6.26_2099, hu6.26_2099)
+    
+  } else if(t == "t6.85_49") {
+    load("RDatas/TP3.RDatas/t6.85_2049.RData")
+    load("RDatas/TP3.RDatas/hu6.85_2049.RData")
+    t.aux = t6.85_2049[[1]]
+    hu.aux = hu6.85_2049[[1]]
+    rm(t6.85_2049, hu6.85_2049)
+    
+  } else if(t == "t6.85_99") {
+    load("RDatas/TP3.RDatas/t6.85_2099.RData")
+    load("RDatas/TP3.RDatas/hu6.85_2099.RData")
+    t.aux = t6.85_2099[[1]]
+    hu.aux = hu6.85_2099[[1]]
+    rm(t6.85_2099, hu6.85_2099)
+    
+  } else if(t == "t5.26_49") {
+    load("RDatas/TP3.RDatas/t5.26_49.RData")
+   
+    t.aux = t5.26_49[[1]]
+    hu.aux = NULL
+    rm(t5.26_49)
+    
+  } else if(t == "t5.26_99") {
+    load("RDatas/TP3.RDatas/t5.26_99.RData")
+    
+    t.aux = t5.26_99[[1]]
+    hu.aux = NULL
+    rm(t5.26_99)
+    
+  } else if(t == "t5.85_99") {
+    load("RDatas/TP3.RDatas/t5.85_99.RData")
+
+    t.aux = t5.85_99[[1]]
+    hu.aux = 1
+    rm(t5.85_99)
+    
+  } 
+  
+  t.aux = t.aux-273
+  t.aux[which(t.aux<0 | t.aux > 40)] = NA
+  Ha = 1.007*(t.aux) - 0.026
+  if(length(hu.aux) == 1 ){
+    Hv = 0
+  } else {
+    Hv = (hu.aux[,,,1:length(t.aux[1,1,1,])]/1000)*(2502 - 0.538*(t.aux))
+  }
+  
+  H.mods = Ha + Hv
+  q.porc = (Hv/H.mods)*100
+  
+  V = list()
+  V[[1]] = H.mods
+  V[[2]] = q.porc
+  return(V)
+  
+}
