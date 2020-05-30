@@ -34,17 +34,20 @@ open_nc = function(file_pattern, model, variable, mes_anual){
     
   } else {
     
+    if(r > 10){
+      r  = 10 # los historical que tiene r30 los RData pesan mas de 1gb... 
+    }
     
     V =  array(data = NA, dim = c(144, 73, 4, r)) # --> quedan los miembros. (se puede hacer el ensamble en el futuro, operando sobre V (o cambiar todo..))
     V2 = array(data = NA, dim = c(144, 73, 4, 29, r))  ## --> por si es necesario
-    
+    V3 = array(data = NA, dim = c(144, 73, 360, r))
     for(m in 1:r){
       
       v_nc = nc_open(t[m])
       v_v = ncvar_get(v_nc, variable)
       nc_close(v_nc)
       v = v_v[,, 3:350] 
-      
+      V3[,,,m] = v_v
       v_anu_3_2 = array(NA, dim = c(144, 73, 29, 12)) 
       
       # años de marzo a feb
@@ -72,14 +75,15 @@ open_nc = function(file_pattern, model, variable, mes_anual){
       }
       
       V[,,,m] =   v_estaciones_prom 
-      
+      print(m)
     }
     
     W = list()
     W[[1]] = V
     W[[2]] = V2
-    W[[3]] = v_v
+    W[[3]] = V3
     return(W)
+
     
   }
   
