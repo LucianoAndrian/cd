@@ -1,9 +1,10 @@
 #TP3 Energia 
 library(ncdf4)
+source("FUNCIONES.R")
 # carga de datos.
 #### Observaciones ####
 
-# Temperatura
+# TEMP
 aux = nc_open(paste(getwd(), "/TP3datos.obs/tmp.mon.mean.nc", sep = ""))
 t.obs = ncvar_get(aux, "air")
 lon.obs = ncvar_get(aux, "lon")
@@ -15,8 +16,9 @@ t.obs = t.obs[,ncol(t.obs):1,]
 
 t.obs_seasons = open_ncobs.tp3(t.obs)
 t.obs_anual = t.obs[,,13:372] # sacando 1975
+t.obs_anual.mean = AnualMean(t.obs_anual)
 
-# humedad 
+# HR 
 
 aux = nc_open(paste(getwd(), "/TP3datos.obs/rhum.mon.mean.nc", sep = ""))
 hu.obs = ncvar_get(aux, "rhum")
@@ -27,70 +29,320 @@ hu.obs = hu.obs[,ncol(hu.obs):1,]
 
 hu.obs_seasons = open_ncobs.tp3(hu.obs)
 hu.obs_anual = hu.obs[,,13:372]
+hu.obs_anual.mean = AnualMean(hu.obs_anual)
 
-# hay presion.. nse para que.
+# PRESION
+aux = nc_open(paste(getwd(), "/TP3datos.obs/pl.mon.mean.nc", sep = ""))
+pr.obs = ncvar_get(aux, "pres")
+nc_close(aux)
 
-##### modelos: temperatura, humedad y etp ####
-ruta_mods = "RDatas/TP3.RDatas/"
-# los RData son listas:
-# dim(v[[1]]) = [,,4,r] (seasons y miembros de ensamble, 10 o 6); 
-# dim(v[[2]]) = [,,4,29,r] (seasons, anios y miembros de ensamble)
-# dim(v[[3]]) = [,,360] ( todos los meses en anios completos)
+# rotando
+pr.obs = pr.obs[,ncol(pr.obs):1,]
 
-# CARGAR CADA UNO CUANDO SEA NECESARIO, TODOS LOS RDATAS JUNTOS SON MUY PESADOS. 
-#--- HISTORICO ----#
-# Temperatura #
-load("RDatas/TP3.RDatas/t6.his.RData")
-# Humedad #
-load("RDatas/TP3.RDatas/hu6.his.RData")
+pr.obs_seasons = open_ncobs.tp3(pr.obs)
+pr.obs_anual = pr.obs[,,13:372]
+pr.obs_anual.mean = AnualMean(pr.obs_anual)
 
+# q 
+q.obs = RhQ(rh = hu.obs, p = pr.obs, t = t.obs)
+q.obs_anual = RhQ(rh = hu.obs_anual, p = pr.obs_anual, t = t.obs_anual)
+q.obs_anual.mean = RhQ(rh = hu.obs_anual.mean, p = pr.obs_anual.mean, t = t.obs_anual.mean)
 
-#--- RCP2.6 ---#
-# Temperatura #
-# CNRM-CM6
-load("RDatas/TP3.RDatas/t6.26_2049.RData")
-load("RDatas/TP3.RDatas/t6.26_2099.RData")
-# Humedad #
-# CNRM-CM6
-load("RDatas/TP3.RDatas/hu6.26_2049.RData")
-load("RDatas/TP3.RDatas/hu6.26_2099.RData")
+#--- TENDENCIAS ----#
+#### OBS ####
 
-#--- RCP8.5 ---#
-# Temperatura #
-load("RDatas/TP3.RDatas/t6.85_2049.RData")
-load("RDatas/TP3.RDatas/t6.85_2099.RData")
+t.tend_an = Tendencia(apply(t.obs_anual.mean, c(3), mean, na.rm = T))
+t.tend_anS = Tendencia(apply(t.obs_anual.mean[,2:37,], c(3), mean, na.rm = T))
+t.tend_anN = Tendencia(apply(t.obs_anual.mean[,37:73,], c(3), mean, na.rm = T))
 
-# Humedad #
-load("RDatas/TP3.RDatas/hu6.85_2049.RData")
-load("RDatas/TP3.RDatas/hu6.85_2099.RData")
+q.tend_an = Tendencia(apply(q.obs_anual.mean, c(3), mean, na.rm = T))
+q.tend_anS = Tendencia(apply(q.obs_anual.mean[,1:37,], c(3), mean, na.rm = T))
+q.tend_anN = Tendencia(apply(q.obs_anual.mean[,37:73,], c(3), mean, na.rm = T))
 
-# etp #
-# solo datos anuales!, a priori no hay hacer nada. luego hacer los ensambles
-load("RDatas/TP3.RDatas/etp6.his_an.RData")
+#--- mods ---# 
+#### CNRM-CM5 #####
+#------------------------------------------------------- HISTORICAL ------------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.his.RData"); load("RDatas/TP3.RDatas/hu5.his.RData"); load("RDatas/TP3.RDatas/etp5.his.RData")
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t5.hisG_tend_an = Tendencia(apply(t5.his[[1]], c(3), mean, na.rm = T))
+t5.hisN_tend_an = Tendencia(apply(t5.his[[1]][,37:73,,], c(3), mean, na.rm = T))
+t5.hisS_tend_an = Tendencia(apply(t5.his[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+q5.hisG_tend_an = Tendencia(apply(hu5.his[[1]], c(3), mean, na.rm = T))
+q5.hisN_tend_an = Tendencia(apply(hu5.his[[1]][,37:73,,], c(3), mean, na.rm = T))
+q5.hisS_tend_an = Tendencia(apply(hu5.his[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+etp5.hisG_tend_an = Tendencia(apply(etp5.his[[1]], c(3), mean, na.rm = T))
+etp5.hisN_tend_an = Tendencia(apply(etp5.his[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp5.hisS_tend_an = Tendencia(apply(etp5.his[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t5.his, hu5.his, etp5.his)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#------------------------------------------------------- RCP26 2020 2049--------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.26_49.RData"); load("RDatas/TP3.RDatas/hu5.26_49.RData")
+load("RDatas/TP3.RDatas/etp5.26_49.RData")
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t5.26_49G_tend_an = Tendencia(apply(t5.26_49[[1]], c(3), mean, na.rm = T))
+t5.26_49N_tend_an = Tendencia(apply(t5.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+t5.26_49S_tend_an = Tendencia(apply(t5.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+q5.26_49G_tend_an = Tendencia(apply(hu5.26_49[[1]], c(3), mean, na.rm = T))
+q5.26_49N_tend_an = Tendencia(apply(hu5.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+q5.26_49S_tend_an = Tendencia(apply(hu5.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+etp5.26_49G_tend_an = Tendencia(apply(etp5.26_49[[1]], c(3), mean, na.rm = T))
+etp5.26_49N_tend_an = Tendencia(apply(etp5.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp5.26_49S_tend_an = Tendencia(apply(etp5.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t5.26_49, hu5.26_49, etp5.26_49)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#.rs.restartR() <- ACA ESTA EL COSO PARA RESETEAR!!!
+
+#------------------------------------------------------- RCP26 2070 2099--------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.26_99.RData"); load("RDatas/TP3.RDatas/hu5.26_99.RData")
+load("RDatas/TP3.RDatas/etp5.26_99.RData")
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t5.26_99G_tend_an = Tendencia(apply(t5.26_99[[1]], c(3), mean, na.rm = T))
+t5.26_99N_tend_an = Tendencia(apply(t5.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+t5.26_99S_tend_an = Tendencia(apply(t5.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+q5.26_99G_tend_an = Tendencia(apply(hu5.26_99[[1]], c(3), mean, na.rm = T))
+q5.26_99N_tend_an = Tendencia(apply(hu5.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+q5.26_99S_tend_an = Tendencia(apply(hu5.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+etp5.26_99G_tend_an = Tendencia(apply(etp5.26_99[[1]], c(3), mean, na.rm = T))
+etp5.26_99N_tend_an = Tendencia(apply(etp5.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp5.26_99S_tend_an = Tendencia(apply(etp5.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t5.26_99, hu5.26_99, etp5.26_99)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#------------------------------------------------------- RCP85 2020 2049--------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.85_49.RData"); load("RDatas/TP3.RDatas/hu5.85_49.RData")
+load("RDatas/TP3.RDatas/etp5.85_49.RData")
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t5.85_49G_tend_an = Tendencia(apply(t5.85_49[[1]], c(3), mean, na.rm = T))
+t5.85_49N_tend_an = Tendencia(apply(t5.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+t5.85_49S_tend_an = Tendencia(apply(t5.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+q5.85_49G_tend_an = Tendencia(apply(hu5.85_49[[1]], c(3), mean, na.rm = T))
+q5.85_49N_tend_an = Tendencia(apply(hu5.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+q5.85_49S_tend_an = Tendencia(apply(hu5.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+etp5.85_49G_tend_an = Tendencia(apply(etp5.85_49[[1]], c(3), mean, na.rm = T))
+etp5.85_49N_tend_an = Tendencia(apply(etp5.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp5.85_49S_tend_an = Tendencia(apply(etp5.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t5.85_49, hu5.85_49, etp5.85_49)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#------------------------------------------------------- RCP85 2070 2099--------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.85_99.RData"); load("RDatas/TP3.RDatas/hu5.85_99.RData")
+load("RDatas/TP3.RDatas/etp5.85_99.RData")
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t5.85_99G_tend_an = Tendencia(apply(t5.85_99[[1]], c(3), mean, na.rm = T))
+t5.85_99N_tend_an = Tendencia(apply(t5.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+t5.85_99S_tend_an = Tendencia(apply(t5.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+q5.85_99G_tend_an = Tendencia(apply(hu5.85_99[[1]], c(3), mean, na.rm = T))
+q5.85_99N_tend_an = Tendencia(apply(hu5.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+q5.85_99S_tend_an = Tendencia(apply(hu5.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+etp5.85_99G_tend_an = Tendencia(apply(etp5.85_99[[1]], c(3), mean, na.rm = T))
+etp5.85_99N_tend_an = Tendencia(apply(etp5.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp5.85_99S_tend_an = Tendencia(apply(etp5.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t5.85_99, hu5.85_99, etp5.85_99)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#.rs.restartR() <- ACA ESTA EL COSO PARA RESETEAR!!!
+
+#### CNRM-CM6 ####
+#------------------------------------------------------- HISTORICAL ------------------------------------------------------#
+load("RDatas/TP3.RDatas/t6.his.RData"); load("RDatas/TP3.RDatas/hu6.his.RData"); load("RDatas/TP3.RDatas/etp6.his_an.RData")
+t6.his = AnualMean(apply(t6.his[[3]], c(1,2,3), mean, na.rm = T))
+hu6.his = AnualMean(apply(hu6.his[[3]], c(1,2,3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t6.hisG_tend_an = Tendencia(apply(t6.his, c(3), mean, na.rm = T))
+t6.hisN_tend_an = Tendencia(apply(t6.his[,37:73,], c(3), mean, na.rm = T))
+t6.hisS_tend_an = Tendencia(apply(t6.his[,1:37,], c(3), mean, na.rm = T))
+
+q6.hisG_tend_an = Tendencia(apply(hu6.his, c(3), mean, na.rm = T))
+q6.hisN_tend_an = Tendencia(apply(hu6.his[,37:73,], c(3), mean, na.rm = T))
+q6.hisS_tend_an = Tendencia(apply(hu6.his[,1:37,], c(3), mean, na.rm = T))
+
+etp6.hisG_tend_an = Tendencia(apply(etp6.his_an[[1]], c(3), mean, na.rm = T))
+etp6.hisN_tend_an = Tendencia(apply(etp6.his_an[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp6.hisS_tend_an = Tendencia(apply(etp6.his_an[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t6.his,hu6.his,etp6.his_an)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#------------------------------------------------------- SSP26 2020 2049--------------------------------------------------#
+load("RDatas/TP3.RDatas/t6.26_49.RData"); load("RDatas/TP3.RDatas/hu6.26_49.RData")
 load("RDatas/TP3.RDatas/etp6.26_49.RData")
+t6.26_2049 = AnualMean(apply(t6.26_2049[[3]], c(1,2,3), mean, na.rm = T))
+hu6.26_2049 = AnualMean(apply(hu6.26_2049[[3]], c(1,2,3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t6.26_49G_tend_an = Tendencia(apply(t6.26_2049, c(3), mean, na.rm = T))
+t6.26_49N_tend_an = Tendencia(apply(t6.26_2049[,37:73,], c(3), mean, na.rm = T))
+t6.26_49S_tend_an = Tendencia(apply(t6.26_2049[,1:37,], c(3), mean, na.rm = T))
+
+q6.26_49G_tend_an = Tendencia(apply(hu6.26_2049, c(3), mean, na.rm = T))
+q6.26_49N_tend_an = Tendencia(apply(hu6.26_2049[,37:73,], c(3), mean, na.rm = T))
+q6.26_49S_tend_an = Tendencia(apply(hu6.26_2049[,1:37,], c(3), mean, na.rm = T))
+
+etp6.26_49G_tend_an = Tendencia(apply(etp6.26_49[[1]], c(3), mean, na.rm = T))
+etp6.26_49N_tend_an = Tendencia(apply(etp6.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp6.26_49S_tend_an = Tendencia(apply(etp6.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t6.26_2049, hu6.26_2049, etp6.26_49)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------- SSP26 2070 2099--------------------------------------------------#
+load("RDatas/TP3.RDatas/t6.26_99.RData"); load("RDatas/TP3.RDatas/hu6.26_99.RData")
 load("RDatas/TP3.RDatas/etp6.26_99.RData")
+t6.26_2099 = AnualMean(apply(t6.26_2099[[3]], c(1,2,3), mean, na.rm = T))
+hu6.26_2099 = AnualMean(apply(hu6.26_2099[[3]], c(1,2,3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t6.26_99G_tend_an = Tendencia(apply(t6.26_2099, c(3), mean, na.rm = T))
+t6.26_99N_tend_an = Tendencia(apply(t6.26_2099[,37:73,], c(3), mean, na.rm = T))
+t6.26_99S_tend_an = Tendencia(apply(t6.26_2099[,1:37,], c(3), mean, na.rm = T))
+
+q6.26_99G_tend_an = Tendencia(apply(hu6.26_2099, c(3), mean, na.rm = T))
+q6.26_99N_tend_an = Tendencia(apply(hu6.26_2099[,37:73,], c(3), mean, na.rm = T))
+q6.26_99S_tend_an = Tendencia(apply(hu6.26_2099[,1:37,], c(3), mean, na.rm = T))
+
+etp6.26_99G_tend_an = Tendencia(apply(etp6.26_99[[1]], c(3), mean, na.rm = T))
+etp6.26_99N_tend_an = Tendencia(apply(etp6.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp6.26_99S_tend_an = Tendencia(apply(etp6.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t6.26_2099, hu6.26_2099, etp6.26_99)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#------------------------------------------------------- SSP85 2020 2049--------------------------------------------------#
+load("RDatas/TP3.RDatas/t6.85_49.RData"); load("RDatas/TP3.RDatas/hu6.85_49.RData")
 load("RDatas/TP3.RDatas/etp6.85_49.RData")
+t6.85_2049 = AnualMean(apply(t6.85_2049[[3]], c(1,2,3), mean, na.rm = T))
+hu6.85_2049 = AnualMean(apply(hu6.85_2049[[3]], c(1,2,3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
+
+t6.85_49G_tend_an = Tendencia(apply(t6.85_2049, c(3), mean, na.rm = T))
+t6.85_49N_tend_an = Tendencia(apply(t6.85_2049[,37:73,], c(3), mean, na.rm = T))
+t6.85_49S_tend_an = Tendencia(apply(t6.85_2049[,1:37,], c(3), mean, na.rm = T))
+
+q6.85_49G_tend_an = Tendencia(apply(hu6.85_2049, c(3), mean, na.rm = T))
+q6.85_49N_tend_an = Tendencia(apply(hu6.85_2049[,37:73,], c(3), mean, na.rm = T))
+q6.85_49S_tend_an = Tendencia(apply(hu6.85_2049[,1:37,], c(3), mean, na.rm = T))
+
+etp6.85_49G_tend_an = Tendencia(apply(etp6.85_49[[1]], c(3), mean, na.rm = T))
+etp6.85_49N_tend_an = Tendencia(apply(etp6.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp6.85_49S_tend_an = Tendencia(apply(etp6.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t6.85_2049, hu6.85_2049, etp6.85_49)
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#------------------------------------------------------- SSP85 2070 2099--------------------------------------------------#
+load("RDatas/TP3.RDatas/t6.85_99.RData"); load("RDatas/TP3.RDatas/hu6.85_99.RData")
 load("RDatas/TP3.RDatas/etp6.85_99.RData")
+t6.85_2099 = AnualMean(apply(t6.85_2099[[3]], c(1,2,3), mean, na.rm = T))
+hu6.85_2099 = AnualMean(apply(hu6.85_2099[[3]], c(1,2,3), mean, na.rm = T))
+#-------------------------------------------------------------------------------------------------------------------------#
 
-#### entalpia ####
-# segun el coso..
-# H = Ha + Hv  
-# Ha = 1.007*T[ºC] - 0.026
-# Hv = q[kg/kg]*(2050[kJ/kg] - 0.538*T[ºC]) ¿¿¿??? es un 0.538 magico
-# H = (1.007*T[ºC] - 0.026) + q[kg/kg]*(2050[kJ/kg] - 0.538*T[ºC])
+t6.85_99G_tend_an = Tendencia(apply(t6.85_2099, c(3), mean, na.rm = T))
+t6.85_99N_tend_an = Tendencia(apply(t6.85_2099[,37:73,], c(3), mean, na.rm = T))
+t6.85_99S_tend_an = Tendencia(apply(t6.85_2099[,1:37,], c(3), mean, na.rm = T))
 
-#Ha.
-# q unidad? dice "1" por la magnitud parece gr/kg, aunque hay valores bastante altos 
-load("RDatas/TP3.RDatas/t6.his.RData")
-load("RDatas/TP3.RDatas/hu6.his.RData")
-t.aux = t6.his[[1]]
-hu.aux = hu6.his[[1]]
-rm(t6.his, hu6.his)
+q6.85_99G_tend_an = Tendencia(apply(hu6.85_2099, c(3), mean, na.rm = T))
+q6.85_99N_tend_an = Tendencia(apply(hu6.85_2099[,37:73,], c(3), mean, na.rm = T))
+q6.85_99S_tend_an = Tendencia(apply(hu6.85_2099[,1:37,], c(3), mean, na.rm = T))
 
-Ha = 1.007*(t.aux-273) - 0.026 
-Hv = hu.aux[,,,1:10]*(2502 - 0.538*(t.aux-273))
+etp6.85_99G_tend_an = Tendencia(apply(etp6.85_99[[1]], c(3), mean, na.rm = T))
+etp6.85_99N_tend_an = Tendencia(apply(etp6.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
+etp6.85_99S_tend_an = Tendencia(apply(etp6.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
+
+#-------------------------------------------------------------------------------------------------------------------------#
+rm(t6.85_2099, hu6.85_2099, etp6.85_99)
+#-------------------------------------------------------------------------------------------------------------------------#
 
 
 
 
+#### Graficos Tendencia ####
+library(ggplot2)
+#--- OBSERVADO ----#
+
+PlotTsTend(global = t.tend_an, hn = t.tend_anN, hs = t.tend_anS, titulo = "T Observada", y.label = "ºC", y.breaks = seq(2, 8, by = 1), nombre.fig = "t.obs_tend")
+PlotTsTend(global = q.tend_an, hn = q.tend_anN, hs = q.tend_anS, titulo = "q Observada", y.label = "Kg/Kg", y.breaks = seq(0.000103, 0.000108, by = 0.000001), nombre.fig = "q.obs_tend")
+
+
+#---- CNRCM-CM5 ----#
+# temp
+PlotTsTend(global = t5.hisG_tend_an, hn = t5.hisN_tend_an, hs = t5.hisS_tend_an, titulo = "T CNRM-CM5 - Historico", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.his_tend", cent = T, anios = c(1976, 2005))
+PlotTsTend(global = t5.26_49G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_49S_tend_an, titulo = "T CNRM-CM5 - RCP26 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.26_49", cent = T, anios = c(2020, 2049))
+PlotTsTend(global = t5.26_99G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_99S_tend_an, titulo = "T CNRM-CM5 - RCP26 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.26_99", cent = T, anios = c(2020, 2049))
+PlotTsTend(global = t5.85_49G_tend_an, hn = t5.85_49N_tend_an, hs = t5.85_49S_tend_an, titulo = "T CNRM-CM5 - RCP85 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.85_49", cent = T, anios = c(2070, 2099))
+PlotTsTend(global = t5.85_99G_tend_an, hn = t5.85_99N_tend_an, hs = t5.85_99S_tend_an, titulo = "T CNRM-CM5 - RCP85 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.85_99", cent = T, anios = c(2070, 2099))
+
+# q
+PlotTsTend(global = q5.hisG_tend_an, hn = q5.hisN_tend_an, hs = q5.hisS_tend_an, titulo = "q CNRM-CM5 - Historico", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.his_tend", cent = F, anios = c(1976, 2005))
+PlotTsTend(global = q5.26_49G_tend_an, hn = q5.26_49N_tend_an, hs = q5.26_49S_tend_an, titulo = "q CNRM-CM5 - RCP26 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.26_49", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q5.26_99G_tend_an, hn = q5.26_99N_tend_an, hs = q5.26_99S_tend_an, titulo = "q CNRM-CM5 - RCP26 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.26_99", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q5.85_49G_tend_an, hn = q5.85_49N_tend_an, hs = q5.85_49S_tend_an, titulo = "q CNRM-CM5 - RCP85 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.85_49", cent = F, anios = c(2070, 2099))
+PlotTsTend(global = q5.85_99G_tend_an, hn = q5.85_99N_tend_an, hs = q5.85_99S_tend_an, titulo = "q CNRM-CM5 - RCP85 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0002), nombre.fig = "q5.85_99", cent = F, anios = c(2070, 2099))
+
+#--- CNRM-CM6 ---#
+PlotTsTend(global = t6.hisG_tend_an, hn = t6.hisN_tend_an, hs = t6.hisS_tend_an, titulo = "T CNRM-CM6 - Historico", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.his_tend", cent = T, anios = c(1976, 2005))
+PlotTsTend(global = t6.26_49G_tend_an, hn = t6.26_49N_tend_an, hs = t6.26_49S_tend_an, titulo = "T CNRM-CM6 - SSP126 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.26_49", cent = T, anios = c(2020, 2049))
+PlotTsTend(global = t6.26_99G_tend_an, hn = t6.26_99N_tend_an, hs = t6.26_99S_tend_an, titulo = "T CNRM-CM6 - SSP126 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.26_99", cent = T,anios = c(2020, 2049))
+PlotTsTend(global = t6.85_49G_tend_an, hn = t6.85_49N_tend_an, hs = t6.85_49S_tend_an, titulo = "T CNRM-CM6 - SSP858 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.85_49", cent = T, anios = c(2070, 2099))
+PlotTsTend(global = t6.85_99G_tend_an, hn = t6.85_99N_tend_an, hs = t6.85_99S_tend_an, titulo = "T CNRM-CM6 - SSP858 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.85_99", cent = T, anios = c(2070, 2099))
+
+# q
+PlotTsTend(global = q6.hisG_tend_an, hn = q6.hisN_tend_an, hs = q6.hisS_tend_an, titulo = "q CNRM-CM6 - Historico", y.label = "Kg/Kg", y.breaks = seq(0.0065, 0.01, by = 0.0001), nombre.fig = "q6.his_tend", cent = F,anios = c(1976, 2005))
+PlotTsTend(global = q6.26_49G_tend_an, hn = q6.26_49N_tend_an, hs = q6.26_49S_tend_an, titulo = "q CNRM-CM6 - SSP126 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q6.26_49", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q6.26_99G_tend_an, hn = q6.26_99N_tend_an, hs = q6.26_99S_tend_an, titulo = "q CNRM-CM6 - SSP126 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q6.26_99", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q6.85_49G_tend_an, hn = q6.85_49N_tend_an, hs = q6.85_49S_tend_an, titulo = "q CNRM-CM6 - SSP585 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0002), nombre.fig = "q6.85_49", cent = F,  anios = c(2070, 2099))
+PlotTsTend(global = q6.85_99G_tend_an, hn = q6.85_99N_tend_an, hs = q6.85_99S_tend_an, titulo = "q CNRM-CM6 - SSP585 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.012, by = 0.0005), nombre.fig = "q6.85_99", cent = F, anios = c(2070, 2099))
+
+##
+
+
+#### ENTALPIA ####
+
+prueba = EntalpiaHR(t.obs, hr = hu.obs, p = pr.obs)
+
+
+prueba = EntalpiaQ("t6.85_99")
+
+# ok
+
+# radiacion neta
+q.obs = RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons)
+
+etp = etp5.his_an[[1]]/(365/12)
+
+RT = etp/Lv(t5.his_an[[1]])
+h = S(t.obs_seasons) + Lv(t.obs_seasons)*RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons) # si es datos obs, --> q(hr)
+Fa = h.V
+
+RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons)
 
