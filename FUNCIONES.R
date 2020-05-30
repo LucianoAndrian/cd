@@ -2293,7 +2293,7 @@ mapa_topo3 = function(variable, variable.sig = NULL, variable.cont = NULL, u = N
     
   }
 }  
-#### OPEN_NCOBS.TP3 ####
+#### Auxs ####
 open_ncobs.tp3 = function(variable){
   
   # separando en estaciones, años de marzo a febrero, empezando en marzo del '76 hasta febrero del '05
@@ -2320,6 +2320,98 @@ open_ncobs.tp3 = function(variable){
   
 }
 
+AnualMean = function(v){
+  
+  W = array(data = NA, dim = c(dim(v[,,1]),30))
+  
+  for(i in 0:29){
+    aux = v[,,(1+12*i):(12+12*i)]
+    W[,,i+1] = apply(aux, c(1,2), mean, na.rm = T)
+  }
+  
+  return(W)
+  
+}
+
+
+Tendencia<-function(datos){
+  
+  datos = cbind(seq(length(datos)), datos)
+  
+  serie<-data.frame(datos[which(!is.na(datos[,2])),1],datos[which(!is.na(datos[,2])),2]) 
+  serie[,1]<-seq(1:length(serie[,1])) 
+  ajuste1<-lm(serie[,2]~serie[,1],data=serie) #Y , X!!
+  tendencia<-ajuste1$coefficients[1]+ajuste1$coefficients[2]*serie[,1]  #contruccion de la recta y=ax+b... coef[2]x+coef[1]
+  b = ajuste1$coefficients[2]
+  attributes(b) = NULL
+  
+  f = summary(ajuste1)$fstatistic
+  p.value = pf(f[1],f[2],f[3],lower.tail=F); attributes(p.value) = NULL
+  
+  serie_tendencia = data.frame(Serie = serie[,2], Tendencia = tendencia)
+  
+  V = list()
+  V[[1]] = serie_tendencia
+  V[[2]] = p.value
+  V[[3]] = b
+  
+  ifelse(test = p.value < 0.05, yes = print(paste("Tendencia Significatica ", " p-value", sprintf("%.5f",p.value)))
+         , no = print(paste("Tendencia NO Significatica ", " p-value", sprintf("%.5f",p.value))))
+  
+  return(V)
+}
+
+
+
+PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.fig, cent = F){
+  
+  anios = seq(min(anios), max(anios), by = 1)
+  
+  if(cent == T){
+    datos = as.data.frame(global[[1]]-273); datos = cbind(datos, hn[[1]]-273, hs[[1]]-273, anios); colnames(datos) = c("Global", "GTend", "HN", "HNTend", "HS", "HSTend", "Años")
+  } else {
+    datos = as.data.frame(global[[1]]); datos = cbind(datos, hn[[1]], hs[[1]], anios); colnames(datos) = c("Global", "GTend", "HN", "HNTend", "HS", "HSTend", "Años")
+  }
+  
+
+  g = ggplot(datos, aes(x = Años)) + theme_minimal()
+  
+  if(global[[2]]<0.05){
+    g = g + geom_line(aes(y = Global, colour = "Global"), size = 1, show.legend = T) + geom_line(aes(y = GTend, colour = "Global"),linetype = 1, size = 0.5, show.legend = F) 
+  } else {
+    g =g + geom_line(aes(y = Global, colour = "Global"), size = 1, show.legend = T) + geom_line(aes(y = GTend, colour = "Global"),linetype = 4, size = 0.5, show.legend = F)  
+  }
+  
+  if(hn[[2]]<0.05){
+    g = g +  geom_line(aes(y = HN, colour = "HN"), size = 1, show.legend = T) + geom_line(aes(y = HNTend, colour = "HN"),linetype = 1, size = 0.5, show.legend = F)  
+  } else {
+    g = g +  geom_line(aes(y = HN, colour = "HN"), size = 1, show.legend = T) + geom_line(aes(y = HNTend, colour = "HN"),linetype = 4, size = 0.5, show.legend = F) 
+  }
+  
+  if(hs[[2]]<0.05){
+    g = g +   geom_line(aes(y = HS, colour = "HS"), size = 1, show.legend = T) + geom_line(aes(y = HSTend, colour = "HS"), linetype = 1, size = 0.5, show.legend = F) 
+  } else {
+    g =g +   geom_line(aes(y = HS, colour = "HS"), size = 1, show.legend = T) + geom_line(aes(y = HSTend, colour = "HS"), linetype = 4, size = 0.5, show.legend = F) 
+  }
+  
+  anios.breaks = seq(min(anios), max(anios), by = 5)
+  
+  g = g + scale_colour_manual("", 
+                              breaks = c("Global", "HN", "HS"),
+                              values = c("Black", "forestgreen", "royalblue")) +
+    scale_x_continuous(breaks = anios.breaks)+
+    scale_y_continuous(breaks = y.breaks) +
+    ggtitle(titulo) +
+    ylab(y.label) +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "right", legend.key.width = unit(1, "cm"), legend.key.height = unit(2, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP3/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+}
 
 
 #### ENTALPIAs #####
@@ -2419,7 +2511,7 @@ RhQ = function(rh, p, t){
   t[which(t<0 | t >40)] = NA
   p = p*100
   
-  q = 0.622/(p/((rh/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t)+2))-0.378)
+  q = 0.622/((p*100)/((rh/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t)+2))-0.378)
  
   return(q) 
   
