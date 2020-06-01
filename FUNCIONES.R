@@ -2333,6 +2333,19 @@ AnualMean = function(v){
   
 }
 
+AnualMeanR = function(v){
+  
+  W = array(data = NA, dim = c(dim(v[,,1,1]),30, length(v[1,1,1,])))
+  
+  for(i in 0:29){
+    aux = v[,,(1+12*i):(12+12*i),]
+    W[,,i+1,] = apply(aux, c(1,2,4), mean, na.rm = T)
+  }
+  
+  return(W)
+  
+}
+
 
 Tendencia<-function(datos){
   
@@ -2411,19 +2424,34 @@ PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.f
           legend.position = "right", legend.key.width = unit(1, "cm"), legend.key.height = unit(2, "cm"), legend.text = element_text(size = 15)) 
   
   ggsave(paste(getwd(), "/Salidas/TP3/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+  
 }
 
+RhQ = function(rh, p, t){
+  
+  t[which(t<0 | t >40)] = NA
+  p = p*100
+  
+  q = 0.622/((p)/((rh/100)*10**(((0.7859 + 0.03477*t)/(1+0.00412*t))+2))-0.378)
+  
+  return(q) 
+  
+}
 
 #### ENTALPIAs #####
 EntalpiaHR = function(t, hr, p){
   
   t[which(t<0 | t > 40)] = NA
   # OBS, usando HR
-  H.obs = (1.007*t + 0.026) + (2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t)+2))-0.378)
-  q.porc = ((2502 - 0.538*t)*0.622/( p*100/((hr/100)*10**((0.7859 + 0.03477*t)(1+0.00412*t)+2))-0.378)/H.obs)*100
+  p = p*100
+  q = 0.622/((p)/((hr/100)*10**(((0.7859 + 0.03477*t)/(1+0.00412*t))+2))-0.378)
+  H.obs = (1.007*t + 0.026) + (2502 - 0.538*t)*q
+  q.porc = ((2502 - 0.538*t)*q/H.obs)*100
   V = list()
   V[[1]] = H.obs
-  V[[2]] = q.porc
+  V[[2]] = array(apply(q.porc, c(1,2), mean, na.rm = T), dim = c(dim(H.obs[,,1]), 1))
+  V[[3]] = array(apply(H.obs, c(1,2), mean, na.rm = T), dim = c(dim(H.obs[,,1]), 1))
   return(V)
   
 }
@@ -2432,60 +2460,73 @@ EntalpiaQ = function(t){
   if(t == "t6.his"){
     load("RDatas/TP3.RDatas/t6.his.RData")
     load("RDatas/TP3.RDatas/hu6.his.RData")
-    t.aux = t6.his[[1]]
-    hu.aux = hu6.his[[1]]
+    t.aux = AnualMeanR(t6.his[[3]])
+    hu.aux = AnualMeanR(hu6.his[[3]])
     rm(t6.his, hu6.his)
     
   } else if(t == "t6.26_49") {
-    load("RDatas/TP3.RDatas/t6.26_2049.RData")
-    load("RDatas/TP3.RDatas/hu6.26_2049.RData")
-    t.aux = t6.26_2049[[1]]
-    hu.aux = hu6.26_2049[[1]]
+    load("RDatas/TP3.RDatas/t6.26_49.RData")
+    load("RDatas/TP3.RDatas/hu6.26_49.RData")
+    t.aux = AnualMeanR(t6.26_2049[[3]])
+    hu.aux = AnualMeanR(hu6.26_2049[[3]])
     rm(t6.26_2049, hu6.26_2049)
     
   } else if(t == "t6.26_99") {
-    load("RDatas/TP3.RDatas/t6.26_2099.RData")
-    load("RDatas/TP3.RDatas/hu6.26_2099.RData")
-    t.aux = t6.26_2099[[1]]
-    hu.aux = hu6.26_2099[[1]]
+    load("RDatas/TP3.RDatas/t6.26_99.RData")
+    load("RDatas/TP3.RDatas/hu6.26_99.RData")
+    t.aux = AnualMeanR(t6.26_2099[[3]])
+    hu.aux = AnualMeanR(hu6.26_2099[[3]])
     rm(t6.26_2099, hu6.26_2099)
     
   } else if(t == "t6.85_49") {
-    load("RDatas/TP3.RDatas/t6.85_2049.RData")
-    load("RDatas/TP3.RDatas/hu6.85_2049.RData")
-    t.aux = t6.85_2049[[1]]
-    hu.aux = hu6.85_2049[[1]]
+    load("RDatas/TP3.RDatas/t6.85_49.RData")
+    load("RDatas/TP3.RDatas/hu6.85_49.RData")
+    t.aux = AnualMeanR(t6.85_2049[[3]])
+    hu.aux = AnualMeanR(hu6.85_2049[[3]])
     rm(t6.85_2049, hu6.85_2049)
     
   } else if(t == "t6.85_99") {
-    load("RDatas/TP3.RDatas/t6.85_2099.RData")
-    load("RDatas/TP3.RDatas/hu6.85_2099.RData")
-    t.aux = t6.85_2099[[1]]
-    hu.aux = hu6.85_2099[[1]]
+    load("RDatas/TP3.RDatas/t6.85_99.RData")
+    load("RDatas/TP3.RDatas/hu6.85_99.RData")
+    t.aux = AnualMeanR(t6.85_2099[[3]])
+    hu.aux = AnualMeanR(hu6.85_2099[[3]])
     rm(t6.85_2099, hu6.85_2099)
     
   } else if(t == "t5.26_49") {
-    load("RDatas/TP3.RDatas/t5.26_49.RData")
-   
+    load("RDatas/TP3.RDatas/t5.26_49.RData"); load("RDatas/TP3.RDatas/hu5.26_49.RData")
+    
     t.aux = t5.26_49[[1]]
-    hu.aux = NULL
-    rm(t5.26_49)
+    hu.aux = hu5.26_49[[1]]
+    rm(t5.26_49, hu5.26_49)
     
   } else if(t == "t5.26_99") {
-    load("RDatas/TP3.RDatas/t5.26_99.RData")
+    load("RDatas/TP3.RDatas/t5.26_99.RData");load("RDatas/TP3.RDatas/hu5.26_99.RData")
     
     t.aux = t5.26_99[[1]]
-    hu.aux = NULL
-    rm(t5.26_99)
+    hu.aux = hu5.26_99[[1]]
+    rm(t5.26_99, hu5.26_99)
     
   } else if(t == "t5.85_99") {
-    load("RDatas/TP3.RDatas/t5.85_99.RData")
-
-    t.aux = t5.85_99[[1]]
-    hu.aux = 1
-    rm(t5.85_99)
+    load("RDatas/TP3.RDatas/t5.85_99.RData"); load("RDatas/TP3.RDatas/hu5.85_99.RData")
     
-  } 
+    t.aux = t5.85_99[[1]]
+    hu.aux = hu5.85_99[[1]]
+    rm(t5.85_99, hu5.85_99)
+    
+  } else if(t == "t5.his"){
+    load("RDatas/TP3.RDatas/t5.his.RData"); load("RDatas/TP3.RDatas/hu5.his.RData")
+    
+    t.aux = t5.his[[1]]
+    hu.aux = hu5.his[[1]]
+    rm(t5.his, hu5.his)
+    
+  } else if(t == "t5.85_49"){
+    load("RDatas/TP3.RDatas/t5.85_49.RData"); load("RDatas/TP3.RDatas/hu5.85_49.RData")
+    
+    t.aux = t5.85_49[[1]]
+    hu.aux = hu5.85_49[[1]]
+    rm(t5.85_49, hu5.85_49)
+  }
   
   t.aux = t.aux-273
   t.aux[which(t.aux<0 | t.aux > 40)] = NA
@@ -2493,29 +2534,25 @@ EntalpiaQ = function(t){
   if(length(hu.aux) == 1 ){
     Hv = 0
   } else {
-    Hv = (hu.aux[,,,1:length(t.aux[1,1,1,])]/1000)*(2502 - 0.538*(t.aux))
+    if(length(t.aux[1,1,1,]) == 1){
+      Hv = array((hu.aux[,,,1])*(2502 - 0.538*(t.aux[,,,1])), dim = c(dim(Ha)))
+    } else {
+      Hv = (hu.aux[,,,1:length(t.aux[1,1,1,])])*(2502 - 0.538*(t.aux))
+    }
   }
   
   H.mods = Ha + Hv
   q.porc = (Hv/H.mods)*100
-  
+  rm(Ha, Hv)
   V = list()
   V[[1]] = H.mods
-  V[[2]] = q.porc
+  V[[2]] = array(apply(q.porc, c(1,2), mean, na.rm = T), dim = c(dim(H.mods[,,1,1]),1)) #ensamble, en array para mapa_topo3
+  V[[3]] = array(apply(H.mods, c(1,2), mean, na.rm = T), dim = c(dim(H.mods[,,1,1]),1)) #ensamble, en array para mapa_topo3
   return(V)
   
 }
 #### Energia ####
-RhQ = function(rh, p, t){
-  
-  t[which(t<0 | t >40)] = NA
-  p = p*100
-  
-  q = 0.622/((p*100)/((rh/100)*10**((0.7859 + 0.03477*t)/(1+0.00412*t)+2))-0.378)
- 
-  return(q) 
-  
-}
+
 
 Lv= function(t){
   # "L" = Lv (original, Henderson - Sellers 1984)
