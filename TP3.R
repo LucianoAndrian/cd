@@ -328,14 +328,192 @@ PlotTsTend(global = q6.85_99G_tend_an, hn = q6.85_99N_tend_an, hs = q6.85_99S_te
 
 #### ENTALPIA ####
 
-prueba = EntalpiaHR(t.obs, hr = hu.obs, p = pr.obs)
+# obs
+H.his_an = EntalpiaHR(t = t.obs_anual.mean, hr = hu.obs_anual.mean, p = pr.obs_anual.mean)
 
 
-prueba = EntalpiaQ("t6.85_99")
+# mods
+H5.his = EntalpiaQ(t = "t5.his"); H5.26_49 = EntalpiaQ(t = "t5.26_49"); H5.26_99 = EntalpiaQ(t = "t5.26_99")
+H5.85_49 = EntalpiaQ(t = "t5.85_49"); H5.85_99 = EntalpiaQ(t = "t5.85_99")
 
-# ok
+H6.his = EntalpiaQ(t = "t6.his"); H6.26_49 = EntalpiaQ(t = "t6.26_49"); H6.26_99 = EntalpiaQ(t = "t6.26_99")
+H6.85_49 = EntalpiaQ(t = "t6.85_49"); H6.85_99 = EntalpiaQ(t = "t6.85_99")
 
-# radiacion neta
+
+#### GRAFICOS ####
+#### CAMPO MEDIO OBSERVADO ####
+mask = H.his_an[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(20, 70, by = 5), revert = T
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "H observada  1976 - 2005",  nombre.fig = "H.his", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = T
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Aporte de q en H  1976 - 2005",  nombre.fig = "H.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+# Bias CNRM-CM5
+mask = H5.his[[3]] - H.his_an[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H5.his[[3]] - H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 9, escala = seq(-8, 8, by = 2), revert = T
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Bias H CNRM-CM5",  nombre.fig = "H5.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H5.his[[2]] - H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-10, 10, by = 2), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Aporte de q en H  1976 - 2005",  nombre.fig = "H5.biasP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+# Bias CNRM-CM6
+mask = H6.his[[3]] - H.his_an[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H6.his[[3]] - H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 9, escala = seq(-8, 8, by = 2), revert = T
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Bias H CNRM-CM6",  nombre.fig = "H6.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H6.his[[2]] - H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-10, 10, by = 2), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Aporte de q en H  1976 - 2005",  nombre.fig = "H6.biasP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+
+#### CNRM-CM5 ####
+# 2.6
+mask = H5.26_49[[3]] - H5.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H5.26_49[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H5.26_49[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM5 RCP2.6",  nombre.fig = "H5.difP.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+mask = H5.26_99[[3]] - H5.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H5.26_99[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H5.26_99[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM5 RCP2.6",  nombre.fig = "H5.difP.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+# 8.5
+mask = H5.85_49[[3]] - H5.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H5.85_49[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H5.85_49[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM5 RCP8.5",  nombre.fig = "H5.difP.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+mask = H5.85_99[[3]] - H5.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H5.85_99[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H5.85_99[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM5 RCP8.5",  nombre.fig = "H5.difP.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+#### CNRM-CM6 ####
+#126
+mask = H6.26_49[[3]] - H6.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H6.26_49[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H6.26_49[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM6 SSP126",  nombre.fig = "H6.difP.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+mask = H6.26_99[[3]] - H6.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H6.26_99[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H6.26_99[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM6 SSP126",  nombre.fig = "H6.difP.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+#858
+mask = H6.85_49[[3]] - H6.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H6.85_49[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H6.85_49[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM6 SSP585",  nombre.fig = "H6.difP.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+
+mask = H6.85_99[[3]] - H6.his[[3]]
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = H6.85_99[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+
+mapa_topo3(variable = H6.85_99[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM6 SSP585",  nombre.fig = "H6.difP.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+
+#### promedios zonales de H 
+#### radacion ####
 q.obs = RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons)
 
 etp = etp5.his_an[[1]]/(365/12)
