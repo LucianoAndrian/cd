@@ -2379,7 +2379,7 @@ Tendencia<-function(datos){
 PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.fig, cent = F){
   
   anios = seq(min(anios), max(anios), by = 1)
-  
+  limite = c(min(y.breaks), max(y.breaks))
   if(cent == T){
     datos = as.data.frame(global[[1]]-273); datos = cbind(datos, hn[[1]]-273, hs[[1]]-273, anios); colnames(datos) = c("Global", "GTend", "HN", "HNTend", "HS", "HSTend", "Años")
   } else {
@@ -2390,21 +2390,21 @@ PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.f
   g = ggplot(datos, aes(x = Años)) + theme_minimal()
   
   if(global[[2]]<0.05){
-    g = g + geom_line(aes(y = Global, colour = "Global"), size = 1, show.legend = T) + geom_line(aes(y = GTend, colour = "Global"),linetype = 1, size = 0.5, show.legend = F) 
+    g = g + geom_line(aes(y = Global, colour = "Global"), size = 0.8, show.legend = T) + geom_line(aes(y = GTend, colour = "Global"),linetype = 1, size = 0.5, show.legend = F) 
   } else {
-    g =g + geom_line(aes(y = Global, colour = "Global"), size = 1, show.legend = T) + geom_line(aes(y = GTend, colour = "Global"),linetype = 4, size = 0.5, show.legend = F)  
+    g =g + geom_line(aes(y = Global, colour = "Global"), size = 0.8, show.legend = T) + geom_line(aes(y = GTend, colour = "Global"),linetype = 4, size = 0.5, show.legend = F)  
   }
   
   if(hn[[2]]<0.05){
-    g = g +  geom_line(aes(y = HN, colour = "HN"), size = 1, show.legend = T) + geom_line(aes(y = HNTend, colour = "HN"),linetype = 1, size = 0.5, show.legend = F)  
+    g = g +  geom_line(aes(y = HN, colour = "HN"), size = 0.8, show.legend = T) + geom_line(aes(y = HNTend, colour = "HN"),linetype = 1, size = 0.5, show.legend = F)  
   } else {
-    g = g +  geom_line(aes(y = HN, colour = "HN"), size = 1, show.legend = T) + geom_line(aes(y = HNTend, colour = "HN"),linetype = 4, size = 0.5, show.legend = F) 
+    g = g +  geom_line(aes(y = HN, colour = "HN"), size = 0.8, show.legend = T) + geom_line(aes(y = HNTend, colour = "HN"),linetype = 4, size = 0.5, show.legend = F) 
   }
   
   if(hs[[2]]<0.05){
-    g = g +   geom_line(aes(y = HS, colour = "HS"), size = 1, show.legend = T) + geom_line(aes(y = HSTend, colour = "HS"), linetype = 1, size = 0.5, show.legend = F) 
+    g = g +   geom_line(aes(y = HS, colour = "HS"), size = 0.8, show.legend = T) + geom_line(aes(y = HSTend, colour = "HS"), linetype = 1, size = 0.5, show.legend = F) 
   } else {
-    g =g +   geom_line(aes(y = HS, colour = "HS"), size = 1, show.legend = T) + geom_line(aes(y = HSTend, colour = "HS"), linetype = 4, size = 0.5, show.legend = F) 
+    g =g +   geom_line(aes(y = HS, colour = "HS"), size = 0.8, show.legend = T) + geom_line(aes(y = HSTend, colour = "HS"), linetype = 4, size = 0.5, show.legend = F) 
   }
   
   anios.breaks = seq(min(anios), max(anios), by = 5)
@@ -2413,7 +2413,7 @@ PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.f
                               breaks = c("Global", "HN", "HS"),
                               values = c("Black", "forestgreen", "royalblue")) +
     scale_x_continuous(breaks = anios.breaks)+
-    scale_y_continuous(breaks = y.breaks) +
+    scale_y_continuous(breaks = y.breaks, limits = limite) +
     ggtitle(titulo) +
     ylab(y.label) +
     theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
@@ -2427,6 +2427,36 @@ PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.f
   
   
 }
+
+
+
+HLonMean = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
+  
+  datos = as.data.frame(serie1); datos = cbind(lat, datos, serie2, serie3); colnames(datos) = c("lat", "Historico", "F.Cercano", "F.Lejano")
+  
+  g = ggplot(datos, aes(x = lat)) + theme_minimal()+
+    geom_line(aes(y = Historico, colour = "Historico"), size = 1, show.legend = T) + 
+    geom_line(aes(y = F.Cercano, colour = "2020-2049"),linetype = 1, size = 1, show.legend = T)  +
+    geom_line(aes(y = F.Lejano, colour = "2070-2099"),linetype = 1, size = 1, show.legend = T) +
+    scale_colour_manual("", 
+                        breaks = c("Historico", "2020-2049", "2070-2099"),
+                        values = c("forestgreen","orange2", "firebrick")) +
+    scale_x_latitude(breaks = seq(-90, 90, by = 20)) + scale_y_continuous(breaks = seq(10, 80, by = 10), limits = c(10, 80)) +
+    geom_vline(xintercept = 0, alpha = 0.3)+
+    ggtitle(titulo) +
+    ylab("kJ/kg") +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 12)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP3/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+}
+
+
 
 RhQ = function(rh, p, t){
   
