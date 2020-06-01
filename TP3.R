@@ -101,7 +101,7 @@ etp5.26_49S_tend_an = Tendencia(apply(etp5.26_49[[1]][,1:37,,], c(3), mean, na.r
 rm(t5.26_49, hu5.26_49, etp5.26_49)
 #-------------------------------------------------------------------------------------------------------------------------#
 
-#.rs.restartR() <- ACA ESTA EL COSO PARA RESETEAR!!!
+
 
 #------------------------------------------------------- RCP26 2070 2099--------------------------------------------------#
 load("RDatas/TP3.RDatas/t5.26_99.RData"); load("RDatas/TP3.RDatas/hu5.26_99.RData")
@@ -287,41 +287,45 @@ rm(t6.85_2099, hu6.85_2099, etp6.85_99)
 
 
 #### Graficos Tendencia ####
+.rs.restartR() # no borra variables, pero se deben volver a cargar funciones y librerias
+source("FUNCIONES.R")
 library(ggplot2)
 #--- OBSERVADO ----#
 
-PlotTsTend(global = t.tend_an, hn = t.tend_anN, hs = t.tend_anS, titulo = "T Observada", y.label = "ºC", y.breaks = seq(2, 8, by = 1), nombre.fig = "t.obs_tend")
-PlotTsTend(global = q.tend_an, hn = q.tend_anN, hs = q.tend_anS, titulo = "q Observada", y.label = "Kg/Kg", y.breaks = seq(0.000103, 0.000108, by = 0.000001), nombre.fig = "q.obs_tend")
+q.br = seq(0.0065, 0.012, by = 0.001)
+
+PlotTsTend(global = t.tend_an, hn = t.tend_anN, hs = t.tend_anS, titulo = "T Observada", y.label = "ºC", y.breaks = seq(1, 14, by = 2), nombre.fig = "t.obs_tend", anios = c(1976, 2005), cent = F)
+PlotTsTend(global = q.tend_an, hn = q.tend_anN, hs = q.tend_anS, titulo = "q Observada", y.label = "Kg/Kg", y.breaks = q.br , nombre.fig = "q.obs_tend", anios = c(1976, 2005), cent = F)
 
 
 #---- CNRCM-CM5 ----#
 # temp
-PlotTsTend(global = t5.hisG_tend_an, hn = t5.hisN_tend_an, hs = t5.hisS_tend_an, titulo = "T CNRM-CM5 - Historico", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.his_tend", cent = T, anios = c(1976, 2005))
-PlotTsTend(global = t5.26_49G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_49S_tend_an, titulo = "T CNRM-CM5 - RCP26 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.26_49", cent = T, anios = c(2020, 2049))
-PlotTsTend(global = t5.26_99G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_99S_tend_an, titulo = "T CNRM-CM5 - RCP26 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.26_99", cent = T, anios = c(2020, 2049))
-PlotTsTend(global = t5.85_49G_tend_an, hn = t5.85_49N_tend_an, hs = t5.85_49S_tend_an, titulo = "T CNRM-CM5 - RCP85 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.85_49", cent = T, anios = c(2070, 2099))
-PlotTsTend(global = t5.85_99G_tend_an, hn = t5.85_99N_tend_an, hs = t5.85_99S_tend_an, titulo = "T CNRM-CM5 - RCP85 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t5.85_99", cent = T, anios = c(2070, 2099))
+PlotTsTend(global = t5.hisG_tend_an, hn = t5.hisN_tend_an, hs = t5.hisS_tend_an, titulo = "T CNRM-CM5 - Historico", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.his_tend", cent = T, anios = c(1976, 2005))
+PlotTsTend(global = t5.26_49G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_49S_tend_an, titulo = "T CNRM-CM5 - RCP26 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.26_49", cent = T, anios = c(2020, 2049))
+PlotTsTend(global = t5.26_99G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_99S_tend_an, titulo = "T CNRM-CM5 - RCP26 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.26_99", cent = T, anios = c(2020, 2049))
+PlotTsTend(global = t5.85_49G_tend_an, hn = t5.85_49N_tend_an, hs = t5.85_49S_tend_an, titulo = "T CNRM-CM5 - RCP85 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.85_49", cent = T, anios = c(2070, 2099))
+PlotTsTend(global = t5.85_99G_tend_an, hn = t5.85_99N_tend_an, hs = t5.85_99S_tend_an, titulo = "T CNRM-CM5 - RCP85 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.85_99", cent = T, anios = c(2070, 2099))
 
 # q
-PlotTsTend(global = q5.hisG_tend_an, hn = q5.hisN_tend_an, hs = q5.hisS_tend_an, titulo = "q CNRM-CM5 - Historico", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.his_tend", cent = F, anios = c(1976, 2005))
-PlotTsTend(global = q5.26_49G_tend_an, hn = q5.26_49N_tend_an, hs = q5.26_49S_tend_an, titulo = "q CNRM-CM5 - RCP26 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.26_49", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q5.26_99G_tend_an, hn = q5.26_99N_tend_an, hs = q5.26_99S_tend_an, titulo = "q CNRM-CM5 - RCP26 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.26_99", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q5.85_49G_tend_an, hn = q5.85_49N_tend_an, hs = q5.85_49S_tend_an, titulo = "q CNRM-CM5 - RCP85 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q5.85_49", cent = F, anios = c(2070, 2099))
-PlotTsTend(global = q5.85_99G_tend_an, hn = q5.85_99N_tend_an, hs = q5.85_99S_tend_an, titulo = "q CNRM-CM5 - RCP85 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0002), nombre.fig = "q5.85_99", cent = F, anios = c(2070, 2099))
+PlotTsTend(global = q5.hisG_tend_an, hn = q5.hisN_tend_an, hs = q5.hisS_tend_an, titulo = "q CNRM-CM5 - Historico", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.his_tend", cent = F, anios = c(1976, 2005))
+PlotTsTend(global = q5.26_49G_tend_an, hn = q5.26_49N_tend_an, hs = q5.26_49S_tend_an, titulo = "q CNRM-CM5 - RCP26 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.26_49", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q5.26_99G_tend_an, hn = q5.26_99N_tend_an, hs = q5.26_99S_tend_an, titulo = "q CNRM-CM5 - RCP26 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.26_99", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q5.85_49G_tend_an, hn = q5.85_49N_tend_an, hs = q5.85_49S_tend_an, titulo = "q CNRM-CM5 - RCP85 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.85_49", cent = F, anios = c(2070, 2099))
+PlotTsTend(global = q5.85_99G_tend_an, hn = q5.85_99N_tend_an, hs = q5.85_99S_tend_an, titulo = "q CNRM-CM5 - RCP85 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.85_99", cent = F, anios = c(2070, 2099))
 
 #--- CNRM-CM6 ---#
-PlotTsTend(global = t6.hisG_tend_an, hn = t6.hisN_tend_an, hs = t6.hisS_tend_an, titulo = "T CNRM-CM6 - Historico", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.his_tend", cent = T, anios = c(1976, 2005))
-PlotTsTend(global = t6.26_49G_tend_an, hn = t6.26_49N_tend_an, hs = t6.26_49S_tend_an, titulo = "T CNRM-CM6 - SSP126 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.26_49", cent = T, anios = c(2020, 2049))
-PlotTsTend(global = t6.26_99G_tend_an, hn = t6.26_99N_tend_an, hs = t6.26_99S_tend_an, titulo = "T CNRM-CM6 - SSP126 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.26_99", cent = T,anios = c(2020, 2049))
-PlotTsTend(global = t6.85_49G_tend_an, hn = t6.85_49N_tend_an, hs = t6.85_49S_tend_an, titulo = "T CNRM-CM6 - SSP858 2020 - 2050", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.85_49", cent = T, anios = c(2070, 2099))
-PlotTsTend(global = t6.85_99G_tend_an, hn = t6.85_99N_tend_an, hs = t6.85_99S_tend_an, titulo = "T CNRM-CM6 - SSP858 2070 - 2100", y.label = "ºC", y.breaks = seq(2, 14, by = 1), nombre.fig = "t6.85_99", cent = T, anios = c(2070, 2099))
+PlotTsTend(global = t6.hisG_tend_an, hn = t6.hisN_tend_an, hs = t6.hisS_tend_an, titulo = "T CNRM-CM6 - Historico", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.his_tend", cent = T, anios = c(1976, 2005))
+PlotTsTend(global = t6.26_49G_tend_an, hn = t6.26_49N_tend_an, hs = t6.26_49S_tend_an, titulo = "T CNRM-CM6 - SSP126 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.26_49", cent = T, anios = c(2020, 2049))
+PlotTsTend(global = t6.26_99G_tend_an, hn = t6.26_99N_tend_an, hs = t6.26_99S_tend_an, titulo = "T CNRM-CM6 - SSP126 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.26_99", cent = T,anios = c(2020, 2049))
+PlotTsTend(global = t6.85_49G_tend_an, hn = t6.85_49N_tend_an, hs = t6.85_49S_tend_an, titulo = "T CNRM-CM6 - SSP858 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.85_49", cent = T, anios = c(2070, 2099))
+PlotTsTend(global = t6.85_99G_tend_an, hn = t6.85_99N_tend_an, hs = t6.85_99S_tend_an, titulo = "T CNRM-CM6 - SSP858 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.85_99", cent = T, anios = c(2070, 2099))
 
 # q
-PlotTsTend(global = q6.hisG_tend_an, hn = q6.hisN_tend_an, hs = q6.hisS_tend_an, titulo = "q CNRM-CM6 - Historico", y.label = "Kg/Kg", y.breaks = seq(0.0065, 0.01, by = 0.0001), nombre.fig = "q6.his_tend", cent = F,anios = c(1976, 2005))
-PlotTsTend(global = q6.26_49G_tend_an, hn = q6.26_49N_tend_an, hs = q6.26_49S_tend_an, titulo = "q CNRM-CM6 - SSP126 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q6.26_49", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q6.26_99G_tend_an, hn = q6.26_99N_tend_an, hs = q6.26_99S_tend_an, titulo = "q CNRM-CM6 - SSP126 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0001), nombre.fig = "q6.26_99", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q6.85_49G_tend_an, hn = q6.85_49N_tend_an, hs = q6.85_49S_tend_an, titulo = "q CNRM-CM6 - SSP585 2020 - 2050", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.01, by = 0.0002), nombre.fig = "q6.85_49", cent = F,  anios = c(2070, 2099))
-PlotTsTend(global = q6.85_99G_tend_an, hn = q6.85_99N_tend_an, hs = q6.85_99S_tend_an, titulo = "q CNRM-CM6 - SSP585 2070 - 2100", y.label = "Kg/Kg", y.breaks = seq(0.007, 0.012, by = 0.0005), nombre.fig = "q6.85_99", cent = F, anios = c(2070, 2099))
+PlotTsTend(global = q6.hisG_tend_an, hn = q6.hisN_tend_an, hs = q6.hisS_tend_an, titulo = "q CNRM-CM6 - Historico", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.his_tend", cent = F,anios = c(1976, 2005))
+PlotTsTend(global = q6.26_49G_tend_an, hn = q6.26_49N_tend_an, hs = q6.26_49S_tend_an, titulo = "q CNRM-CM6 - SSP126 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.26_49", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q6.26_99G_tend_an, hn = q6.26_99N_tend_an, hs = q6.26_99S_tend_an, titulo = "q CNRM-CM6 - SSP126 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.26_99", cent = F, anios = c(2020, 2049))
+PlotTsTend(global = q6.85_49G_tend_an, hn = q6.85_49N_tend_an, hs = q6.85_49S_tend_an, titulo = "q CNRM-CM6 - SSP585 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.85_49", cent = F,  anios = c(2070, 2099))
+PlotTsTend(global = q6.85_99G_tend_an, hn = q6.85_99N_tend_an, hs = q6.85_99S_tend_an, titulo = "q CNRM-CM6 - SSP585 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.85_99", cent = F, anios = c(2070, 2099))
 
 ##
 
@@ -512,7 +516,47 @@ mapa_topo3(variable = H6.85_99[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs,
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM6 SSP585",  nombre.fig = "H6.difP.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
-#### promedios zonales de H 
+#### promedios zonales de H ####
+H.his_lon = apply(H.his_an[[3]], c(2), mean, na.rm = T)
+
+H5.his_lon = apply(H5.his[[3]], c(2), mean, na.rm = T)
+H5.26_49_lon = apply(H5.26_49[[3]], c(2), mean, na.rm = T); H5.26_99_lon = apply(H5.26_99[[3]], c(2), mean, na.rm = T)
+H5.85_49_lon = apply(H5.85_49[[3]], c(2), mean, na.rm = T); H5.85_99_lon = apply(H5.85_99[[3]], c(2), mean, na.rm = T)
+
+H6.his_lon = apply(H6.his[[3]], c(2), mean, na.rm = T)
+H6.26_49_lon = apply(H6.26_49[[3]], c(2), mean, na.rm = T); H6.26_99_lon = apply(H6.26_99[[3]], c(2), mean, na.rm = T)
+H6.85_49_lon = apply(H6.85_49[[3]], c(2), mean, na.rm = T); H6.85_99_lon = apply(H6.85_99[[3]], c(2), mean, na.rm = T)
+
+datos = as.data.frame(H.his_lon); datos = cbind(lat.obs, datos, H5.his_lon, H6.his_lon); colnames(datos) = c("lat", "obs", "cm5", "cm6")
+g = ggplot(datos, aes(x = lat)) + theme_minimal()+
+  geom_line(aes(y = obs, colour = "Observado"), size = 1, show.legend = T) + 
+  geom_line(aes(y = cm5, colour = "CNRM-CM5"),linetype = 1, size = 1, show.legend = T)  +
+  geom_line(aes(y = cm6, colour = "CNRM-CM6"),linetype = 1, size = 1, show.legend = T) +
+  scale_colour_manual("", 
+                      breaks = c("Observado", "CNRM-CM5", "CNRM-CM6"),
+                      values = c("black","springgreen2", "tomato1")) +
+  scale_x_latitude(breaks = seq(-90, 90, by = 20)) + scale_y_continuous(breaks = seq(10, 80, by = 10), limits = c(10, 80)) +
+  geom_vline(xintercept = 0, alpha = 0.3)+
+  ggtitle("Promedio H Zonal Historico") +
+  ylab("kJ/kg") +
+  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        panel.ontop = F,
+        plot.title = element_text(hjust = 0.5, size = 18),
+        legend.position = "bottom", legend.key.width = unit(3, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 14)) 
+
+ggsave(paste(getwd(), "/Salidas/TP3/", "H.his_lon", ".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+
+  
+HLonMean(serie1 = H5.his_lon, serie2 = H5.26_49_lon, serie3 = H5.26_99_lon, lat = lat.obs, titulo = "Promedio Zonal H  CNRM-CM5 RCP2.6", nombre.fig = "H5.lon26_49")
+HLonMean(serie1 = H5.his_lon, serie2 = H5.85_49_lon, serie3 = H5.85_99_lon, lat = lat.obs, titulo = "Promedio Zonal H  CNRM-CM5 RCP8.5", nombre.fig = "H5.lon85_49")
+HLonMean(serie1 = H6.his_lon, serie2 = H6.26_49_lon, serie3 = H6.26_99_lon, lat = lat.obs, titulo = "Promedio Zonal H  CNRM-CM5 SSP126", nombre.fig = "H6.lon26_49")
+HLonMean(serie1 = H6.his_lon, serie2 = H6.85_49_lon, serie3 = H6.85_99_lon, lat = lat.obs, titulo = "Promedio Zonal H  CNRM-CM5 SSP585", nombre.fig = "H6.lon85_49")
+
+
+
+
 #### radacion ####
 q.obs = RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons)
 
