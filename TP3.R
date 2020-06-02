@@ -569,13 +569,40 @@ source("FUNCIONES.R")
 
 
 
+etp = etp6.his_an[[1]]/(886400*(365/12))
+
+t6.his = AnualMeanR(t6.his[[3]])
+hu6.his = AnualMeanR(hu6.his[[3]])
+u6.his = AnualMeanR(u6.his[[3]])
+v6.his = AnualMeanR(v6.his[[3]])
+RT = etp[,,,1:length(t6.his[1,1,1,])]*Lv(t6.his)*1000  ## por o dividido?? dividiendo no dan las unidades...
+
+h = S(t6.his)*1000 + Lv(t6.his)*hu6.his*1000
+
+
+Fa.u = h*u6.his; Fa.v = h*v6.his
+
+Fa.u = apply(Fa.u, c(1,2), mean, na.rm = T); Fa.v = apply(Fa.v, c(1,2), mean, na.rm = T)
+
+lat = lat.obs
+dx = 6370000*2*pi/144
+dy = 6370000*pi/73
+prueba1 = Dx(arr = Fa.u/9.8, dx = dx) + Dy(arr = Fa.v/9.8, dy = dy )
+
+prueba = prueba1 - apply(RT, c(1,2), mean, na.rm = T)
+
+# da cualquier cosa...
+
+aux = array(prueba, dim = c(144,73,1))
+mapa_topo3(variable = aux, lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(-1, 1, by = 0.1), mapa = "mundo", revert = T
+           , nombre.fig = "preuba", na.fill = 0, salida = "/Salidas/TP3/")
 
 
 
 
-
-
-
-
+mapa_topo3(variable = H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(20, 70, by = 5), revert = T
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , alpha.vsig = 1, sig = T
+           , titulo = "H observada  1976 - 2005",  nombre.fig = "H.his", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 
