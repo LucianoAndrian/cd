@@ -2030,31 +2030,8 @@ Dy = function(arr, dy){
 }
 
 
-Dx = function(arr,dx, es){
+Dx = function(arr,dx){
   
-  if(es == "no"){
-    
-    dUx = arr*0
-    a = length(arr[,1])
-    b = length(arr[1,])
-    i = 1
-    
-    while(i<a){
-      j = 1
-      while(j<b){
-        if(j == a-1){
-          dUx[i,j]=(arr[a,j]-arr[i,j])/dx
-        } else {
-          dUx[i,j]=(arr[i+1,j]-arr[i,j])/dx
-        }
-        j=j+1
-      }
-      i=i+1
-      
-    }
-    return(dUx) 
-    
-  } else {
     # este es por las dudas.
     dUx = arr*0
     a = length(arr[,1])
@@ -2065,9 +2042,9 @@ Dx = function(arr,dx, es){
       j = 1
       while(j<b){
         if(j == a-1){
-          dUx[i,j]=(arr[a,j]-arr[i,j])/(dx*cos(lat[i]*pi/180))/2
+          dUx[i,j]=(arr[a,j]-arr[i,j])/(dx*cos(lat[j]*pi/180))
         } else {
-          dUx[i,j]=(arr[i+1,j]-arr[i,j])/(dx*cos(lat[i]*pi/180))/2
+          dUx[i,j]=(arr[i+1,j]-arr[i,j])/(dx*cos(lat[j]*pi/180))
         }
         j=j+1
       }
@@ -2075,7 +2052,6 @@ Dx = function(arr,dx, es){
       
     }
     return(dUx) 
-  }
   
 }
 
