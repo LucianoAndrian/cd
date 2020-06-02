@@ -558,13 +558,24 @@ HLonMean(serie1 = H6.his_lon, serie2 = H6.85_49_lon, serie3 = H6.85_99_lon, lat 
 
 
 #### radacion ####
-q.obs = RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons)
+# solo CM6
 
-etp = etp5.his_an[[1]]/(365/12)
+#------------------------------------------------------- HISTORICAL ------------------------------------------------------#
+load("RDatas/TP3.RDatas/t6.his.RData"); load("RDatas/TP3.RDatas/hu6.his.RData"); load("RDatas/TP3.RDatas/etp6.his_an.RData")
+load("RDatas/TP3.RDatas/u6.his.RData"); load("RDatas/TP3.RDatas/v6.his.RData")
+#-------------------------------------------------------------------------------------------------------------------------#
+.rs.restartR() 
+source("FUNCIONES.R")
 
-RT = etp/Lv(t5.his_an[[1]])
-h = S(t.obs_seasons) + Lv(t.obs_seasons)*RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons) # si es datos obs, --> q(hr)
-Fa = h.V
 
-RhQ(rh = hu.obs_seasons, p = pr.obs_seasons, t = t.obs_seasons)
+
+
+
+
+
+
+
+
+
+
 
