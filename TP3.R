@@ -51,143 +51,59 @@ q.obs_anual.mean = RhQ(rh = hu.obs_anual.mean, p = pr.obs_anual.mean, t = t.obs_
 #--- TENDENCIAS ----#
 #### OBS ####
 
-t.tend_an = Tendencia(apply(t.obs_anual.mean, c(3), mean, na.rm = T))
-t.tend_anS = Tendencia(apply(t.obs_anual.mean[,2:37,], c(3), mean, na.rm = T))
-t.tend_anN = Tendencia(apply(t.obs_anual.mean[,37:73,], c(3), mean, na.rm = T))
-
-q.tend_an = Tendencia(apply(q.obs_anual.mean, c(3), mean, na.rm = T))
-q.tend_anS = Tendencia(apply(q.obs_anual.mean[,1:37,], c(3), mean, na.rm = T))
-q.tend_anN = Tendencia(apply(q.obs_anual.mean[,37:73,], c(3), mean, na.rm = T))
+t.tend = Tendencia(t.obs_anual.mean)
+q.tend = Tendencia(q.obs_anual.mean)
 
 #--- mods ---# 
 #### CNRM-CM5 #####
 #------------------------------------------------------- HISTORICAL ------------------------------------------------------#
-load("RDatas/TP3.RDatas/t5.his.RData"); load("RDatas/TP3.RDatas/hu5.his.RData"); load("RDatas/TP3.RDatas/etp5.his.RData")
+load("RDatas/TP3.RDatas/t5.his.RData"); load("RDatas/TP3.RDatas/hu5.his.RData")
+t5.his = Tendencia(apply(t5.his[[1]], c(1,2,3), mean, na.rm = T))
+q5.his = Tendencia(apply(hu5.his[[1]], c(1,2,3), mean, na.rm = T))
+rm(hu5.his)
 #-------------------------------------------------------------------------------------------------------------------------#
 
-t5.hisG_tend_an = Tendencia(apply(t5.his[[1]], c(3), mean, na.rm = T))
-t5.hisN_tend_an = Tendencia(apply(t5.his[[1]][,37:73,,], c(3), mean, na.rm = T))
-t5.hisS_tend_an = Tendencia(apply(t5.his[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-q5.hisG_tend_an = Tendencia(apply(hu5.his[[1]], c(3), mean, na.rm = T))
-q5.hisN_tend_an = Tendencia(apply(hu5.his[[1]][,37:73,,], c(3), mean, na.rm = T))
-q5.hisS_tend_an = Tendencia(apply(hu5.his[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-etp5.hisG_tend_an = Tendencia(apply(etp5.his[[1]], c(3), mean, na.rm = T))
-etp5.hisN_tend_an = Tendencia(apply(etp5.his[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp5.hisS_tend_an = Tendencia(apply(etp5.his[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t5.his, hu5.his, etp5.his)
-#-------------------------------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------- RCP26 2020 2049--------------------------------------------------#
 load("RDatas/TP3.RDatas/t5.26_49.RData"); load("RDatas/TP3.RDatas/hu5.26_49.RData")
-load("RDatas/TP3.RDatas/etp5.26_49.RData")
+t5.26_49 = Tendencia(apply(t5.26_49[[1]], c(1,2,3), mean, na.rm = T))
+q5.26_49 = Tendencia(apply(hu5.26_49[[1]], c(1,2,3), mean, na.rm = T))
+rm(hu5.26_49)
 #-------------------------------------------------------------------------------------------------------------------------#
-
-t5.26_49G_tend_an = Tendencia(apply(t5.26_49[[1]], c(3), mean, na.rm = T))
-t5.26_49N_tend_an = Tendencia(apply(t5.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-t5.26_49S_tend_an = Tendencia(apply(t5.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-q5.26_49G_tend_an = Tendencia(apply(hu5.26_49[[1]], c(3), mean, na.rm = T))
-q5.26_49N_tend_an = Tendencia(apply(hu5.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-q5.26_49S_tend_an = Tendencia(apply(hu5.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-etp5.26_49G_tend_an = Tendencia(apply(etp5.26_49[[1]], c(3), mean, na.rm = T))
-etp5.26_49N_tend_an = Tendencia(apply(etp5.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp5.26_49S_tend_an = Tendencia(apply(etp5.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t5.26_49, hu5.26_49, etp5.26_49)
-#-------------------------------------------------------------------------------------------------------------------------#
-
 
 
 #------------------------------------------------------- RCP26 2070 2099--------------------------------------------------#
 load("RDatas/TP3.RDatas/t5.26_99.RData"); load("RDatas/TP3.RDatas/hu5.26_99.RData")
-load("RDatas/TP3.RDatas/etp5.26_99.RData")
+t5.26_99 = Tendencia(apply(t5.26_99[[1]], c(1,2,3), mean, na.rm = T))
+q5.26_99 = Tendencia(apply(hu5.26_99[[1]], c(1,2,3), mean, na.rm = T))
+rm(hu5.26_99)
 #-------------------------------------------------------------------------------------------------------------------------#
 
-t5.26_99G_tend_an = Tendencia(apply(t5.26_99[[1]], c(3), mean, na.rm = T))
-t5.26_99N_tend_an = Tendencia(apply(t5.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-t5.26_99S_tend_an = Tendencia(apply(t5.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-q5.26_99G_tend_an = Tendencia(apply(hu5.26_99[[1]], c(3), mean, na.rm = T))
-q5.26_99N_tend_an = Tendencia(apply(hu5.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-q5.26_99S_tend_an = Tendencia(apply(hu5.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-etp5.26_99G_tend_an = Tendencia(apply(etp5.26_99[[1]], c(3), mean, na.rm = T))
-etp5.26_99N_tend_an = Tendencia(apply(etp5.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp5.26_99S_tend_an = Tendencia(apply(etp5.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t5.26_99, hu5.26_99, etp5.26_99)
-#-------------------------------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------- RCP85 2020 2049--------------------------------------------------#
 load("RDatas/TP3.RDatas/t5.85_49.RData"); load("RDatas/TP3.RDatas/hu5.85_49.RData")
-load("RDatas/TP3.RDatas/etp5.85_49.RData")
-#-------------------------------------------------------------------------------------------------------------------------#
-
-t5.85_49G_tend_an = Tendencia(apply(t5.85_49[[1]], c(3), mean, na.rm = T))
-t5.85_49N_tend_an = Tendencia(apply(t5.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-t5.85_49S_tend_an = Tendencia(apply(t5.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-q5.85_49G_tend_an = Tendencia(apply(hu5.85_49[[1]], c(3), mean, na.rm = T))
-q5.85_49N_tend_an = Tendencia(apply(hu5.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-q5.85_49S_tend_an = Tendencia(apply(hu5.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-etp5.85_49G_tend_an = Tendencia(apply(etp5.85_49[[1]], c(3), mean, na.rm = T))
-etp5.85_49N_tend_an = Tendencia(apply(etp5.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp5.85_49S_tend_an = Tendencia(apply(etp5.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t5.85_49, hu5.85_49, etp5.85_49)
+t5.85_49 = Tendencia(apply(t5.85_49[[1]], c(1,2,3), mean, na.rm = T))
+q5.85_49 = Tendencia(apply(hu5.85_49[[1]], c(1,2,3), mean, na.rm = T))
+rm(hu5.85_49)
 #-------------------------------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------- RCP85 2070 2099--------------------------------------------------#
 load("RDatas/TP3.RDatas/t5.85_99.RData"); load("RDatas/TP3.RDatas/hu5.85_99.RData")
-load("RDatas/TP3.RDatas/etp5.85_99.RData")
-#-------------------------------------------------------------------------------------------------------------------------#
-
-t5.85_99G_tend_an = Tendencia(apply(t5.85_99[[1]], c(3), mean, na.rm = T))
-t5.85_99N_tend_an = Tendencia(apply(t5.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-t5.85_99S_tend_an = Tendencia(apply(t5.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-q5.85_99G_tend_an = Tendencia(apply(hu5.85_99[[1]], c(3), mean, na.rm = T))
-q5.85_99N_tend_an = Tendencia(apply(hu5.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-q5.85_99S_tend_an = Tendencia(apply(hu5.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-etp5.85_99G_tend_an = Tendencia(apply(etp5.85_99[[1]], c(3), mean, na.rm = T))
-etp5.85_99N_tend_an = Tendencia(apply(etp5.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp5.85_99S_tend_an = Tendencia(apply(etp5.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t5.85_99, hu5.85_99, etp5.85_99)
+t5.85_99 = Tendencia(apply(t5.85_99[[1]], c(1,2,3), mean, na.rm = T))
+q5.85_99 = Tendencia(apply(hu5.85_99[[1]], c(1,2,3), mean, na.rm = T))
+rm(hu5.85_99)
 #-------------------------------------------------------------------------------------------------------------------------#
 
 #.rs.restartR() <- ACA ESTA EL COSO PARA RESETEAR!!!
 
 #### CNRM-CM6 ####
 #------------------------------------------------------- HISTORICAL ------------------------------------------------------#
-load("RDatas/TP3.RDatas/t6.his.RData"); load("RDatas/TP3.RDatas/hu6.his.RData"); load("RDatas/TP3.RDatas/etp6.his_an.RData")
+load("RDatas/TP3.RDatas/t6.his.RData"); load("RDatas/TP3.RDatas/hu6.his.RData")
 t6.his = AnualMean(apply(t6.his[[3]], c(1,2,3), mean, na.rm = T))
 hu6.his = AnualMean(apply(hu6.his[[3]], c(1,2,3), mean, na.rm = T))
-#-------------------------------------------------------------------------------------------------------------------------#
-
-t6.hisG_tend_an = Tendencia(apply(t6.his, c(3), mean, na.rm = T))
-t6.hisN_tend_an = Tendencia(apply(t6.his[,37:73,], c(3), mean, na.rm = T))
-t6.hisS_tend_an = Tendencia(apply(t6.his[,1:37,], c(3), mean, na.rm = T))
-
-q6.hisG_tend_an = Tendencia(apply(hu6.his, c(3), mean, na.rm = T))
-q6.hisN_tend_an = Tendencia(apply(hu6.his[,37:73,], c(3), mean, na.rm = T))
-q6.hisS_tend_an = Tendencia(apply(hu6.his[,1:37,], c(3), mean, na.rm = T))
-
-etp6.hisG_tend_an = Tendencia(apply(etp6.his_an[[1]], c(3), mean, na.rm = T))
-etp6.hisN_tend_an = Tendencia(apply(etp6.his_an[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp6.hisS_tend_an = Tendencia(apply(etp6.his_an[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t6.his,hu6.his,etp6.his_an)
+t6.his = Tendencia(t6.his)
+q6.his = Tendencia(hu6.his)
+rm(hu6.his)
 #-------------------------------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------- SSP26 2020 2049--------------------------------------------------#
@@ -195,24 +111,10 @@ load("RDatas/TP3.RDatas/t6.26_49.RData"); load("RDatas/TP3.RDatas/hu6.26_49.RDat
 load("RDatas/TP3.RDatas/etp6.26_49.RData")
 t6.26_2049 = AnualMean(apply(t6.26_2049[[3]], c(1,2,3), mean, na.rm = T))
 hu6.26_2049 = AnualMean(apply(hu6.26_2049[[3]], c(1,2,3), mean, na.rm = T))
-
+t6.26_49 = Tendencia(t6.26_2049)
+q6.26_49 = Tendencia(hu6.26_2049)
+rm(hu6.26_2049)
 #-------------------------------------------------------------------------------------------------------------------------#
-
-t6.26_49G_tend_an = Tendencia(apply(t6.26_2049, c(3), mean, na.rm = T))
-t6.26_49N_tend_an = Tendencia(apply(t6.26_2049[,37:73,], c(3), mean, na.rm = T))
-t6.26_49S_tend_an = Tendencia(apply(t6.26_2049[,1:37,], c(3), mean, na.rm = T))
-
-q6.26_49G_tend_an = Tendencia(apply(hu6.26_2049, c(3), mean, na.rm = T))
-q6.26_49N_tend_an = Tendencia(apply(hu6.26_2049[,37:73,], c(3), mean, na.rm = T))
-q6.26_49S_tend_an = Tendencia(apply(hu6.26_2049[,1:37,], c(3), mean, na.rm = T))
-
-etp6.26_49G_tend_an = Tendencia(apply(etp6.26_49[[1]], c(3), mean, na.rm = T))
-etp6.26_49N_tend_an = Tendencia(apply(etp6.26_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp6.26_49S_tend_an = Tendencia(apply(etp6.26_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t6.26_2049, hu6.26_2049, etp6.26_49)
-#-------------------------------------------------------------------------------------------------------------------------#
-
 
 
 #------------------------------------------------------- SSP26 2070 2099--------------------------------------------------#
@@ -220,70 +122,30 @@ load("RDatas/TP3.RDatas/t6.26_99.RData"); load("RDatas/TP3.RDatas/hu6.26_99.RDat
 load("RDatas/TP3.RDatas/etp6.26_99.RData")
 t6.26_2099 = AnualMean(apply(t6.26_2099[[3]], c(1,2,3), mean, na.rm = T))
 hu6.26_2099 = AnualMean(apply(hu6.26_2099[[3]], c(1,2,3), mean, na.rm = T))
+t6.26_99 = Tendencia(t6.26_2099)
+q6.26_99 = Tendencia(hu6.26_2099)
 #-------------------------------------------------------------------------------------------------------------------------#
-
-t6.26_99G_tend_an = Tendencia(apply(t6.26_2099, c(3), mean, na.rm = T))
-t6.26_99N_tend_an = Tendencia(apply(t6.26_2099[,37:73,], c(3), mean, na.rm = T))
-t6.26_99S_tend_an = Tendencia(apply(t6.26_2099[,1:37,], c(3), mean, na.rm = T))
-
-q6.26_99G_tend_an = Tendencia(apply(hu6.26_2099, c(3), mean, na.rm = T))
-q6.26_99N_tend_an = Tendencia(apply(hu6.26_2099[,37:73,], c(3), mean, na.rm = T))
-q6.26_99S_tend_an = Tendencia(apply(hu6.26_2099[,1:37,], c(3), mean, na.rm = T))
-
-etp6.26_99G_tend_an = Tendencia(apply(etp6.26_99[[1]], c(3), mean, na.rm = T))
-etp6.26_99N_tend_an = Tendencia(apply(etp6.26_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp6.26_99S_tend_an = Tendencia(apply(etp6.26_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t6.26_2099, hu6.26_2099, etp6.26_99)
+rm(hu6.26_2099)
 #-------------------------------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------- SSP85 2020 2049--------------------------------------------------#
 load("RDatas/TP3.RDatas/t6.85_49.RData"); load("RDatas/TP3.RDatas/hu6.85_49.RData")
-load("RDatas/TP3.RDatas/etp6.85_49.RData")
 t6.85_2049 = AnualMean(apply(t6.85_2049[[3]], c(1,2,3), mean, na.rm = T))
 hu6.85_2049 = AnualMean(apply(hu6.85_2049[[3]], c(1,2,3), mean, na.rm = T))
+t6.85_49 = Tendencia(t6.85_2049)
+q6.85_49 = Tendencia(hu6.85_2049)
+rm(hu6.85_2049)
 #-------------------------------------------------------------------------------------------------------------------------#
 
-t6.85_49G_tend_an = Tendencia(apply(t6.85_2049, c(3), mean, na.rm = T))
-t6.85_49N_tend_an = Tendencia(apply(t6.85_2049[,37:73,], c(3), mean, na.rm = T))
-t6.85_49S_tend_an = Tendencia(apply(t6.85_2049[,1:37,], c(3), mean, na.rm = T))
-
-q6.85_49G_tend_an = Tendencia(apply(hu6.85_2049, c(3), mean, na.rm = T))
-q6.85_49N_tend_an = Tendencia(apply(hu6.85_2049[,37:73,], c(3), mean, na.rm = T))
-q6.85_49S_tend_an = Tendencia(apply(hu6.85_2049[,1:37,], c(3), mean, na.rm = T))
-
-etp6.85_49G_tend_an = Tendencia(apply(etp6.85_49[[1]], c(3), mean, na.rm = T))
-etp6.85_49N_tend_an = Tendencia(apply(etp6.85_49[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp6.85_49S_tend_an = Tendencia(apply(etp6.85_49[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t6.85_2049, hu6.85_2049, etp6.85_49)
-#-------------------------------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------- SSP85 2070 2099--------------------------------------------------#
 load("RDatas/TP3.RDatas/t6.85_99.RData"); load("RDatas/TP3.RDatas/hu6.85_99.RData")
-load("RDatas/TP3.RDatas/etp6.85_99.RData")
 t6.85_2099 = AnualMean(apply(t6.85_2099[[3]], c(1,2,3), mean, na.rm = T))
 hu6.85_2099 = AnualMean(apply(hu6.85_2099[[3]], c(1,2,3), mean, na.rm = T))
+t6.85_99 = Tendencia(t6.85_2099)
+q6.85_99 = Tendencia(hu6.85_2099)
+rm(hu6.85_2099)
 #-------------------------------------------------------------------------------------------------------------------------#
-
-t6.85_99G_tend_an = Tendencia(apply(t6.85_2099, c(3), mean, na.rm = T))
-t6.85_99N_tend_an = Tendencia(apply(t6.85_2099[,37:73,], c(3), mean, na.rm = T))
-t6.85_99S_tend_an = Tendencia(apply(t6.85_2099[,1:37,], c(3), mean, na.rm = T))
-
-q6.85_99G_tend_an = Tendencia(apply(hu6.85_2099, c(3), mean, na.rm = T))
-q6.85_99N_tend_an = Tendencia(apply(hu6.85_2099[,37:73,], c(3), mean, na.rm = T))
-q6.85_99S_tend_an = Tendencia(apply(hu6.85_2099[,1:37,], c(3), mean, na.rm = T))
-
-etp6.85_99G_tend_an = Tendencia(apply(etp6.85_99[[1]], c(3), mean, na.rm = T))
-etp6.85_99N_tend_an = Tendencia(apply(etp6.85_99[[1]][,37:73,,], c(3), mean, na.rm = T))
-etp6.85_99S_tend_an = Tendencia(apply(etp6.85_99[[1]][,1:37,,], c(3), mean, na.rm = T))
-
-#-------------------------------------------------------------------------------------------------------------------------#
-rm(t6.85_2099, hu6.85_2099, etp6.85_99)
-#-------------------------------------------------------------------------------------------------------------------------#
-
-
 
 
 #### Graficos Tendencia ####
@@ -291,43 +153,238 @@ rm(t6.85_2099, hu6.85_2099, etp6.85_99)
 source("FUNCIONES.R")
 library(ggplot2)
 #--- OBSERVADO ----#
+#---------------------------------------------------------- TEMPERATURA ---------------------------------------------------#
+auxx = t.tend; titulo = "Tendencia de T Reanalisis 1976 - 2005"; nombre.fig = "t.r_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1)); mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
 
-q.br = seq(0.0065, 0.012, by = 0.001)
 
-PlotTsTend(global = t.tend_an, hn = t.tend_anN, hs = t.tend_anS, titulo = "T Observada", y.label = "ºC", y.breaks = seq(1, 14, by = 2), nombre.fig = "t.obs_tend", anios = c(1976, 2005), cent = F)
-PlotTsTend(global = q.tend_an, hn = q.tend_anN, hs = q.tend_anS, titulo = "q Observada", y.label = "Kg/Kg", y.breaks = q.br , nombre.fig = "q.obs_tend", anios = c(1976, 2005), cent = F)
+auxx = t5.his; titulo = "Tendencia de T CNRM-CM5 - 1976 - 2005"; nombre.fig = "t5.his_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
 
 
-#---- CNRCM-CM5 ----#
-# temp
-PlotTsTend(global = t5.hisG_tend_an, hn = t5.hisN_tend_an, hs = t5.hisS_tend_an, titulo = "T CNRM-CM5 - Historico", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.his_tend", cent = T, anios = c(1976, 2005))
-PlotTsTend(global = t5.26_49G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_49S_tend_an, titulo = "T CNRM-CM5 - RCP26 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.26_49", cent = T, anios = c(2020, 2049))
-PlotTsTend(global = t5.26_99G_tend_an, hn = t5.26_49N_tend_an, hs = t5.26_99S_tend_an, titulo = "T CNRM-CM5 - RCP26 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.26_99", cent = T, anios = c(2020, 2049))
-PlotTsTend(global = t5.85_49G_tend_an, hn = t5.85_49N_tend_an, hs = t5.85_49S_tend_an, titulo = "T CNRM-CM5 - RCP85 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.85_49", cent = T, anios = c(2070, 2099))
-PlotTsTend(global = t5.85_99G_tend_an, hn = t5.85_99N_tend_an, hs = t5.85_99S_tend_an, titulo = "T CNRM-CM5 - RCP85 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t5.85_99", cent = T, anios = c(2070, 2099))
 
-# q
-PlotTsTend(global = q5.hisG_tend_an, hn = q5.hisN_tend_an, hs = q5.hisS_tend_an, titulo = "q CNRM-CM5 - Historico", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.his_tend", cent = F, anios = c(1976, 2005))
-PlotTsTend(global = q5.26_49G_tend_an, hn = q5.26_49N_tend_an, hs = q5.26_49S_tend_an, titulo = "q CNRM-CM5 - RCP26 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.26_49", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q5.26_99G_tend_an, hn = q5.26_99N_tend_an, hs = q5.26_99S_tend_an, titulo = "q CNRM-CM5 - RCP26 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.26_99", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q5.85_49G_tend_an, hn = q5.85_49N_tend_an, hs = q5.85_49S_tend_an, titulo = "q CNRM-CM5 - RCP85 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.85_49", cent = F, anios = c(2070, 2099))
-PlotTsTend(global = q5.85_99G_tend_an, hn = q5.85_99N_tend_an, hs = q5.85_99S_tend_an, titulo = "q CNRM-CM5 - RCP85 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q5.85_99", cent = F, anios = c(2070, 2099))
+auxx = t6.his; titulo = "Tendencia de T CNRM-CM6 - 1976 - 2005"; nombre.fig = "t6.his_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
 
-#--- CNRM-CM6 ---#
-PlotTsTend(global = t6.hisG_tend_an, hn = t6.hisN_tend_an, hs = t6.hisS_tend_an, titulo = "T CNRM-CM6 - Historico", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.his_tend", cent = T, anios = c(1976, 2005))
-PlotTsTend(global = t6.26_49G_tend_an, hn = t6.26_49N_tend_an, hs = t6.26_49S_tend_an, titulo = "T CNRM-CM6 - SSP126 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.26_49", cent = T, anios = c(2020, 2049))
-PlotTsTend(global = t6.26_99G_tend_an, hn = t6.26_99N_tend_an, hs = t6.26_99S_tend_an, titulo = "T CNRM-CM6 - SSP126 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.26_99", cent = T,anios = c(2020, 2049))
-PlotTsTend(global = t6.85_49G_tend_an, hn = t6.85_49N_tend_an, hs = t6.85_49S_tend_an, titulo = "T CNRM-CM6 - SSP858 2020 - 2050", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.85_49", cent = T, anios = c(2070, 2099))
-PlotTsTend(global = t6.85_99G_tend_an, hn = t6.85_99N_tend_an, hs = t6.85_99S_tend_an, titulo = "T CNRM-CM6 - SSP858 2070 - 2100", y.label = "ºC", y.breaks = seq(1, 14, by = 1), nombre.fig = "t6.85_99", cent = T, anios = c(2070, 2099))
 
-# q
-PlotTsTend(global = q6.hisG_tend_an, hn = q6.hisN_tend_an, hs = q6.hisS_tend_an, titulo = "q CNRM-CM6 - Historico", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.his_tend", cent = F,anios = c(1976, 2005))
-PlotTsTend(global = q6.26_49G_tend_an, hn = q6.26_49N_tend_an, hs = q6.26_49S_tend_an, titulo = "q CNRM-CM6 - SSP126 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.26_49", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q6.26_99G_tend_an, hn = q6.26_99N_tend_an, hs = q6.26_99S_tend_an, titulo = "q CNRM-CM6 - SSP126 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.26_99", cent = F, anios = c(2020, 2049))
-PlotTsTend(global = q6.85_49G_tend_an, hn = q6.85_49N_tend_an, hs = q6.85_49S_tend_an, titulo = "q CNRM-CM6 - SSP585 2020 - 2050", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.85_49", cent = F,  anios = c(2070, 2099))
-PlotTsTend(global = q6.85_99G_tend_an, hn = q6.85_99N_tend_an, hs = q6.85_99S_tend_an, titulo = "q CNRM-CM6 - SSP585 2070 - 2100", y.label = "Kg/Kg", y.breaks = q.br, nombre.fig = "q6.85_99", cent = F, anios = c(2070, 2099))
 
-##
+
+auxx = t5.26_49; titulo = "Tendencia de T CNRM-CM5 RCP2.6 - 2020 - 2049"; nombre.fig = "t5.26_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = t5.26_99; titulo = "Tendencia de T CNRM-CM5 RCP2.6 - 2070 - 2099"; nombre.fig = "t5.26_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+
+auxx = t5.85_49; titulo = "Tendencia de T CNRM-CM5 RCP8.5 - 2020 - 2049"; nombre.fig = "t5.85_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = t5.85_99; titulo = "Tendencia de T CNRM-CM5 RCP8.5 - 2070 - 2099"; nombre.fig = "t5.85_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = t6.26_49; titulo = "Tendencia de T CNRM-CM6 SSP126 - 2020 - 2049"; nombre.fig = "t6.26_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = t6.26_99; titulo = "Tendencia de T CNRM-CM6 SSP126 - 2070 - 2099"; nombre.fig = "t6.26_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+
+auxx = t6.85_49; titulo = "Tendencia de T CNRM-CM6 SSP585 - 2020 - 2049"; nombre.fig = "t6.85_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = t6.85_99; titulo = "Tendencia de T CNRM-CM6 SSP585 - 2070 - 2099"; nombre.fig = "t6.85_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-4,4, by = 0.5)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "ºC/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+#-------------------------------------------------------------------------------------------------------------------------#
+
+#-------------------------------------------------------- HUMEDAD --------------------------------------------------------#
+
+auxx = q.tend; titulo = "Tendencia de q Reanalisis 1976 - 2005"; nombre.fig = "q.r_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1)); mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = q5.his; titulo = "Tendencia de q CNRM-CM5 - 1976 - 2005"; nombre.fig = "q5.his_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+
+auxx = q6.his; titulo = "Tendencia de q CNRM-CM6 - 1976 - 2005"; nombre.fig = "q6.his_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+
+
+auxx = q5.26_49; titulo = "Tendencia de q CNRM-CM5 RCP2.6 - 2020 - 2049"; nombre.fig = "q5.26_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = q5.26_99; titulo = "Tendencia de q CNRM-CM5 RCP2.6 - 2070 - 2099"; nombre.fig = "q5.26_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+
+auxx = q5.85_49; titulo = "Tendencia de q CNRM-CM5 RCP8.5 - 2020 - 2049"; nombre.fig = "q5.85_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = q5.85_99; titulo = "Tendencia de q CNRM-CM5 RCP8.5 - 2070 - 2099"; nombre.fig = "q5.85_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = q6.26_49; titulo = "Tendencia de q CNRM-CM6 SSP126 - 2020 - 2049"; nombre.fig = "q6.26_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = q6.26_99; titulo = "Tendencia de q CNRM-CM6 SSP126 - 2070 - 2099"; nombre.fig = "q6.26_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+
+auxx = q6.85_49; titulo = "Tendencia de q CNRM-CM6 SSP585 - 2020 - 2049"; nombre.fig = "q6.85_49_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+auxx = q6.85_99; titulo = "Tendencia de q CNRM-CM6 SSP585 - 2070 - 2099"; nombre.fig = "q6.85_99_tend" 
+aux = array(auxx[[1]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask = array(auxx[[2]][,ncol(auxx[[1]]):1], c(144,73,1))
+mask[which(!is.na(mask))] = 0
+mask[which(mask == 1)] = NA # ver esto
+mapa_topo3(variable = aux*30*1000, variable.sig = mask, lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 11, revert = F, escala = seq(-2, 2, by = 0.25)
+           , color.vsig = "black", alpha.vsig = 0.3, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "kg/kg/30Años", na.fill = -1000
+           , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP3/Tend/", colorbar.pos = "bottom")
+
+
+#---------------------------------------------------------------------------------------------------------#
+
+
 
 
 #### ENTALPIA ####
@@ -353,12 +410,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(20, 70, by = 5), revert = T
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "H observada  1976 - 2005",  nombre.fig = "H.his", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Entalpía Reanalisis  1976 - 2005",  nombre.fig = "H.his", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = T
+mapa_topo3(variable = H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Aporte de q en H  1976 - 2005",  nombre.fig = "H.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q  1976 - 2005 Reanalisis",  nombre.fig = "H.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 
 # Bias CNRM-CM5
@@ -369,13 +426,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.his[[3]] - H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 9, escala = seq(-8, 8, by = 2), revert = T
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Bias H CNRM-CM5",  nombre.fig = "H5.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Bias Entalpía CNRM-CM5",  nombre.fig = "H5.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H5.his[[2]] - H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-10, 10, by = 2), revert = F
+mapa_topo3(variable = H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Aporte de q en H  1976 - 2005",  nombre.fig = "H5.biasP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
-
+           , titulo = "Aporte de q 1976 - 2005 CNRM-CM6",  nombre.fig = "H5.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 # Bias CNRM-CM6
 mask = H6.his[[3]] - H.his_an[[3]]
@@ -387,10 +443,10 @@ mapa_topo3(variable = H6.his[[3]] - H.his_an[[3]], lon = lon.obs, lat = lat.obs,
            , alpha.vsig = 1, sig = T
            , titulo = "Bias H CNRM-CM6",  nombre.fig = "H6.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H6.his[[2]] - H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-10, 10, by = 2), revert = F
+mapa_topo3(variable = H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Aporte de q en H  1976 - 2005",  nombre.fig = "H6.biasP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q 1976 - 2005 CNRM-CM6",  nombre.fig = "H6.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 
 
@@ -403,12 +459,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.26_49[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H5.26_49[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H5.26_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM5 RCP2.6",  nombre.fig = "H5.difP.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q Futuro Cercano CNRM-CM5 RCP2.6",  nombre.fig = "H5P.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 
 mask = H5.26_99[[3]] - H5.his[[3]]
@@ -418,12 +474,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.26_99[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H5.26_99[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H5.26_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM5 RCP2.6",  nombre.fig = "H5.difP.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q Futuro Lejano  CNRM-CM5 RCP2.6",  nombre.fig = "H5P.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 # 8.5
 mask = H5.85_49[[3]] - H5.his[[3]]
@@ -433,12 +489,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.85_49[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H5.85_49[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H5.85_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM5 RCP8.5",  nombre.fig = "H5.difP.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q  Futuro Cercano CNRM-CM5 RCP8.5",  nombre.fig = "H5.P.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 
 mask = H5.85_99[[3]] - H5.his[[3]]
@@ -448,12 +504,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.85_99[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H5.85_99[[2]] - H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H5.85_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM5 RCP8.5",  nombre.fig = "H5.difP.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q  Futuro Lejano CNRM-CM5 RCP8.5",  nombre.fig = "H5.P.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 #### CNRM-CM6 ####
 #126
@@ -464,12 +520,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.26_49[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H6.26_49[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H6.26_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM6 SSP126",  nombre.fig = "H6.difP.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q  Futuro Cercano  CNRM-CM6 SSP126",  nombre.fig = "H6.P.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 
 mask = H6.26_99[[3]] - H6.his[[3]]
@@ -479,12 +535,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.26_99[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H6.26_99[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H6.26_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM6 SSP126",  nombre.fig = "H6.difP.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q Futuro Lejano  CNRM-CM6 SSP126",  nombre.fig = "H6.P.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 #858
 mask = H6.85_49[[3]] - H6.his[[3]]
@@ -494,12 +550,12 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.85_49[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Cercano vs Historico - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H6.85_49[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
-           , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Cercano vs Historico CNRM-CM6 SSP585",  nombre.fig = "H6.difP.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+mapa_topo3(variable = H6.85_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
+                               , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+                               , alpha.vsig = 1, sig = T
+                               , titulo = "Aporte de q Futuro Cercano  CNRM-CM6 SSP585",  nombre.fig = "H6.P.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 
 mask = H6.85_99[[3]] - H6.his[[3]]
@@ -509,14 +565,15 @@ mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.85_99[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia H Futuro Lejano vs Historico - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
+           , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
-mapa_topo3(variable = H6.85_99[[2]] - H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "BrBG", niveles = 9, escala = seq(-3, 3, by = 0.5), revert = F
+mapa_topo3(variable = H6.85_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
            , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
            , alpha.vsig = 1, sig = T
-           , titulo = "Diferencia Aporte de q en H Futuro Lejano vs Historico CNRM-CM6 SSP585",  nombre.fig = "H6.difP.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , titulo = "Aporte de q Futuro Lejano  CNRM-CM6 SSP585",  nombre.fig = "H6.P.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
 #### promedios zonales de H ####
+
 H.his_lon = apply(H.his_an[[3]], c(2), mean, na.rm = T)
 
 H5.his_lon = apply(H5.his[[3]], c(2), mean, na.rm = T)
@@ -564,45 +621,5 @@ HLonMean(serie1 = H6.his_lon, serie2 = H6.85_49_lon, serie3 = H6.85_99_lon, lat 
 load("RDatas/TP3.RDatas/t6.his.RData"); load("RDatas/TP3.RDatas/hu6.his.RData"); load("RDatas/TP3.RDatas/etp6.his_an.RData")
 load("RDatas/TP3.RDatas/u6.his.RData"); load("RDatas/TP3.RDatas/v6.his.RData")
 #-------------------------------------------------------------------------------------------------------------------------#
-.rs.restartR() 
-source("FUNCIONES.R")
-
-
-
-etp = etp6.his_an[[1]]/(886400*(365/12))
-
-t6.his = AnualMeanR(t6.his[[3]])
-hu6.his = AnualMeanR(hu6.his[[3]])
-u6.his = AnualMeanR(u6.his[[3]])
-v6.his = AnualMeanR(v6.his[[3]])
-RT = etp[,,,1:length(t6.his[1,1,1,])]*Lv(t6.his)*1000  ## por o dividido?? dividiendo no dan las unidades...
-
-h = S(t6.his)*1000 + Lv(t6.his)*hu6.his*1000
-
-
-Fa.u = h*u6.his; Fa.v = h*v6.his
-
-Fa.u = apply(Fa.u, c(1,2), mean, na.rm = T); Fa.v = apply(Fa.v, c(1,2), mean, na.rm = T)
-
-lat = lat.obs
-dx = 6370000*2*pi/144
-dy = 6370000*pi/73
-prueba1 = Dx(arr = Fa.u/9.8, dx = dx) + Dy(arr = Fa.v/9.8, dy = dy )
-
-prueba = prueba1 - apply(RT, c(1,2), mean, na.rm = T)
-
-# da cualquier cosa...
-
-aux = array(prueba, dim = c(144,73,1))
-mapa_topo3(variable = aux, lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(-1, 1, by = 0.1), mapa = "mundo", revert = T
-           , nombre.fig = "preuba", na.fill = 0, salida = "/Salidas/TP3/")
-
-
-
-
-mapa_topo3(variable = H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(20, 70, by = 5), revert = T
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
-           , alpha.vsig = 1, sig = T
-           , titulo = "H observada  1976 - 2005",  nombre.fig = "H.his", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 
