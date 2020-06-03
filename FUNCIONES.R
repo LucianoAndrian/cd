@@ -2013,6 +2013,7 @@ Dy = function(arr, dy){
   a = length(arr[,1])
   b = length(arr[1,])
   i = 1
+  
   while(i<a){
     j = 1
     while(j<b){
@@ -2041,10 +2042,10 @@ Dx = function(arr,dx){
     while(i<a){
       j = 1
       while(j<b){
-        if(j == a-1){
+        if(i == a-1){
           dUx[i,j]=(arr[a,j]-arr[i,j])/(dx*cos(lat[j]*pi/180))
         } else {
-          dUx[i,j]=(arr[i+1,j]-arr[i,j])/(dx*cos(lat[j]*pi/180))
+          dUx[i,j]=(arr[i+1,j]-arr[i,j])/(dx*cos(lat[j]*pi/180))/2
         }
         j=j+1
       }
@@ -2323,29 +2324,38 @@ AnualMeanR = function(v){
 }
 
 
-Tendencia<-function(datos){
+Tendencia<-function(data){
   
-  datos = cbind(seq(length(datos)), datos)
+  aux = array(NA, c(144,73)); aux2 = array(NA, c(144,73))
   
-  serie<-data.frame(datos[which(!is.na(datos[,2])),1],datos[which(!is.na(datos[,2])),2]) 
-  serie[,1]<-seq(1:length(serie[,1])) 
-  ajuste1<-lm(serie[,2]~serie[,1],data=serie) #Y , X!!
-  tendencia<-ajuste1$coefficients[1]+ajuste1$coefficients[2]*serie[,1]  #contruccion de la recta y=ax+b... coef[2]x+coef[1]
-  b = ajuste1$coefficients[2]
-  attributes(b) = NULL
-  
-  f = summary(ajuste1)$fstatistic
-  p.value = pf(f[1],f[2],f[3],lower.tail=F); attributes(p.value) = NULL
-  
-  serie_tendencia = data.frame(Serie = serie[,2], Tendencia = tendencia)
-  
+  for(i in 1:144){
+    for(j in 1:73){
+      
+      datos = data[i,j,]
+      
+      datos = cbind(seq(length(datos)), datos)
+      
+      serie<-data.frame(datos[which(!is.na(datos[,2])),1],datos[which(!is.na(datos[,2])),2]) 
+      serie[,1]<-seq(1:length(serie[,1])) 
+      ajuste1<-lm(serie[,2]~serie[,1],data=serie) #Y , X!!
+      tendencia<-ajuste1$coefficients[1]+ajuste1$coefficients[2]*serie[,1]  #contruccion de la recta y=ax+b... coef[2]x+coef[1]
+      b = ajuste1$coefficients[2]
+      attributes(b) = NULL
+      
+      f = summary(ajuste1)$fstatistic
+      p.value = pf(f[1],f[2],f[3],lower.tail=F); attributes(p.value) = NULL
+      
+      serie_tendencia = data.frame(Serie = serie[,2], Tendencia = tendencia)
+      
+      
+      aux[i,j] = b
+      aux2[i,j] = ifelse(test = p.value < 0.05, yes = 1, no = NA)
+      
+     
+    }
+  }
   V = list()
-  V[[1]] = serie_tendencia
-  V[[2]] = p.value
-  V[[3]] = b
-  
-  ifelse(test = p.value < 0.05, yes = print(paste("Tendencia Significatica ", " p-value", sprintf("%.5f",p.value)))
-         , no = print(paste("Tendencia NO Significatica ", " p-value", sprintf("%.5f",p.value))))
+  V[[1]] = aux; V[[2]] = aux2
   
   return(V)
 }
@@ -2406,7 +2416,7 @@ PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.f
 
 
 
-HLonMean = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
+HLatMean = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
   
   datos = as.data.frame(serie1); datos = cbind(lat, datos, serie2, serie3); colnames(datos) = c("lat", "Historico", "F.Cercano", "F.Lejano")
   
@@ -2436,11 +2446,16 @@ HLonMean = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
 
 RhQ = function(rh, p, t){
   
-  t[which(t<0 | t >40)] = NA
+  #t[which(t<0 | t >40)] = NA
   p = p*100
   
-  q = 0.622/((p)/((rh/100)*10**(((0.7859 + 0.03477*t)/(1+0.00412*t))+2))-0.378)
+  #q = 0.622/((p)/((rh/100)*10**(((0.7859 + 0.03477*t)/(1+0.00412*t))+2))-0.378)
   
+  #algo falla de la de arriba. nse que
+  # vamos por partes...
+  e.sat = 10**(((0.7859 + 0.03477*t)/(1+0.00412*t))+2)
+  den = (rh/100)*e.sat
+  q = 0.622/((p/den)-0.378)
   return(q) 
   
 }
