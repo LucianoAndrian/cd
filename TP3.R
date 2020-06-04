@@ -408,12 +408,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "Spectral", niveles = 11, escala = seq(20, 70, by = 5), revert = T
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Entalpía Reanalisis  1976 - 2005",  nombre.fig = "H.his", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H.his_an[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q  1976 - 2005 Reanalisis",  nombre.fig = "H.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -424,12 +424,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.his[[3]] - H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 9, escala = seq(-8, 8, by = 2), revert = T
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Bias Entalpía CNRM-CM5",  nombre.fig = "H5.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H5.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q 1976 - 2005 CNRM-CM6",  nombre.fig = "H5.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -439,12 +439,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.his[[3]] - H.his_an[[3]], lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 9, escala = seq(-8, 8, by = 2), revert = T
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Bias H CNRM-CM6",  nombre.fig = "H6.bias", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H6.his[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q 1976 - 2005 CNRM-CM6",  nombre.fig = "H6.hisP", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -457,12 +457,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.26_49[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H5.26_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q Futuro Cercano CNRM-CM5 RCP2.6",  nombre.fig = "H5P.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -472,12 +472,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.26_99[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM5 RCP2.6",  nombre.fig = "H5.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H5.26_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q Futuro Lejano  CNRM-CM5 RCP2.6",  nombre.fig = "H5P.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -487,12 +487,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.85_49[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H5.85_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q  Futuro Cercano CNRM-CM5 RCP8.5",  nombre.fig = "H5.P.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -502,12 +502,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H5.85_99[[3]] - H5.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM5 RCP8.5",  nombre.fig = "H5.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H5.85_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q  Futuro Lejano CNRM-CM5 RCP8.5",  nombre.fig = "H5.P.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -518,12 +518,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.26_49[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H6.26_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q  Futuro Cercano  CNRM-CM6 SSP126",  nombre.fig = "H6.P.26_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -533,12 +533,12 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.26_99[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM6 SSP126",  nombre.fig = "H6.dif.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H6.26_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q Futuro Lejano  CNRM-CM6 SSP126",  nombre.fig = "H6.P.26_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -548,27 +548,28 @@ mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.85_49[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Cercano  - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H6.85_49[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-                               , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
-                               , alpha.vsig = 1, sig = T
-                               , titulo = "Aporte de q Futuro Cercano  CNRM-CM6 SSP585",  nombre.fig = "H6.P.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
+           , alpha.vsig = 1, sig = T
+           , titulo = "Aporte de q Futuro Cercano  CNRM-CM6 SSP585",  nombre.fig = "H6.P.85_49", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
+                               
 
 mask = H6.85_99[[3]] - H6.his[[3]]
 mask[which(!is.na(mask))] = 0
 mask[which(is.na(mask))] = 1
 mask[which(mask == 1)] = NA
 mapa_topo3(variable = H6.85_99[[3]] - H6.his[[3]], lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", niveles = 9, escala = seq(0, 10, by = 1), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Diferencia Entalpía Futuro Lejano  - CNRM-CM6 SSP585",  nombre.fig = "H6.dif.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "KJ/kg")
 
 mapa_topo3(variable = H6.85_99[[2]], lon = lon.obs, lat = lat.obs, colorbar = "PuBuGn", niveles = 9, escala = seq(0, 100, by = 10), revert = F
-           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "grey"
+           , mapa = "mundo", na.fill = 0 ,salida = "/Salidas/TP3/", variable.sig = mask, color.vsig = "white"
            , alpha.vsig = 1, sig = T
            , titulo = "Aporte de q Futuro Lejano  CNRM-CM6 SSP585",  nombre.fig = "H6.P.85_99", width = 35, x.label = NULL, y.label = NULL, label.escala = "%")
 
@@ -621,5 +622,705 @@ HLonMean(serie1 = H6.his_lon, serie2 = H6.85_49_lon, serie3 = H6.85_99_lon, lat 
 load("RDatas/TP3.RDatas/t6.his.RData"); load("RDatas/TP3.RDatas/hu6.his.RData"); load("RDatas/TP3.RDatas/etp6.his_an.RData")
 load("RDatas/TP3.RDatas/u6.his.RData"); load("RDatas/TP3.RDatas/v6.his.RData")
 #-------------------------------------------------------------------------------------------------------------------------#
+.rs.restartR() 
+source("FUNCIONES.R")
+load("RDatas/TP3.RDatas/etp5.his.RData")
+etp5 = etp5.his[[1]]/(86400*365/12)/12
+RT5 = etp5*2500000
+fields::image.plot(RT5[,,1,1])
+
+
+t6.his = AnualMeanR(t6.his[[3]])
+hu6.his = AnualMeanR(hu6.his[[3]])
+u6.his = AnualMeanR(u6.his[[3]])
+v6.his = AnualMeanR(v6.his[[3]])
+
+etp = etp6.his_an[[1]]/(2628002.88)/(12)/10
+
+RT6 = etp[,,,1:length(t6.his[1,1,1,])]*Lv(t6.his)  # radiacion neta [W/m2]
+
+RT6[which(RT6 >200)]=NA
+
+fields::image.plot(RT6[,,1,1])
+
+h = S(t6.his) + Lv(t6.his)*hu6.his #[kJ/kg]*1000-->J/kg
+
+
+aux = array(prueba, dim = c(144,73,1))
+aux = aux[,ncol(aux):1,]
+aux = array(aux, dim = c(144,73,1))
+mask = aux
+mask[which(!is.na(mask))] = 0
+mask[which(is.na(mask))] = 1
+mask[which(mask == 1)] = NA
+mapa_topo3(variable = aux/100, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", niveles = 9, escala = seq(-40, 40, by = 10), mapa = "mundo", revert = T
+           , nombre.fig = "preuba", na.fill = 0, salida = "/Salidas/TP3/"
+           , variable.sig = mask, color.vsig = "white", alpha.vsig = 1, sig = T)
+
+
+
+##### Variabilidad interanual ####
+
+
+source("FUNCIONES.R")
+#### CNRM-CM5 #####
+#
+load("RDatas/TP3.RDatas/t5.his.RData")
+load("RDatas/TP3.RDatas/hu5.his.RData")
+load("RDatas/TP3.RDatas/etp5.his.RData")
+
+t5 = t5.his[[1]]
+q5 = hu5.his[[1]]
+H5.his_an = EntalpiaQ2(t = t5, q = q5, seasons = F)
+
+etp = etp5.his[[1]]/(2628002.88)/(12)
+Rt5.his = etp*Lv(t5[,,,1:length(t5[1,1,1,])])*1000
+Rt5z_his = apply(Rt5.his, c(2), mean, na.rm = T)
+aux = apply(H5.his_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(Rt5.his, c(1,2,3), mean, na.rm = T)
+RtH5.his = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+t5.his = t5
+q5.his = q5 
+#------------------------------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.85_49.RData")
+load("RDatas/TP3.RDatas/hu5.85_49.RData")
+load("RDatas/TP3.RDatas/etp5.85_49.RData")
+
+t5 = t5.85_49[[1]]
+q5 = hu5.85_49[[1]]
+H5.85_49_an = EntalpiaQ2(t = t5, q = q5, seasons = F)
+
+etp = etp5.85_49[[1]]/(2628002.88)/(12)
+Rt5.85_49 = etp[,,,1]*Lv(t5[,,,1])*1000
+Rt5z_85_49 = apply(Rt5.85_49, c(2), mean, na.rm = T)
+aux = apply(H5.85_49_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(Rt5.85_49, c(1,2,3), mean, na.rm = T)
+RtH5.85_49 = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+t5.85_49 = t5
+q5.85_49 = q5 
+
+#-------------------------------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.26_49.RData")
+load("RDatas/TP3.RDatas/hu5.26_49.RData")
+load("RDatas/TP3.RDatas/etp5.26_49.RData")
+
+t5 = t5.26_49[[1]]
+q5 = hu5.26_49[[1]]
+H5.26_49_an = EntalpiaQ2(t = t5, q = q5, seasons = F)
+
+etp = etp5.26_49[[1]]/(2628002.88)/(12)
+Rt5.26_49 = etp[,,,1]*Lv(t5[,,,1])*1000
+Rt5z_26_49 = apply(Rt5.26_49, c(2), mean, na.rm = T)
+aux = apply(H5.26_49_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(Rt5.26_49, c(1,2,3), mean, na.rm = T)
+RtH5.26_49 = corr2.0(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+t5.26_49 = t5
+q5.26_49 = q5 
+
+#-------------------------------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.85_99.RData")
+load("RDatas/TP3.RDatas/hu5.85_99.RData")
+load("RDatas/TP3.RDatas/etp5.85_99.RData")
+
+t5 = t5.85_99[[1]]
+q5 = hu5.85_99[[1]]
+H5.85_99_an = EntalpiaQ2(t = t5, q = q5, seasons = F)
+
+etp = etp5.85_99[[1]]/(2628002.88)/(12)
+Rt5.85_99 = etp*Lv(t5[,,,1:length(etp[1,1,1,])])*1000
+Rt5z_85_99 = apply(Rt5.85_99, c(2), mean, na.rm = T)
+aux = apply(H5.85_99_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(Rt5.85_99, c(1,2,3), mean, na.rm = T)
+RtH5.85_99 = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+t5.85_99 = t5
+q5.85_99 = q5 
+#-------------------------------------------------------------------------#
+load("RDatas/TP3.RDatas/t5.26_99.RData")
+load("RDatas/TP3.RDatas/hu5.26_99.RData")
+load("RDatas/TP3.RDatas/etp5.26_99.RData")
+
+t5 = t5.26_99[[1]]
+q5 = hu5.26_99[[1]]
+H5.26_99_an = EntalpiaQ2(t = t5, q = q5, seasons = F)
+
+etp = etp5.26_99[[1]]/(2628002.88)/(12)
+Rt5.26_99 = etp[,,,1]*Lv(t5[,,,1])*1000
+Rt5z_26_99 = apply(Rt5.26_99, c(2), mean, na.rm = T)
+aux = apply(H5.26_99_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(Rt5.26_99, c(1,2,3), mean, na.rm = T)
+RtH5.26_99 = corr2.0(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+t5.26_99 = t5
+q5.26_99 = q5 
+
+
+
+##### CNRM-CM6 #####
+
+#---- Historical ----#
+load("RDatas/TP3.RDatas/t6.his.RData")
+load("RDatas/TP3.RDatas/hu6.his.RData")
+load("RDatas/TP3.RDatas/etp6.his_an.RData")
+
+t6 = AnualMeanR(t6.his[[3]])
+q6 = AnualMeanR(hu6.his[[3]])
+H.his_an = EntalpiaQ2(t = t6, q = q6, seasons = F)
+
+etp = etp6.his_an[[1]]/(2628002.88)/(12)/10 # este es un 10 es magico
+RT6 = etp[,,,1:length(t6[1,1,1,])]*Lv(t6)*1000
+RT6z = apply(RT6, c(2), mean, na.rm = T)
+
+t6.his_seasons = t6.his[[1]]
+hu6.his_seasons = hu6.his[[1]]
+H.his_seasons = EntalpiaQ2(t = t6.his_seasons, q = hu6.his_seasons)
+  
+t6.his = AnualMonthR(t6.his[[3]])
+hu6.his = AnualMonthR(hu6.his[[3]])
+
+H.his = EntalpiaQ2(t = t6.his, q = hu6.his, seasons = F)
+
+
+H.his_seasonsZonal = apply(H.his_seasons[[1]], c(2,3), mean, na.rm = T)
+H.his_seasonsZonal2 = apply(H.his_seasons[[2]], c(2,3), mean, na.rm = T)
+H.his_seasonsZonal3 = apply(H.his_seasons[[3]], c(2,3), mean, na.rm = T)
+aux = apply(H.his_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(RT6, c(1,2,3), mean, na.rm = T)
+RtH.his =  corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf =0.95 )
+
+#------- 126 2049 ------#
+load("RDatas/TP3.RDatas/t6.26_49.RData")
+load("RDatas/TP3.RDatas/hu6.26_49.RData")
+load("RDatas/TP3.RDatas/etp6.26_49.RData")
+
+t6 = AnualMeanR(t6.26_2049[[3]])
+q6 = AnualMeanR(hu6.26_2049[[3]])
+H.26_49_an = EntalpiaQ2(t = t6, q = q6, seasons = F)
+
+t6 = AnualMeanR(t6.26_2049[[3]])
+etp = etp6.26_49[[1]]/(2628002.88)/(12)/10
+RT6.26_49 = etp[,,,1:length(t6[1,1,1,])]*Lv(t6)*1000
+RT6z_26_49 = apply(RT6.26_49, c(2), mean, na.rm = T)
+
+t6.26_2049_seasons = t6.26_2049[[1]]
+hu6.26_2049_seasons = hu6.26_2049[[1]]
+
+
+t6.26_2049 = AnualMonthR(t6.26_2049[[3]])
+hu6.26_2049 = AnualMonthR(hu6.26_2049[[3]])
+
+H.26_49_seasons = EntalpiaQ2(t = t6.26_2049_seasons, q = hu6.26_2049_seasons)
+H.26_49 = EntalpiaQ2(t = t6.26_2049, q = hu6.26_2049, seasons = F)
+
+H.26_49_seasonsZonal = apply(H.26_49_seasons[[1]], c(2,3), mean, na.rm = T)
+H.26_49_seasonsZonal2 = apply(H.26_49_seasons[[2]], c(2,3), mean, na.rm = T)
+H.26_49_seasonsZonal3 = apply(H.26_49_seasons[[3]], c(2,3), mean, na.rm = T)
+
+aux = apply(H.26_49_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(RT6.26_49, c(1,2,3), mean, na.rm = T)
+RtH6.26_49 = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+#------- 126 2099 ------#
+load("RDatas/TP3.RDatas/t6.26_99.RData")
+load("RDatas/TP3.RDatas/hu6.26_99.RData")
+load("RDatas/TP3.RDatas/etp6.26_99.RData")
+
+t6 = AnualMeanR(t6.26_2099[[3]])
+q6 = AnualMeanR(hu6.26_2099[[3]])
+H.26_99_an = EntalpiaQ2(t = t6, q = q6, seasons = F)
+
+t6 = AnualMeanR(t6.26_2099[[3]])
+etp = etp6.26_99[[1]]/(2628002.88)/(12)/10
+RT6.26_99 = etp[,,,1:length(t6[1,1,1,])]*Lv(t6)*1000
+RT6z_26_99 = apply(RT6.26_99, c(2), mean, na.rm = T)
+
+t6.26_2099_seasons = t6.26_2099[[1]]
+hu6.26_2099_seasons = hu6.26_2099[[1]]
+
+t6.26_2099 = AnualMonthR(t6.26_2099[[3]])
+hu6.26_2099 = AnualMonthR(hu6.26_2099[[3]])
+
+H.26_99_seasons = EntalpiaQ2(t = t6.26_2099_seasons, q = hu6.26_2099_seasons)
+H.26_99 = EntalpiaQ2(t = t6.26_2099, q = hu6.26_2099, seasons = F)
+
+H.26_99_seasonsZonal = apply(H.26_99_seasons[[1]], c(2,3), mean, na.rm = T)
+H.26_99_seasonsZonal2 = apply(H.26_99_seasons[[2]], c(2,3), mean, na.rm = T)
+H.26_99_seasonsZonal3 = apply(H.26_99_seasons[[3]], c(2,3), mean, na.rm = T)
+
+
+aux = apply(H.26_99_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(RT6.26_99, c(1,2,3), mean, na.rm = T)
+RtH6.26_99 = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+#------- 185 2049 ------#
+load("RDatas/TP3.RDatas/t6.85_49.RData")
+load("RDatas/TP3.RDatas/hu6.85_49.RData")
+load("RDatas/TP3.RDatas/etp6.85_49.RData")
+
+t6 = AnualMeanR(t6.85_2049[[3]])
+q6 = AnualMeanR(hu6.85_2049[[3]])
+H.85_49_an = EntalpiaQ2(t = t6, q = q6, seasons = F)
+
+
+t6 = AnualMeanR(t6.85_2049[[3]])
+etp = etp6.85_49[[1]]/(2628002.88)/(12)/10
+RT6.85_49 = etp[,,,1:length(t6[1,1,1,])]*Lv(t6)*1000
+RT6z_85_49 = apply(RT6.85_49, c(2), mean, na.rm = T)
+
+t6.85_2049_seasons = t6.85_2049[[1]]
+hu6.85_2049_seasons = hu6.85_2049[[1]]
+
+t6.85_2049 = AnualMonthR(t6.85_2049[[3]])
+hu6.85_2049 = AnualMonthR(hu6.85_2049[[3]])
+
+H.85_49_seasons = EntalpiaQ2(t = t6.85_2049_seasons, q = hu6.85_2049_seasons)
+H.85_49 = EntalpiaQ2(t = t6.85_2049, q = hu6.85_2049, seasons = F)
+
+H.85_49_seasonsZonal = apply(H.85_49_seasons[[1]], c(2,3), mean, na.rm = T)
+H.85_49_seasonsZonal2 = apply(H.85_49_seasons[[2]], c(2,3), mean, na.rm = T)
+H.85_49_seasonsZonal3 = apply(H.85_49_seasons[[3]], c(2,3), mean, na.rm = T)
+
+aux = apply(H.85_49_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(RT6.85_49, c(1,2,3), mean, na.rm = T)
+RtH6.85_49 = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+#------- 185 2099 ------#
+load("RDatas/TP3.RDatas/t6.85_99.RData")
+load("RDatas/TP3.RDatas/hu6.85_99.RData")
+load("RDatas/TP3.RDatas/etp6.85_99.RData")
+
+t6 = AnualMeanR(t6.85_2099[[3]])
+q6 = AnualMeanR(hu6.85_2099[[3]])
+H.85_99_an = EntalpiaQ2(t = t6, q = q6, seasons = F)
+
+t6 = AnualMeanR(t6.85_2099[[3]])
+etp = etp6.85_99[[1]]/(2628002.88)/(12)/10
+RT6.85_99 = etp[,,,1:length(t6[1,1,1,])]*Lv(t6)*1000
+RT6z_85_99 = apply(RT6.85_99, c(2), mean, na.rm = T)
+
+t6.85_2099_seasons = t6.85_2099[[1]]
+hu6.85_2099_seasons = hu6.85_2099[[1]]
+
+t6.85_2099 = AnualMonthR(t6.85_2099[[3]])
+hu6.85_2099 = AnualMonthR(hu6.85_2099[[3]])
+
+H.85_99_seasons = EntalpiaQ2(t = t6.85_2099_seasons, q = hu6.85_2099_seasons)
+H.85_99 = EntalpiaQ2(t = t6.85_2099, q = hu6.85_2099, seasons = F)
+
+H.85_99_seasonsZonal = apply(H.85_99_seasons[[1]], c(2,3), mean, na.rm = T)
+H.85_99_seasonsZonal2 = apply(H.85_99_seasons[[2]], c(2,3), mean, na.rm = T)
+H.85_99_seasonsZonal3 = apply(H.85_99_seasons[[3]], c(2,3), mean, na.rm = T)
+
+aux = apply(H.85_99_an[[4]], c(1,2,3), mean, na.rm = T)
+aux2 = apply(RT6.85_99, c(1,2,3), mean, na.rm = T)
+RtH6.85_99 = corr(mod = aux, obs = aux2, lon = 144, lat = 73, cf = 0.95 )
+
+#### Graficos #####
+#### Rt ####
+aux1 = aux = ComMT3(Rt5.his)
+mapa_topo3(variable = aux[[1]], variable.sig = mask, sig = T, lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", escala = seq(0, 200, by = 20)
+           , niveles = 9, revert = F, color.vsig = "white", alpha.vsig = 1, titulo = "Rt CNRR-CM5 - Historico", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt5.his", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+
+aux = ComMT3(Rt5.26_49)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-10, 10, by = 1)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM5 F. Cercano vs Historico RCP2.6", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt5.dif26_49", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+aux = ComMT3(Rt5.26_99)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-10, 10, by = 1)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM5 F. Lejano vs Historico RCP2.6", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt5.dif26_99", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+aux = ComMT3(Rt5.85_49)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-10, 10, by = 1)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM5 F. Cercano vs Historico RCP8.5", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt5.dif85_49", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+aux = ComMT3(Rt5.85_99)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-10, 10, by = 1)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM5 F. Lejano vs Historico RCP8.5", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt5.dif85_99", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+#--------------------------------------CNRM-CM6 -----------------------------------------------#
+aux1 = aux = ComMT3(RT6)
+mapa_topo3(variable = aux[[1]], variable.sig = mask, sig = T, lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", escala = seq(0, 200, by = 20)
+           , niveles = 9, revert = F, color.vsig = "white", alpha.vsig = 1, titulo = "Rt CNRR-CM6 - Historico", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt6.his", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+
+aux = ComMT3(RT6.26_49)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", escala = seq(0, 20, by = 2.5)
+           , niveles = 9, revert = F, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM6 F. Cercano vs Historico SSP126", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt6.dif26_49", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+aux = ComMT3(RT6.26_99)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", escala = seq(0, 20, by = 2.5)
+           , niveles = 9, revert = F, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM6 F. Lejano vs Historico SSP126", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt6.dif26_99", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+aux = ComMT3(RT6.85_49)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", escala = seq(0, 20, by = 2.5)
+           , niveles = 9, revert = F, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM6 F. Cercano vs Historico SSP585", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt6.dif85_49", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+
+
+aux = ComMT3(RT6.85_99)
+mapa_topo3(variable = aux[[1]] - aux1[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "YlOrRd", escala = seq(0, 100, by = 20)
+           , niveles = 9, revert = F, color.vsig = "white", alpha.vsig = 1, titulo = "Diferencia Rt CNRR-CM6 F. Lejano vs Historico SSP585", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "Rt6.dif85_99", salida = "/Salidas/TP3/Rt/", label.escala = "W/m2")
+#----------------------------------------------------------------------------------------------------#
+
+#### Corr ####
+
+aux1 = ComMT3_2_2(RtH5.his)
+mapa_topo3(variable = aux1[[1]], variable.sig = aux1[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM5 - Historico", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr5RH", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+
+aux = ComMT3_2(RtH5.26_49)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM5 - F. Cercano RCP2.6", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr5RH.26_49", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+aux = ComMT3_2(RtH5.26_99)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM5  - F. Lejano RCP2.6", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr5RH.26_99", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+aux = ComMT3_2(RtH5.85_49)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM5 - F. Cercano RCP8.5", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr5RH.85_49", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+aux = ComMT3_2(RtH5.85_99)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM5 - F. Lejano RCP8.5", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr5RH.85_99", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+#--------------------------------------CNRM-CM6 -----------------------------------------------#
+aux1 = aux = ComMT3_2(RtH6)
+mapa_topo3(variable = aux[[1]], variable.sig = mask, sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Rt CNRR-CM6 - Historico", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr6RH", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+
+aux = ComMT3_2(RtH6.26_49)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM6 - F. Cercano SSP126", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr6RH.26_49", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+aux = ComMT3_2(RtH6.26_99)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM6 - F. Lejano SSP126", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr6RH.26_99", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+aux = ComMT3_2(RtH6.85_49)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM6 - F. Cercano SSP585", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr6RH.85_49", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+
+
+aux = ComMT3_2(RtH6.85_99)
+mapa_topo3(variable = aux[[1]], variable.sig = aux[[2]], sig = T, lon = lon.obs, lat = lat.obs, colorbar = "RdBu", escala = seq(-1, 1, by = 0.2)
+           , niveles = 9, revert = T, color.vsig = "white", alpha.vsig = 1, titulo = "Correlación entre Rt y Entalpia CNRR-CM6 - F. Lejano SSP585", colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = 0, width = 30, nombre.fig = "corr6RH.85_99", salida = "/Salidas/TP3/corr/", label.escala = "W/m2")
+#----------------------------------------------------------------------------------------------------#
+
+
+
+
+
+
+#### Entalpia5  y LH , SH #####
+aux1 = H.his_an[[1]]; titulo = "Entalpia CNRM-CM5 Historico"; nombre.fig = "H5.his"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H.his_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H.his_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1 = H5.26_49_an[[1]]; titulo = "Entalpia CNRM-CM5 2020-2049 - RCP2.6"
+nombre.fig = "H5.26_49"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.26_49_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.26_49_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1 = H5.26_99_an[[1]]; titulo = "Entalpia CNRM-CM5 2070-2099 RCP2.6"
+nombre.fig = "H5.26_99"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.26_99_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.26_99_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1 = H5.85_49_an[[1]]; titulo = "Entalpia CNRM-CM5 2020-2049 - RCP8.5"
+nombre.fig = "H5.85_49"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.85_49_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.85_49_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1 = H5.85_99_an[[1]]; titulo = "Entalpia CNRM-CM5 2070-2099 RCP8.5"
+nombre.fig = "H5.85_99"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.85_99_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1 = H5.85_99_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+#### Entalpia6 y SH y LH #####
+aux1= H.his_an[[1]]; titulo = "Entalpia CNRM-CM6 Historico"; nombre.fig = "H6.his"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.his_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.his_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1= H.26_49_an[[1]]; titulo = "Entalpia CNRM-CM6 2020-2049 - SSP126"
+nombre.fig = "H6.26_49"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.26_49_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.26_49_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1= H.26_99_an[[1]]; titulo = "Entalpia CNRM-CM6 2070-2099 SSP126"
+nombre.fig = "H6.26_99"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.26_99_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.26_99_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1= H.85_49_an[[1]]; titulo = "Entalpia CNRM-CM6 2020-2049 - SSP585"
+nombre.fig = "H6.85_49"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.85_49_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.85_49_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+
+
+
+aux1= H.85_99_an[[1]]; titulo = "Entalpia CNRM-CM6 2070-2099 SSP585"
+nombre.fig = "H6.85_99"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.85_99_an[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+aux1= H.85_99_an[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H/", label.escala = "kJ/kg")
+##### entalpia 6 seasons campos ####
+
+
+aux1= H.26_49_seasons[[1]]; titulo = "Entalpia CNRM-CM6 2020-2049 - SSP126"
+nombre.fig = "H6.26_49"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.26_49_seasons[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.26_49_seasons[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+
+
+
+aux1= H.26_99_seasons[[1]]; titulo = "Entalpia CNRM-CM6 2070-2099 SSP126"
+nombre.fig = "H6.26_99"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.26_99_seasons[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.26_99_seasons[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+
+
+
+aux1= H.85_49_seasons[[1]]; titulo = "Entalpia CNRM-CM6 2020-2049 - SSP585"
+nombre.fig = "H6.85_49"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.85_49_seasons[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.85_49_seasons[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+
+
+
+aux1= H.85_99_seasons[[1]]; titulo = "Entalpia CNRM-CM6 2070-2099 SSP585"
+nombre.fig = "H6.85_99"; escala = seq(0,70, by = 10)
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "_total", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.85_99_seasons[[2]]; titulo = "SH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "SH", sep =""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+aux1= H.85_99_seasons[[3]]; titulo = "LH"
+mapa_topo3(variable = aux1, lon = lon.obs, lat = rev(lat.obs), colorbar = "YlOrRd", escala = escala
+           , niveles = 9, revert = F, titulo = titulo, colorbar.pos = "bottom"
+           , mapa = "mundo", na.fill = -1000, width = 30, nombre.fig = paste(nombre.fig, "LH", sep = ""), salida = "/Salidas/TP3/H_seas/", label.escala = "kJ/kg", r = 4)
+
+
+##### Distribucion zonal de lo de arriba ####
+titulo = "Promedio Zonal"
+estaciones = c("MAM", "JJA", "SON", "DJF")
+
+for(i in 1:4){
+  HLatMean2(serie1 = H.his_seasonsZonal[,i], serie2 = H.his_seasonsZonal2[,i], serie3 = H.his_seasonsZonal3[,i], 
+            lat = rev(lat.obs), titulo = paste(titulo, " CNRM-CM5 - Historico - ", estaciones[i], sep = ""), nombre.fig = paste("H6.his_", estaciones[i], sep = ""))
+  
+  HLatMean2(serie1 = H.26_49_seasonsZonal[,i], serie2 = H.26_49_seasonsZonal2[,i], serie3 = H.26_49_seasonsZonal3[,i], 
+            lat = rev(lat.obs), titulo = paste(titulo, " CNRM-CM5 SSP126 - 2020-2049 - ", estaciones[i], sep = ""), nombre.fig = paste("H6.26_49_", estaciones[i], sep = ""))
+  
+  HLatMean2(serie1 = H.26_99_seasonsZonal[,i], serie2 = H.26_99_seasonsZonal2[,i], serie3 = H.26_99_seasonsZonal3[,i], 
+            lat = rev(lat.obs), titulo = paste(titulo, " CNRM-CM5 SSP126 - 2070-2099 - ", estaciones[i], sep = ""), nombre.fig = paste("H6.26_99_", estaciones[i], sep = ""))
+  
+  HLatMean2(serie1 = H.85_49_seasonsZonal[,i], serie2 = H.26_49_seasonsZonal2[,i], serie3 = H.85_49_seasonsZonal3[,i], 
+            lat = rev(lat.obs), titulo = paste(titulo, " CNRM-CM5 SSP585 - 2020-2049 - ", estaciones[i], sep = ""), nombre.fig = paste("H6.85_49_", estaciones[i], sep = ""))
+  
+  HLatMean2(serie1 = H.85_99_seasonsZonal[,i], serie2 = H.26_99_seasonsZonal2[,i], serie3 = H.85_99_seasonsZonal3[,i], 
+            lat = rev(lat.obs), titulo = paste(titulo, " CNRM-CM5 SSP585 - 2070-2099 - ", estaciones[i], sep = ""), nombre.fig = paste("H6.85_99_", estaciones[i], sep = ""))
+  
+}
+
+
+##### "Marcha anual" promedio ####
+h = list(); h[[1]] = seq(1,37, by = 1); h[[2]] = seq(37, 73, by = 1)
+H = c("H. Sur", "H. Norte")
+H.fig = c("HS", "HN")
+
+for(i in 1:2){
+  
+  HLatMean3(serie1 = apply(H.his[[4]][,h[[i]],],c(3), mean, na.rm = T), serie2 = apply(H.his[[5]][,h[[i]],], c(3), mean, na.rm = T)
+            , serie3 = apply(H.his[[6]][,h[[i]],], c(3),mean, na.rm = T), lat = seq(1, 12, by = 1)
+            , titulo = paste("CNRM-CM6 SSP126 - 1976 - 2005 ", H[i], sep = ""),nombre.fig = paste("H.m.a_his_", H.fig[i], sep = ""))
+  
+  HLatMean3(serie1 = apply(H.26_49[[4]][,h[[i]],],c(3), mean, na.rm = T), serie2 = apply(H.26_49[[5]][,h[[i]],], c(3), mean, na.rm = T)
+            , serie3 = apply(H.26_49[[6]][,h[[i]],], c(3),mean, na.rm = T), lat = seq(1, 12, by = 1)
+            , titulo = paste("CNRM-CM6 SSP126 - 2020 - 2049 ", H[i], sep = ""),nombre.fig = paste("H.m.a_26_49_", H.fig[i], sep = ""))
+  
+  HLatMean3(serie1 = apply(H.26_99[[4]][,h[[i]],],c(3), mean, na.rm = T), serie2 = apply(H.26_99[[5]][,h[[i]],], c(3), mean, na.rm = T)
+            , serie3 = apply(H.26_99[[6]][,h[[i]],], c(3),mean, na.rm = T), lat = seq(1, 12, by = 1)
+            , titulo = paste("CNRM-CM6 SSP126 - 2070 - 2099 ", H[i], sep = ""),nombre.fig = paste("H.m.a_26_99_", H.fig[i], sep = ""))
+  
+  
+  HLatMean3(serie1 = apply(H.85_49[[4]][,h[[i]],],c(3), mean, na.rm = T), serie2 = apply(H.85_49[[5]][,h[[i]],], c(3), mean, na.rm = T)
+            , serie3 = apply(H.85_49[[6]][,h[[i]],], c(3),mean, na.rm = T), lat = seq(1, 12, by = 1)
+            , titulo = paste("CNRM-CM6 SSP585 - 2020 - 2049 ", H[i], sep = ""),nombre.fig = paste("H.m.a_85_49_", H.fig[i], sep = ""))
+  
+  
+  HLatMean3(serie1 = apply(H.85_99[[4]][,h[[i]],],c(3), mean, na.rm = T), serie2 = apply(H.85_99[[5]][,h[[i]],], c(3), mean, na.rm = T)
+            , serie3 = apply(H.85_99[[6]][,h[[i]],], c(3),mean, na.rm = T), lat = seq(1, 12, by = 1)
+            , titulo = paste("CNRM-CM6 SSP585 - 2070 - 2099 ", H[i], sep = ""),nombre.fig = paste("H.m.a_85_99_", H.fig[i], sep = ""))
+}
 
 
