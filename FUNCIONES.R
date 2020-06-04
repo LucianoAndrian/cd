@@ -286,6 +286,47 @@ corr = function(mod, obs, lon, lat, cf){
       
       # si cada serie [i,j,] no tiene una cantidad de al menos 3 valores no NA, cor.test da error y corta el ciclo
       if(is.na(obs[i,j,1])){
+        aux = obs[i,j,]
+        l_NA = length(aux[which(is.na(aux))]) 
+        corr[i,j,2] = NA
+        
+      } else {
+        
+        l = cor.test(mod[i,j,], obs[i,j,], method = "pearson", conf.level = cf, alternative = "two.sided")
+        
+        corr[i,j,1] = l$estimate
+        
+        # esto con lo de arriba deberia no hacer falta, pero en caso de que dos valores sean iguales el resultado de p.value es NA
+        # seria muy raro que pase.
+        if(is.na(l$p.value)){
+          
+          corr[i,j,2] = NA
+          
+        } else if(l$p.value < a){
+          
+          corr[i,j,2] = 1
+        }
+        
+      }
+      
+    }
+  }
+  
+  return(corr)
+  
+}
+
+
+corr2.0 = function(mod, obs, lon, lat, cf){
+  corr =  array(data = NA, dim = c(lon, lat,2))
+  a = 1- cf
+  for(i in 1:lon){
+    for(j in 1:lat){
+      
+      # si cada serie [i,j,] no tiene una cantidad de al menos 3 valores no NA, cor.test da error y corta el ciclo
+      aux = obs[i,j,]
+      l_NA = length(aux[which(is.na(aux))]) 
+      if(l_NA>3){
         
         corr[i,j,2] = NA
         
@@ -2071,7 +2112,7 @@ Adv = function(variable, u, v, i){
 #### MAPA_TOPO3.0 ####
 mapa_topo3 = function(variable, variable.sig = NULL, variable.cont = NULL, u = NULL, v = NULL, lon, lat, contour.fill = T, contour = F, viento = F
                       , colorbar = "Spectral", niveles = 9, revert = F, escala = NULL, resta = 0, resta.vsig = 0, resta.vcont = 0, nivel.vcont = NULL, color.vsig = "black", color.vcont = "red", alpha.vsig, sig = F
-                      , titulo = NULL, label.escala = "value", x.label = "x", y.label = "y", fill.mapa = F, colorbar.pos = "right"
+                      , titulo = NULL, label.escala = "value", x.label = NULL, y.label = NULL, fill.mapa = F, colorbar.pos = "right"
                       , mapa = NULL, altura.topo = 0, r = 1, na.fill = NULL, nombre.fig = "fig", width = 25, height = 20, salida = NULL){
   
   library(maps)
@@ -2310,6 +2351,8 @@ AnualMean = function(v){
   
 }
 
+
+
 AnualMeanR = function(v){
   
   W = array(data = NA, dim = c(dim(v[,,1,1]),30, length(v[1,1,1,])))
@@ -2324,6 +2367,23 @@ AnualMeanR = function(v){
 }
 
 
+AnualMonthR = function(v){
+  
+  W = array(data = NA, dim = c(dim(v[,,1,1]), 12, 30))
+  
+  for(i in 0:29){
+    aux = v[,,(1+12*i):(12+12*i),]
+    W[,,,i+1] = apply(aux, c(1,2,3), mean, na.rm = T)
+  }
+  
+  W = apply(W, c(1,2,3), mean, na.rm = T)
+  return(W)
+  
+}
+
+
+
+
 Tendencia<-function(data){
   
   aux = array(NA, c(144,73)); aux2 = array(NA, c(144,73))
@@ -2332,7 +2392,7 @@ Tendencia<-function(data){
     for(j in 1:73){
       
       datos = data[i,j,]
-      
+     
       datos = cbind(seq(length(datos)), datos)
       
       serie<-data.frame(datos[which(!is.na(datos[,2])),1],datos[which(!is.na(datos[,2])),2]) 
@@ -2443,6 +2503,63 @@ HLatMean = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
 }
 
 
+HLatMean2 = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
+  
+  datos = as.data.frame(serie1); datos = cbind(lat, datos, serie2, serie3); colnames(datos) = c("lat", "Entalpia", "SH", "LH")
+  
+  g = ggplot(datos, aes(x = lat)) + theme_minimal()+
+    geom_line(aes(y = Entalpia, colour = "Entalpia"), size = 1, show.legend = T) + 
+    geom_line(aes(y = SH, colour = "SH"),linetype = 1, size = 1, show.legend = T)  +
+    geom_line(aes(y = LH, colour = "LH"),linetype = 1, size = 1, show.legend = T) +
+    scale_colour_manual("", 
+                        breaks = c("Entalpia","SH", "LH"),
+                        values = c("firebrick","orange2","forestgreen")) +
+    scale_x_latitude(breaks = seq(-90, 90, by = 20)) + scale_y_continuous(breaks = seq(0, 80, by = 10), limits = c(0, 80)) +
+    geom_vline(xintercept = 0, alpha = 0.3)+
+    ggtitle(titulo) +
+    ylab("kJ/kg") +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 12)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP3/Hlon_seas/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+}
+
+
+
+HLatMean3 = function(serie1, serie2, serie3, lat,  titulo, nombre.fig){
+  
+  datos = as.data.frame(serie1); datos = cbind(lat, datos, serie2, serie3); colnames(datos) = c("meses", "Entalpia", "SH", "LH")
+  
+  g = ggplot(datos, aes(x = meses)) + theme_minimal()+
+    geom_line(aes(y = Entalpia, colour = "Entalpia"), size = 1, show.legend = T) + 
+    geom_line(aes(y = SH, colour = "SH"),linetype = 1, size = 1, show.legend = T)  +
+    geom_line(aes(y = LH, colour = "LH"),linetype = 1, size = 1, show.legend = T) +
+    scale_colour_manual("", 
+                        breaks = c("Entalpia","SH", "LH"),
+                        values = c("firebrick","orange2","forestgreen")) +
+    scale_x_continuous(labels=c("1" = "Mar", "2" = "Abr", "3" = "May", "4" = "Jun", "5" = "Jul", "6" = "Ago", "7" = "Sep", "8" =  "Oct", "9" = "Nov", "10" = "Dic", "11" = "Ene", "12" = "Feb"), breaks = seq(1, 12, by = 1)) +
+    scale_y_continuous(breaks = seq(0, 60, by = 10), limits = c(0, 60)) +
+    
+    ggtitle(titulo) +
+    ylab("kJ/kg") + xlab("")+
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 12)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP3/Hlon_an/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+                         
+}
+
+
 
 RhQ = function(rh, p, t){
   
@@ -2459,6 +2576,44 @@ RhQ = function(rh, p, t){
   return(q) 
   
 }
+
+
+ComMT3 = function(data){
+  
+  aux = array(apply(data, c(1,2), mean, na.rm = T), dim = c(144,73,1))
+  aux = array(aux, dim = c(144,73,r)); aux = aux[,ncol(aux):1,]
+  aux = array(aux, dim = c(144,73,1))
+  mask = aux
+  mask[which(!is.na(mask))] = 0
+  mask[which(is.na(mask))] = 1
+  mask[which(mask == 1)] = NA
+  
+  
+  V= list(); V[[1]] = aux; V[[2]] = mask
+  return(V)
+  
+}
+
+
+ComMT3_2 = function(data){
+  
+  aux = array(data, dim = c(144,73,2))
+  aux = array(aux, dim = c(144,73,2)); aux = aux[,ncol(aux):1,]
+  aux = array(aux, dim = c(144,73,2))
+  aux1 = aux[,,1]
+  mask = aux[,,2]
+  mask[which(!is.na(mask))] = 0
+  mask[which(is.na(mask))] = 1
+  mask[which(mask == 1)] = NA
+  
+  
+  V= list(); 
+  V[[1]] = array(aux1, dim = c(dim(aux1),1))
+  V[[2]] = array(mask, dim = c(dim(mask),1))
+  return(V)
+  
+}
+
 
 #### ENTALPIAs #####
 EntalpiaHR = function(t, hr, p){
@@ -2572,6 +2727,48 @@ EntalpiaQ = function(t){
   return(V)
   
 }
+
+
+
+EntalpiaQ2 = function(t, q, seasons = T){
+  
+  if(seasons){
+    t= t-273
+    t[which(t<0 | t > 40)] = NA
+    
+    Ha = 1.007*(t) - 0.026
+    
+    Hv = array(q[,,,1:length(t[1,1,1,])]*(2502 - 0.538*t), dim = c(dim(Ha)))
+    
+    H = Ha + Hv
+    V = list()
+    V[[1]] = array(apply(H, c(1,2,3), mean, na.rm = T), dim = c(144,73,4))
+    V[[2]] = array(apply(Ha, c(1,2,3), mean, na.rm = T), dim = c(144,73,4))
+    V[[3]] = array(apply(Hv, c(1,2,3), mean, na.rm = T), dim = c(144,73,4))
+    return(V)
+  } else {
+    
+    t= t-273
+    t[which(t<0 | t > 40)] = NA
+    
+    Ha = 1.007*(t) - 0.026
+    
+    Hv = array(q*(2502 - 0.538*t), dim = c(dim(Ha)))
+    
+    H = Ha + Hv
+    V = list()
+    V[[1]] = array(H, dim = c(144,73,1))
+    V[[2]] = array(Ha, dim = c(144,73,1))
+    V[[3]] = array(Hv, dim = c(144,73,1))
+    V[[4]] = H
+    V[[5]] = Ha
+    V[[6]] = Hv
+    return(V)
+  }
+  
+  
+}
+
 #### Energia ####
 
 
