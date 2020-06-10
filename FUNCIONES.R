@@ -2798,3 +2798,74 @@ S = function(t){
   return(s)
   
 }
+#### Tabla7.1 ####
+
+
+Tabla7.1 = function(pp, evap, nombre, salida){
+  #Tabla 7.1 Pexioto.
+  
+  lat = read.table("lat.txt") # o seq(-90,90, by = 2.5).. es lo mismo
+  lat.breaks = seq(-90, 90, by = 10)
+  lat2 = array(data = NA, c(length(lat.breaks)-1,5))
+  for(i in 1:(length(lat.breaks)-1)){
+    lat2[i,]  = seq(which(lat == lat.breaks[i]),which(lat == lat.breaks[i+1]))
+  }
+  
+  pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)
+  evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+  
+  p_e = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T)
+  ep = apply(evap_ens/pp_ens, c(1,2), mean, na.rm = T)
+  p_ep = apply((pp_ens - evap_ens)/pp_ens, c(1,2), mean, na.rm = T)
+  p = apply(pp_ens, c(1,2), mean, na.rm = T)
+  e = apply(evap_ens, c(1,2), mean, na.rm = T)
+  
+  # por latitudes
+  
+  aux = c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
+          , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N" )
+  tabla = data.frame(P = seq(1, length(lat.breaks)-1), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = aux)
+  
+  for(i in 1:(length(lat.breaks)-1)){
+    tabla[i,1] = round(mean(p[,lat2[i,]]), digits = 2) 
+    tabla[i,2] = round(mean(e[,lat2[i,]]), digits = 2) 
+    tabla[i,3] = round(mean(p_e[,lat2[i,]]), digits = 2)
+    tabla[i,4] = round(mean(ep[,lat2[i,]]), digits = 2)
+    tabla[i,5] = round(mean(p_ep[,lat2[i,]]), digits = 2)
+    
+  }
+  
+  
+  # Por hemisferio y global
+  tabla2 = data.frame(P = c(1,2,3), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = c("HS", "HN", "Global"))
+  
+  tabla2[1,1] = round(mean(p[,1:37]), digits = 2) 
+  tabla2[1,2] = round(mean(e[,1:37]), digits = 2) 
+  tabla2[1,3] = round(mean(p_e[,1:37]), digits = 2)
+  tabla2[1,4] = round(mean(ep[,1:37]), digits = 2)
+  tabla2[1,5] = round(mean(p_ep[,1:37]), digits = 2)
+  
+  tabla2[2,1] = round(mean(p[,37:73]), digits = 2) 
+  tabla2[2,2] = round(mean(e[,37:73]), digits = 2) 
+  tabla2[2,3] = round(mean(p_e[,37:73]), digits = 2)
+  tabla2[2,4] = round(mean(ep[,37:73]), digits = 2)
+  tabla2[2,5] = round(mean(p_ep[,37:73]), digits = 2)
+  
+  tabla2[3,1] = round(mean(p), digits = 2) 
+  tabla2[3,2] = round(mean(e), digits = 2) 
+  tabla2[3,3] = round(mean(p_e), digits = 2)
+  tabla2[3,4] = round(mean(ep), digits = 2)
+  tabla2[3,5] = round(mean(p_ep), digits = 2)
+  
+  
+  colnames(tabla) = c("P", "E", "P-E", "E/P", "(P-E)/P")
+  colnames(tabla2) = c("P", "E", "P-E", "E/P", "(P-E)/P")
+  tabla =  as.table(as.matrix(tabla))
+  tabla2 =  as.table(as.matrix(tabla2))
+  
+  write.table(x = tabla, file = paste(getwd(), salida, nombre,".csv", sep = ""), sep = "  ")
+  write.table(x = tabla2, file = paste(getwd(), salida, nombre,"global.csv", sep = ""), sep = "  ")
+  
+  print(paste("Tablas guardadas como", paste(nombre,".csv", sep = ""), "y ", paste(nombre,"global.csv", sep =""), "en ", salida), sep = "")
+  
+}
