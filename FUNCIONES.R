@@ -2384,7 +2384,7 @@ AnualMonthR = function(v){
 
 
 
-Tendencia<-function(data){
+Tendencia<-function(data, s){
   
   aux = array(NA, c(144,73)); aux2 = array(NA, c(144,73))
   
@@ -2408,8 +2408,9 @@ Tendencia<-function(data){
       serie_tendencia = data.frame(Serie = serie[,2], Tendencia = tendencia)
       
       
+      p = 1 - s
       aux[i,j] = b
-      aux2[i,j] = ifelse(test = p.value < 0.05, yes = 1, no = NA)
+      aux2[i,j] = ifelse(test = p.value < p, yes = 1, no = NA)
       
      
     }
@@ -2420,6 +2421,33 @@ Tendencia<-function(data){
   return(V)
 }
 
+
+Tendencia.ts<-function(datos){
+  
+  datos = cbind(seq(length(datos)), datos)
+  
+  serie<-data.frame(datos[which(!is.na(datos[,2])),1],datos[which(!is.na(datos[,2])),2]) 
+  serie[,1]<-seq(1:length(serie[,1])) 
+  ajuste1<-lm(serie[,2]~serie[,1],data=serie) #Y , X!!
+  tendencia<-ajuste1$coefficients[1]+ajuste1$coefficients[2]*serie[,1]  #contruccion de la recta y=ax+b... coef[2]x+coef[1]
+  b = ajuste1$coefficients[2]
+  attributes(b) = NULL
+  
+  f = summary(ajuste1)$fstatistic
+  p.value = pf(f[1],f[2],f[3],lower.tail=F); attributes(p.value) = NULL
+  
+  serie_tendencia = data.frame(Serie = serie[,2], Tendencia = tendencia)
+  
+  V = list()
+  V[[1]] = serie_tendencia
+  V[[2]] = p.value
+  V[[3]] = b
+  
+  ifelse(test = p.value < 0.05, yes = print(paste("Tendencia Significatica ", " p-value", sprintf("%.5f",p.value)))
+         , no = print(paste("Tendencia NO Significatica ", " p-value", sprintf("%.5f",p.value))))
+  
+  return(V)
+}
 
 
 PlotTsTend = function(global, hn, hs, titulo, y.label, y.breaks, anios, nombre.fig, cent = F){
@@ -2811,8 +2839,11 @@ Tabla7.1 = function(pp, evap, nombre, salida){
     lat2[i,]  = seq(which(lat == lat.breaks[i]),which(lat == lat.breaks[i+1]))
   }
   
-  pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)
-  evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+  lat = read.table("lat.txt")
+  lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30))
+  
+  pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)*lats
+  evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)*lats
   
   p_e = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T)
   ep = apply(evap_ens/pp_ens, c(1,2), mean, na.rm = T)
@@ -2820,8 +2851,18 @@ Tabla7.1 = function(pp, evap, nombre, salida){
   p = apply(pp_ens, c(1,2), mean, na.rm = T)
   e = apply(evap_ens, c(1,2), mean, na.rm = T)
   
-  # por latitudes
+  mask = as.matrix(read.table("mask.txt"))
+  mask2 = mask; mask2[which(is.na(mask2))] = 2; mask2[which(mask2==1)] = NA; mask2[which(mask2==2)] = 1
+  p_c = p*mask
+  e_c = e*mask
+  p_ep_c = p_ep*mask
+  p_e_c = p_e*mask
+  ep_c = ep*mask
   
+  p_e_o = p_e*mask2
+  
+  
+  # por latitudes
   aux = c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
           , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N" )
   tabla = data.frame(P = seq(1, length(lat.breaks)-1), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = aux)
@@ -2857,15 +2898,291 @@ Tabla7.1 = function(pp, evap, nombre, salida){
   tabla2[3,4] = round(mean(ep), digits = 2)
   tabla2[3,5] = round(mean(p_ep), digits = 2)
   
+  tabla3 = data.frame(P = c(1,2,3,4,5), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = c("SA", "NA", "EA", "AF", "OC"))
+  tabla3[1,1] = round(mean(p_c[110:132,1:45], na.rm = T), digits = 2) 
+  tabla3[1,2] = round(mean(e_c[110:132,1:45], na.rm = T), digits = 2) 
+  tabla3[1,3] = round(mean(p_e_c[110:132,1:45], na.rm = T),  digits = 2)
+  tabla3[1,4] = round(mean(ep_c[110:132,1:45], na.rm = T),  digits = 2)
+  tabla3[1,5] = round(mean(p_ep_c[110:132,1:45], na.rm = T),  digits = 2)
+  
+  tabla3[2,1] = round(mean(p_c[75:130,45:73], na.rm = T),  digits = 2) 
+  tabla3[2,2] = round(mean(e_c[75:130,45:73], na.rm = T),  digits = 2) 
+  tabla3[2,3] = round(mean(p_e_c[75:130,45:73], na.rm = T),  digits = 2)
+  tabla3[2,4] = round(mean(ep_c[75:130,45:73], na.rm = T),  digits = 2)
+  tabla3[2,5] = round(mean(p_ep_c[75:130,45:73], na.rm = T),  digits = 2)
+  
+  tabla3[3,1] = round(mean(p_c[1:75,40:73], na.rm = T),  digits = 2) 
+  tabla3[3,2] = round(mean(e_c[1:75,40:73], na.rm = T),  digits = 2) 
+  tabla3[3,3] = round(mean(p_e_c[1:75,40:73], na.rm = T),  digits = 2)
+  tabla3[3,4] = round(mean(ep_c[1:75,40:73], na.rm = T),  digits = 2)
+  tabla3[3,5] = round(mean(p_ep_c[1:75,40:73], na.rm = T),  digits = 2)
+  
+  tabla3[4,1] = round(mean(p_c[1:20,1:55], na.rm = T),  digits = 2) 
+  tabla3[4,2] = round(mean(e_c[1:20,1:55], na.rm = T),  digits = 2) 
+  tabla3[4,3] = round(mean(p_e_c[1:20,1:55], na.rm = T),  digits = 2)
+  tabla3[4,4] = round(mean(ep_c[1:20,1:55], na.rm = T),  digits = 2)
+  tabla3[4,5] = round(mean(p_ep_c[1:20,1:55], na.rm = T),  digits = 2)
+  
+  tabla3[5,1] = round(mean(p_c[40:80,1:50], na.rm = T),  digits = 2) 
+  tabla3[5,2] = round(mean(e_c[40:80,1:50], na.rm = T),  digits = 2) 
+  tabla3[5,3] = round(mean(p_e_c[40:80,1:50], na.rm = T),  digits = 2)
+  tabla3[5,4] = round(mean(ep_c[40:80,1:50], na.rm = T),  digits = 2)
+  tabla3[5,5] = round(mean(p_ep_c[40:80,1:50], na.rm = T),  digits = 2)
+  
+  
+  
+  V = list()
+  V[[1]] = rbind(tabla2, 0, tabla)
+  V[[2]] = tabla3
+  V[[3]] = p_e_c
+  V[[4]] = p_e_o
+  V[[5]] = p_e
   
   colnames(tabla) = c("P", "E", "P-E", "E/P", "(P-E)/P")
   colnames(tabla2) = c("P", "E", "P-E", "E/P", "(P-E)/P")
-  tabla =  as.table(as.matrix(tabla))
-  tabla2 =  as.table(as.matrix(tabla2))
-  
+  colnames(tabla3) = c("P", "E", "P-E", "E/P", "(P-E)/P")
+  tabla = as.table(as.matrix(tabla))
+  tabla2 = as.table(as.matrix(tabla2))
+  tabla3 = as.table(as.matrix(tabla3))
   write.table(x = tabla, file = paste(getwd(), salida, nombre,".csv", sep = ""), sep = "  ")
   write.table(x = tabla2, file = paste(getwd(), salida, nombre,"global.csv", sep = ""), sep = "  ")
+  write.table(x = tabla3, file = paste(getwd(), salida, nombre,"continental.csv", sep = ""), sep = "  ")
   
-  print(paste("Tablas guardadas como", paste(nombre,".csv", sep = ""), "y ", paste(nombre,"global.csv", sep =""), "en ", salida), sep = "")
+  print(paste("Tablas guardadas como", paste(nombre,".csv", sep = ""), ", ", paste(nombre,"global.csv", sep =""), " y ", paste(nombre,"continental.csv", sep =""), "en ", salida), sep = "")
+  
+  return(V)
   
 }
+
+
+
+
+Tabla7.1Grafico = function(tabla,v = 3, limites, global = F, limites2 = NULL, escala2 = F, titulo, nombre, salida, width = 20, height = 20){
+  library(ggplot2)
+  ruta = getwd()
+ 
+  l = vector(length = 20)
+  i = 0
+  
+  while(length(l)>=15){
+    stp = 50+50*i
+    breaks.mm =  seq(limites[1], limites[2], by = stp)
+    l = breaks.mm
+    i = i + 1
+    print(length(l))
+  }
+
+  
+
+  aux = cbind(tabla, lats =  seq(-13, 8, by = 1))
+  g = ggplot(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v] > 0)) +
+    geom_bar(stat = "identity", show.legend = F) +
+    scale_fill_manual(values = c("tan3", "steelblue3" )) +
+    scale_y_continuous(labels=c("-13" = "HS", "-12" = "HN", "-11" = "Global", "-10" = "" ,"-9" = "80-90S", "-8" = "70-80S", "-7" = "60-70S", "-6" = "50-60S", "-5" = "40-50S",
+                                "-4" = "30-40S", "-3" = "20-30S", "-2" = "10-20S", "-1" = "0-10S", 
+                                "0" = "0-10N", "1" = "10-20N", "2" = "20-30N", "3" = "30-40N", "4" = "40-50N", "5" = "50-60N", 
+                                "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1))+
+  scale_x_continuous(breaks = breaks.mm, limits = limites) +
+    
+    theme_minimal() +
+    ylab("")+xlab("mm")+ ggtitle(titulo)+
+  theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+        axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        panel.ontop = F,
+        plot.title = element_text(hjust = 0.5))
+  
+  ggsave(paste(ruta, salida, nombre, ".jpg", sep = ""), plot = g, width = width, height = height, units = "cm")
+  
+ 
+  if(global == T){
+    
+    aux = aux[1:3,]
+    # para la parte global
+    g = ggplot(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v] > 0)) +
+      geom_bar(stat = "identity", show.legend = F) +
+      scale_fill_manual(values = c("tan3", "steelblue3" )) +
+      scale_y_continuous(labels=c("-13" = "HS", "-12" = "HN", "-11" = "Global", "-10" = "" ,"-9" = "80-90S", "-8" = "70-80S", "-7" = "60-70S", "-6" = "50-60S", "-5" = "40-50S",
+                                  "-4" = "30-40S", "-3" = "20-30S", "-2" = "10-20S", "-1" = "0-10S", 
+                                  "0" = "0-10N", "1" = "10-20N", "2" = "20-30N", "3" = "30-40N", "4" = "40-50N", "5" = "50-60N", 
+                                  "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1)) 
+    if(escala2 == T){
+      
+      l = vector(length = 20)
+      i = 0
+      
+      while(length(l)>15){
+        stp = 10+10*i
+        breaks.mm2 =  seq(limites2[1], limites2[2], by = stp)
+        l = breaks.mm2
+        i = i + 1
+      }
+      
+      g = g + scale_x_continuous(breaks = breaks.mm2, limits = limites2) 
+    } else {
+      
+      g = g + scale_x_continuous(breaks = breaks.mm, limits = limites) 
+    }
+    
+    g = g +  theme_minimal() +
+      ylab("")+xlab("mm")+ ggtitle(titulo) +
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, size = 1),
+            panel.ontop = F,
+            plot.title = element_text(hjust = 0.5))
+    ggsave(paste(ruta, salida, nombre, "2", ".jpg", sep = ""), plot = g, width = width, height = height, units = "cm")
+  } 
+  
+} 
+
+
+Tabla7.1Grafico_Continental = function(tabla,v = 3, limites, titulo, nombre, salida, width = 20, height = 20){
+  library(ggplot2)
+  ruta = getwd()
+  
+  l = vector(length = 20)
+  i = 0
+  
+  while(length(l)>=15){
+    stp = 50+50*i
+    breaks.mm =  seq(limites[1], limites[2], by = stp)
+    l = breaks.mm
+    i = i + 1
+    print(length(l))
+  }
+  
+  
+  
+  aux = cbind(tabla, lats =  seq(1, 5, by = 1))
+  g = ggplot(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v] > 0)) +
+    geom_bar(stat = "identity", show.legend = F) +
+    scale_fill_manual(values = c("steelblue3", "tan3" )) +
+    scale_y_continuous(labels=c( "1" = "Sudamerica", "2" = "Norte America", "3" = "Eurasia", "4" = "Africa", "5" = "Oceania"),breaks = seq(1, 5, by = 1))+
+    scale_x_continuous(breaks = breaks.mm, limits = limites) +
+    
+    theme_minimal() +
+    ylab("")+xlab("mm")+ ggtitle(titulo)+
+    theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+          axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5))
+  
+  ggsave(paste(ruta, salida, nombre, "continental.jpg", sep = ""), plot = g, width = width, height = height, units = "cm")
+  
+}  
+
+
+
+
+#### PlotLat ####
+
+PlotLat = function(pp, evap, titulo, y.breaks, nombre, salida){
+  
+  library(ggplot2)
+  library(metR)
+  
+  limite = c(min(y.breaks), max(y.breaks))
+  
+  pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   
+  evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+  
+  datos = array(NA, c(73,5))
+  
+  pp.lat = apply(pp_ens, c(2), mean, na.rm = T)
+  evap.lat = apply(evap_ens, c(2), mean, na.rm = T)   
+  
+  datos = cbind(pp.lat ,evap.lat)
+  datos = cbind(datos,  apply(pp_ens*mask, c(2), mean, na.rm = T)); datos = cbind(datos,  apply(evap_ens*mask, c(2), mean, na.rm = T))
+  datos = cbind(datos,  apply(pp_ens*mask2, c(2), mean, na.rm = T)); datos = cbind(datos,  apply(evap_ens*mask2, c(2), mean, na.rm = T))
+  datos = cbind(datos, lat)
+  
+  colnames(datos) = c("P", "E", "P_C", "E_C", "P_O", "E_O", "Lat")
+  
+  g = ggplot(data = datos, aes(x = Lat)) + 
+    geom_line(aes(y = P, colour = "Global"), size = 1) + 
+    geom_line(aes(y = P_O, colour = "Oceanico"), size = 1) + 
+    geom_line(aes(y = P_C, colour = "Continental"), size = 1)+
+    scale_colour_manual("", 
+                        breaks = c("Global", "Oceanico", "Continental"),
+                        values = c("Black", "royalblue", "forestgreen")) +
+    scale_x_latitude(breaks = seq(-90, 90, by = 15)) +
+    scale_y_continuous(breaks = y.breaks, limits = limite) +
+    ggtitle(paste("Precipitación", titulo)) +
+    ylab("") +
+    theme_minimal() +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), salida,"P", nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+  g = ggplot(data = datos, aes(x = Lat)) + 
+    geom_line(aes(y = E, colour = "Global"), size = 1) + 
+    geom_line(aes(y = E_O, colour = "Oceanico"), size = 1) + 
+    geom_line(aes(y = E_C, colour = "Continental"), size = 1)+
+    scale_colour_manual("", 
+                        breaks = c("Global", "Oceanico", "Continental"),
+                        values = c("Black", "royalblue", "forestgreen")) +
+    scale_x_latitude(breaks = seq(-90, 90, by = 15)) +
+    scale_y_continuous(breaks = y.breaks, limits = limite) +
+    ggtitle(paste("Evaporación", titulo)) +
+    ylab("") +
+    theme_minimal() +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), salida,"E", nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+  
+}
+#### PlotTs ####
+PlotTs = function(datos, escala,escala2,  titulo, nombre){
+  library(ggplot2)
+  
+  colnames(datos) = c("PP", "TendenciaP", "Años", "E", "TendenciaE")
+  g = ggplot(datos, aes(x = Años))+ theme_minimal()+
+    geom_line(aes(y = PP, colour = "P"), size = 1) +
+    geom_line(aes(y = TendenciaP), show.legend = F, color = "steelblue3") + 
+    geom_line(aes(y = E, colour = "E"), size = 1) +
+    geom_line(aes(y = TendenciaE), show.legend = F, color = "orange2")+
+    scale_colour_manual("", 
+                        breaks = c("P", "Tend P", "E", "Tend E"),
+                        values = c("steelblue3","steelblue3", "orange2", "orange2"))+
+    scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)))+
+  ylab("mm")+ ggtitle(titulo)+
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+g = ggplot(datos, aes(x = Años))+ theme_minimal()+
+    geom_line(aes(y = PP-E, colour = "P-E"), size = 1) +
+    geom_hline(yintercept = 0) +
+    scale_colour_manual("", 
+                        breaks = c("P-E"),
+                        values = c("darkorchid4")) +
+    scale_y_continuous(breaks = escala2, limits = c(min(escala2), max(escala2)))+
+    ylab("mm")+ ggtitle(titulo)+
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,"resta.jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+}  
