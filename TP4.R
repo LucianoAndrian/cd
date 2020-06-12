@@ -528,156 +528,62 @@ source("FUNCIONES.R")
 
 #### TABLA 7.1 ####
 
-# CNRM-CM5
-# Historical
-load("RDatas/TP4.RDatas/pp5.his.RData"); load("RDatas/TP4.RDatas/evap5.his.RData") 
-pp = pp5.his[[1]]  # prueba...(ram)
-evap = evap5.his[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5his", salida = "/Salidas/TP4/tablas/", r = T)
+cm = c("5", "6")
+rcp = c("26", "85")
 
-titulo = "P - E CNRM-CM5 - Historico"
-nombre = "pe5.his"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
+source("FUNCIONES.R")
 
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-# RCP2.6
-# 2020 - 2049
-load("RDatas/TP4.RDatas/pp5.26_49.RData"); load("RDatas/TP4.RDatas/evap5.26_49.RData")
-
-pp = pp5.26_49[[1]]  # prueba...(ram)
-evap = evap5.26_49[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.26_49", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM5 RCP2.6 -  2020 - 2099"
-nombre = "pe5.26_49"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-
-# 2070 - 2099
-load("RDatas/TP4.RDatas/pp5.26_99.RData"); load("RDatas/TP4.RDatas/evap5.26_99.RData") 
-
-pp = pp5.26_99[[1]]  # prueba...(ram)
-evap = evap5.26_99[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.26_99", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM5 RCP2.6 -  2070 - 2049"
-nombre = "pe5.26_99"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-
-# RCP8.5
-# 2020 - 2049
-load("RDatas/TP4.RDatas/pp5.85_49.RData"); load("RDatas/TP4.RDatas/evap5.85_49.RData") 
-
-pp = pp5.85_49[[1]]  # prueba...(ram)
-evap = evap5.85_49[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.85_49", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM5 RCP8.5 -  2020 - 2049"
-nombre = "pe5.85_49"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-
-# 2070 - 2099
-load("RDatas/TP4.RDatas/pp5.85_99.RData"); load("RDatas/TP4.RDatas/evap5.85_99.RData") 
-
-pp = pp5.85_99[[1]]  # prueba...(ram)
-evap = evap5.85_99[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.85_99", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM5 RCP8.5 -  2070 - 2099"
-nombre = "pe5.85_99"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-
-# CNRM-CM6
-# Historical
-load("RDatas/TP4.RDatas/pp6.his.RData"); load("RDatas/TP4.RDatas/evap6.his.RData") 
-pp = pp6.his[[1]]  # prueba...(ram)
-evap = evap6.his[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6his", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM6 - Historico"
-nombre = "pe6.his"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-
-# SSP126
-# 2020 - 2049
-load("RDatas/TP4.RDatas/pp6.26_49.RData"); load("RDatas/TP4.RDatas/evap6.26_49.RData") 
-
-pp = pp6.26_49[[1]]  # prueba...(ram)
-evap = evap6.26_49[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6.26_49", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM6 SSP126 -  2020 - 2049"
-nombre = "pe6.26_49"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-
-# 2070 - 2099
-load("RDatas/TP4.RDatas/pp6.26_99.RData"); load("RDatas/TP4.RDatas/evap6.26_99.RData") 
-
-pp = pp6.26_99[[1]]  # prueba...(ram)
-evap = evap6.26_99[[1]]
-
-tabla =Tabla7.1(pp = pp, evap = evap, nombre = "6.26_99", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM6 SSP126 -  2070 - 2099"
-nombre = "pe6.26_99"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-# SSP585
-# 2020 - 2049
-load("RDatas/TP4.RDatas/pp6.85_49.RData"); load("RDatas/TP4.RDatas/evap6.85_49.RData") 
-
-pp = pp6.85_49[[1]]  # prueba...(ram)
-evap = evap6.85_49[[1]]
-
-tabla=Tabla7.1(pp = pp, evap = evap, nombre = "6.85_49", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM6 SSP585 -  2020 - 2049"
-nombre = "pe6.85_49"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
-
-# 2070 - 2099
-load("RDatas/TP4.RDatas/pp6.85_99.RData"); load("RDatas/TP4.RDatas/evap6.85_99.RData") 
-
-pp = pp6.85_99[[1]]  # prueba...(ram)
-evap = evap6.85_99[[1]]
-
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6.85_99", salida = "/Salidas/TP4/tablas/", r = T)
-
-titulo = "P - E CNRM-CM6 SSP585 -  2070 - 2099"
-nombre = "pe6.85_99"
-Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
-                , escala2 = T, limites2 = c(-60, 60), global = T)
-Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
+for( i in 1:2){
+  for(j in 1:2){
+    
+    load(paste("RDatas/TP4.RDatas/", "pp", cm[i],".his.RData", sep = ""), envir = N <- new.env())  #### !!!
+    load(paste("RDatas/TP4.RDatas/evap", cm[i],".his.RData", sep = ""), envir = M <- new.env() )   #### !!!
+    pp = get(paste("pp", cm[i], ".his", sep = ""), envir =  N)[[1]]
+    evap = get(paste("evap", cm[i], ".his", sep = ""), envir =  M)[[1]]
+    
+    nombre = paste(cm[i], ".his", sep = "")
+    tabla = Tabla7.1(pp = pp, evap = evap, nombre = nombre, salida = "/Salidas/TP4/tablas/", r = T)
+    
+    
+    
+    load(paste("RDatas/TP4.RDatas/pp",cm[i],".",rcp[j], "_49.RData", sep = ""), envir = N <- new.env())
+    load(paste("RDatas/TP4.RDatas/evap",cm[i],".",rcp[j], "_49.RData", sep = ""), envir = M <- new.env())
+    
+    pp = get(paste("pp", cm[i], ".", rcp[j], "_49", sep = ""), envir =  N)[[1]]
+    evap = get(paste("evap", cm[i], ".", rcp[j], "_49", sep = ""), envir =  M)[[1]]
+    
+    nombre = paste(cm[i], ".", rcp[j], "_49", sep = "")
+    tabla2 = Tabla7.1(pp = pp, evap = evap, nombre = nombre, salida = "/Salidas/TP4/tablas/", r = T)
+    
+    
+    
+    load(paste("RDatas/TP4.RDatas/pp",cm[i],".",rcp[j], "_99.RData", sep = ""), N <- new.env())
+    load(paste("RDatas/TP4.RDatas/evap",cm[i],".",rcp[j], "_99.RData", sep = ""), M <- new.env())
+    
+    pp = get(paste("pp", cm[i], ".", rcp[j], "_99", sep = ""), envir =  N)[[1]]
+    evap = get(paste("evap", cm[i], ".", rcp[j], "_99", sep = ""), envir =  M)[[1]]
+    
+    nombre = paste(cm[i], ".", rcp[j], "_99", sep = "")
+    tabla3 = Tabla7.1(pp = pp, evap = evap, nombre = nombre, salida = "/Salidas/TP4/tablas/", r = T)
+    
+    
+    
+    
+    titulo = paste("P - E  CNRM-CM", cm[i], " RCP", rcp[j] ,sep = "")
+    nombre = paste(cm[i], "_", rcp[j], sep ="")
+    
+    Tabla7.1Grafico(data.his =  tabla[[1]], data.49 = tabla2[[1]], data.99 = tabla3[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
+                    , escala2 = T, limites2 = c(-60, 60), global = T)
+    
+    Tabla7.1Grafico_Continental(data.his = tabla[[2]], data.49 = tabla2[[2]], data.99 = tabla3[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
+    
+    print(paste("RDatas/TP4.RDatas/pp",cm[i],".",rcp[j], "_99.RData", sep = ""))
+    print(paste("P - E  CNRM-CM", cm[i], " RCP", rcp[j] ,sep = ""))
+    
+    rm(N, M)
+  }
+}
 
 
 
