@@ -29,23 +29,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(1976, 2005, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(690, 725, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM5 Historical", nombre = "5.his.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -53,8 +36,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM5 Historico"; nombre.fig = "p5
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -62,8 +45,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM5 Historico"; nombre.fig = "e
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -72,13 +55,9 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
-
-
-
-
 
 
 #---- RCP2.6 2020  2049----#
@@ -99,23 +78,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2020, 2049, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(690, 725, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM5 RCP2.6  2020 - 2049", nombre = "5.26_49.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -123,8 +85,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM5 RCP2.6  2020 - 2049 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -132,8 +94,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM5 RCP2.6  2020 - 2049"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -142,8 +104,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -168,23 +130,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2070, 2099, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(690, 725, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM5 RCP2.6  2070 - 2099", nombre = "5.26_99.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -192,8 +137,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM5 RCP2.6  2070 - 2099 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -201,8 +146,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM5 RCP2.6  2070 - 2099"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -211,8 +156,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -235,23 +180,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2020, 2049, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(690, 725, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM5 RCP8.5  2020 - 2049", nombre = "5.85_49.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -259,8 +187,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM5 RCP8.5  2020 - 2049 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -268,8 +196,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM5 RCP8.5  2020 - 2049"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -278,8 +206,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -304,23 +232,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2070, 2099, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(700, 760, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM5 RCP8.5  2070 - 2099", nombre = "5.85_99.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -328,8 +239,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM5 RCP8.5  2070 - 2099 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -337,8 +248,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM5 RCP8.5  2070 - 2099"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -347,8 +258,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -373,23 +284,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(1976, 2005, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(660, 670, by = 1), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM6 Historical", nombre = "6.his.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -397,8 +291,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM6 Historico"; nombre.fig = "p6
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -406,8 +300,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM6 Historico"; nombre.fig = "e
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -416,13 +310,9 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
-
-
-
-
 
 
 #---- SSP126 2020  2049----#
@@ -444,22 +334,6 @@ temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
 
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2020, 2049, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(660, 690, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM6 SSP126  2020 - 2049", nombre = "6.26_49.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -467,8 +341,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM6 SSP126  2020 - 2049 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -476,8 +350,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM6 SSP126  2020 - 2049"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -486,8 +360,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -512,23 +386,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2070, 2099, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(660, 690, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM6 SSP126  2070 - 2099", nombre = "6.26_99.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -536,8 +393,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM6 SSP126  2070 - 2099 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -545,8 +402,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM6 SSP126  2070 - 2099"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -555,8 +412,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -579,23 +436,6 @@ evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
 temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
-
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2020, 2049, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(660, 690, by = 5), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM6 SSP585  2020 - 2049", nombre = "6.85_49.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -603,8 +443,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM6 SSP585  2020 - 2049 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -612,8 +452,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM6 SSP585  2020 - 2049"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -622,8 +462,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -649,22 +489,6 @@ temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
 # hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
 
 
-pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
-evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
-temp.ts = apply(temp_ens*lats, c(3), mean, na.rm = T)
-# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
-
-pp = Tendencia.ts(pp.ts)
-evap = Tendencia.ts(evap.ts)
-temp = Tendencia.ts(temp.ts)
-# hu = Tendencia.ts(# hu.ts)
-
-datos = as.data.frame(pp[[1]])
-datos = cbind(datos, Años = seq(2070, 2099, by = 1))
-datos = cbind(datos, as.data.frame(evap[[1]]))
-
-PlotTs(datos = datos, escala = seq(660, 720, by = 10), escala2 = seq(-1.5, 1.5, by = 0.25), titulo = "CNRM-CM6 SSP585  2070 - 2099", nombre = "6.85_99.ts")
-
 pp.t.f = Tendencia(pp_ens, s = 0.9)
 evap.t.f = Tendencia(evap_ens, s = 0.9)
 
@@ -672,8 +496,8 @@ auxx = pp.t.f; titulo = "Tendencia de PP - CNRM-CM6 SSP585  2070 - 2099 "; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat),colorbar = "Spectral", niveles = 11, revert = F, escala = seq(-10,10, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -681,8 +505,8 @@ auxx = evap.t.f; titulo = "Tendencia de E - CNRM-CM6 SSP585  2070 - 2099"; nombr
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx[[1]], c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PRGn", niveles = 11, revert = T, escala = seq(-5,5, by = 0.5)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "PuOr", niveles = 9, revert = T, escala = seq(-7,7, by = 1)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -691,8 +515,8 @@ auxx = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T) ; titulo = "P - E  CNRM
 mask = as.matrix(read.table("mask.txt"))
 aux = array(auxx, c(144,73,1)); mask = array(auxx[[2]], c(144,73,1))
 mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
-mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlGn", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
-           , color.vsig = "black", alpha.vsig = 0.2, sig = T, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
+mapa_topo3(variable = aux, variable.sig = mask, lon = as.matrix(lon), lat = as.matrix(lat), colorbar = "RdYlBu", niveles = 11, revert = F, escala = seq(-2000,2000, by = 250)
+           , color.vsig = "black", alpha.vsig = 0.2, sig = F, mapa = "mundo", x.label = NULL, y.label = NULL, label.escala = "mm", na.fill = -1000
            , titulo = titulo, nombre.fig = nombre.fig, width = 30, salida = "/Salidas/TP4/Tend/", colorbar.pos = "bottom")
 
 
@@ -710,7 +534,7 @@ load("RDatas/TP4.RDatas/pp5.his.RData"); load("RDatas/TP4.RDatas/evap5.his.RData
 pp = pp5.his[[1]]  # prueba...(ram)
 evap = evap5.his[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5his", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5his", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM5 - Historico"
 nombre = "pe5.his"
@@ -726,7 +550,7 @@ load("RDatas/TP4.RDatas/pp5.26_49.RData"); load("RDatas/TP4.RDatas/evap5.26_49.R
 pp = pp5.26_49[[1]]  # prueba...(ram)
 evap = evap5.26_49[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.26_49", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.26_49", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM5 RCP2.6 -  2020 - 2099"
 nombre = "pe5.26_49"
@@ -741,7 +565,7 @@ load("RDatas/TP4.RDatas/pp5.26_99.RData"); load("RDatas/TP4.RDatas/evap5.26_99.R
 pp = pp5.26_99[[1]]  # prueba...(ram)
 evap = evap5.26_99[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.26_99", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.26_99", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM5 RCP2.6 -  2070 - 2049"
 nombre = "pe5.26_99"
@@ -757,7 +581,7 @@ load("RDatas/TP4.RDatas/pp5.85_49.RData"); load("RDatas/TP4.RDatas/evap5.85_49.R
 pp = pp5.85_49[[1]]  # prueba...(ram)
 evap = evap5.85_49[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.85_49", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.85_49", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM5 RCP8.5 -  2020 - 2049"
 nombre = "pe5.85_49"
@@ -772,7 +596,7 @@ load("RDatas/TP4.RDatas/pp5.85_99.RData"); load("RDatas/TP4.RDatas/evap5.85_99.R
 pp = pp5.85_99[[1]]  # prueba...(ram)
 evap = evap5.85_99[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.85_99", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "5.85_99", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM5 RCP8.5 -  2070 - 2099"
 nombre = "pe5.85_99"
@@ -787,7 +611,7 @@ load("RDatas/TP4.RDatas/pp6.his.RData"); load("RDatas/TP4.RDatas/evap6.his.RData
 pp = pp6.his[[1]]  # prueba...(ram)
 evap = evap6.his[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6his", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6his", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM6 - Historico"
 nombre = "pe6.his"
@@ -803,7 +627,7 @@ load("RDatas/TP4.RDatas/pp6.26_49.RData"); load("RDatas/TP4.RDatas/evap6.26_49.R
 pp = pp6.26_49[[1]]  # prueba...(ram)
 evap = evap6.26_49[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6.26_49", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6.26_49", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM6 SSP126 -  2020 - 2049"
 nombre = "pe6.26_49"
@@ -818,7 +642,7 @@ load("RDatas/TP4.RDatas/pp6.26_99.RData"); load("RDatas/TP4.RDatas/evap6.26_99.R
 pp = pp6.26_99[[1]]  # prueba...(ram)
 evap = evap6.26_99[[1]]
 
-tabla =Tabla7.1(pp = pp, evap = evap, nombre = "6.26_99", salida = "/Salidas/TP4/tablas/")
+tabla =Tabla7.1(pp = pp, evap = evap, nombre = "6.26_99", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM6 SSP126 -  2070 - 2099"
 nombre = "pe6.26_99"
@@ -833,7 +657,7 @@ load("RDatas/TP4.RDatas/pp6.85_49.RData"); load("RDatas/TP4.RDatas/evap6.85_49.R
 pp = pp6.85_49[[1]]  # prueba...(ram)
 evap = evap6.85_49[[1]]
 
-tabla=Tabla7.1(pp = pp, evap = evap, nombre = "6.85_49", salida = "/Salidas/TP4/tablas/")
+tabla=Tabla7.1(pp = pp, evap = evap, nombre = "6.85_49", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM6 SSP585 -  2020 - 2049"
 nombre = "pe6.85_49"
@@ -847,11 +671,453 @@ load("RDatas/TP4.RDatas/pp6.85_99.RData"); load("RDatas/TP4.RDatas/evap6.85_99.R
 pp = pp6.85_99[[1]]  # prueba...(ram)
 evap = evap6.85_99[[1]]
 
-tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6.85_99", salida = "/Salidas/TP4/tablas/")
+tabla = Tabla7.1(pp = pp, evap = evap, nombre = "6.85_99", salida = "/Salidas/TP4/tablas/", r = T)
 
 titulo = "P - E CNRM-CM6 SSP585 -  2070 - 2099"
 nombre = "pe6.85_99"
 Tabla7.1Grafico(tabla = tabla[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
                 , escala2 = T, limites2 = c(-60, 60), global = T)
 Tabla7.1Grafico_Continental(tabla = tabla[[2]], v = 3, limites = c(-900,900), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/")
+
+
+
+### TENDENCIA ####
+#CNRM-CM5
+#### RCP2.6 ####
+load("RDatas/TP4.RDatas/pp5.his.RData"); load("RDatas/TP4.RDatas/evap5.his.RData")
+load("RDatas/TP4.RDatas/t5.his.RData")#;  load("RDatas/TP4.RDatas/hu5.his.RData")
+pp = pp5.his[[1]]  # prueba...(ram)
+evap = evap5.his[[1]]
+temp = t5.his[[1]]
+# # hu = hu5.his[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos = cbind(datos, as.data.frame(evap[[1]]))
+datos = cbind(datos, as.data.frame(temp[[1]]))
+
+
+load("RDatas/TP4.RDatas/pp5.26_49.RData"); load("RDatas/TP4.RDatas/evap5.26_49.RData")
+load("RDatas/TP4.RDatas/t5.26_49.RData")#;  load("RDatas/TP4.RDatas/hu5.26_49.RData")
+pp = pp5.26_49[[1]]  # prueba...(ram)
+evap = evap5.26_49[[1]]
+temp = t5.26_49[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+datos = rbind(datos, NA, datos2)
+
+load("RDatas/TP4.RDatas/pp5.26_99.RData"); load("RDatas/TP4.RDatas/evap5.26_99.RData")
+load("RDatas/TP4.RDatas/t5.26_99.RData")#;  load("RDatas/TP4.RDatas/hu5.26_99.RData")
+pp = pp5.26_99[[1]]  # prueba...(ram)
+evap = evap5.26_99[[1]]
+temp = t5.26_99[[1]]
+# hu = hu5.26_99[[1]]
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos2 = cbind(datos2, Años = seq(2070, 2099, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+
+datos = rbind(datos, NA, datos2)
+
+aux = seq(1976, 2005); aux1 = seq(2020,2049); aux2 = seq(2070, 2099)
+años = c(aux, 2010 , aux1, 2060 , aux2)
+
+datos = cbind(datos, años)
+
+aux = datos
+
+
+datos = aux
+aux1 =  mean(datos[32:61,5]) - mean(datos[1:30,5])
+aux2 = mean(datos[63:92,5]) - mean(datos[1:30,5])
+
+datos[1:30,5] = datos[1:30,5] - mean(datos[1:30,5])
+datos[32:61,5] = datos[32:61,5] - mean(datos[32:61,5]) + aux1
+datos[63:92,5] = datos[63:92,5] - mean(datos[63:92,5]) + aux2
+
+PlotTs(datos = datos, escala = seq(690, 740, by = 10), escala2 = seq(-1, 1, by = 0.2), titulo = "CNRM-CM5 RCP2.6", nombre = "cm5.26", c = 700)
+
+
+#### RCP8.5 ####
+load("RDatas/TP4.RDatas/pp5.his.RData"); load("RDatas/TP4.RDatas/evap5.his.RData")
+load("RDatas/TP4.RDatas/t5.his.RData")#;  load("RDatas/TP4.RDatas/hu5.his.RData")
+pp = pp5.his[[1]]  # prueba...(ram)
+evap = evap5.his[[1]]
+temp = t5.his[[1]]
+# # hu = hu5.his[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos = cbind(datos, as.data.frame(evap[[1]]))
+datos = cbind(datos, as.data.frame(temp[[1]]))
+
+
+load("RDatas/TP4.RDatas/pp5.85_49.RData"); load("RDatas/TP4.RDatas/evap5.85_49.RData")
+load("RDatas/TP4.RDatas/t5.85_49.RData")#;  load("RDatas/TP4.RDatas/hu5.85_49.RData")
+pp = pp5.85_49[[1]]  # prueba...(ram)
+evap = evap5.85_49[[1]]
+temp = t5.85_49[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+datos = rbind(datos, NA, datos2)
+
+load("RDatas/TP4.RDatas/pp5.85_99.RData"); load("RDatas/TP4.RDatas/evap5.85_99.RData")
+load("RDatas/TP4.RDatas/t5.85_99.RData")#;  load("RDatas/TP4.RDatas/hu5.85_99.RData")
+pp = pp5.85_99[[1]]  # prueba...(ram)
+evap = evap5.85_99[[1]]
+temp = t5.85_99[[1]]
+# hu = hu5.85_99[[1]]
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos2 = cbind(datos2, Años = seq(2070, 2099, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+
+datos = rbind(datos, NA, datos2)
+
+aux = seq(1976, 2005); aux1 = seq(2020,2049); aux2 = seq(2070, 2099)
+años = c(aux, 2010 , aux1, 2060 , aux2)
+
+datos = cbind(datos, años)
+
+aux = datos
+
+
+datos = aux
+aux1 =  mean(datos[32:61,5]) - mean(datos[1:30,5])
+aux2 = mean(datos[63:92,5]) - mean(datos[1:30,5])
+
+datos[1:30,5] = datos[1:30,5] - mean(datos[1:30,5])
+datos[32:61,5] = datos[32:61,5] - mean(datos[32:61,5]) + aux1
+datos[63:92,5] = datos[63:92,5] - mean(datos[63:92,5]) + aux2
+
+PlotTs(datos = datos, escala = seq(690, 760, by = 10), escala2 = seq(-1, 1, by = 0.2), titulo = "CNRM-CM5 RCP8.5", nombre = "cm5.85", c = 700)
+
+
+#CNRM-CM6
+####SSP126 ####
+load("RDatas/TP4.RDatas/pp6.his.RData"); load("RDatas/TP4.RDatas/evap6.his.RData")
+load("RDatas/TP4.RDatas/t6.his.RData")#;  load("RDatas/TP4.RDatas/hu5.his.RData")
+pp = pp6.his[[1]]  # prueba...(ram)
+evap = evap6.his[[1]]
+temp = t6.his[[1]]
+# # hu = hu5.his[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos = cbind(datos, as.data.frame(evap[[1]]))
+datos = cbind(datos, as.data.frame(temp[[1]]))
+
+
+load("RDatas/TP4.RDatas/pp6.26_49.RData"); load("RDatas/TP4.RDatas/evap6.26_49.RData")
+load("RDatas/TP4.RDatas/t6.26_49.RData")#;  load("RDatas/TP4.RDatas/hu5.26_49.RData")
+pp = pp6.26_49[[1]]  # prueba...(ram)
+evap = evap6.26_49[[1]]
+temp = t6.26_49[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+datos = rbind(datos, NA, datos2)
+
+load("RDatas/TP4.RDatas/pp6.26_99.RData"); load("RDatas/TP4.RDatas/evap6.26_99.RData")
+load("RDatas/TP4.RDatas/t6.26_99.RData")#;  load("RDatas/TP4.RDatas/hu5.26_99.RData")
+pp = pp6.26_99[[1]]  # prueba...(ram)
+evap = evap6.26_99[[1]]
+temp = t6.26_99[[1]]
+# hu = hu5.26_99[[1]]
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos2 = cbind(datos2, Años = seq(2070, 2099, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+
+datos = rbind(datos, NA, datos2)
+
+aux = seq(1976, 2005); aux1 = seq(2020,2049); aux2 = seq(2070, 2099)
+años = c(aux, 2010 , aux1, 2060 , aux2)
+
+datos = cbind(datos, años)
+
+aux = datos
+
+
+datos = aux
+aux1 =  mean(datos[32:61,5]) - mean(datos[1:30,5])
+aux2 = mean(datos[63:92,5]) - mean(datos[1:30,5])
+
+datos[1:30,5] = datos[1:30,5] - mean(datos[1:30,5])
+datos[32:61,5] = datos[32:61,5] - mean(datos[32:61,5]) + aux1
+datos[63:92,5] = datos[63:92,5] - mean(datos[63:92,5]) + aux2
+
+PlotTs(datos = datos, escala = seq(650, 725, by = 15), escala2 = seq(-1, 1, by = 0.2), titulo = "CNRM-CM6 SSP126", nombre = "CM6.26", c = 665)
+
+
+#### SSP585 ####
+load("RDatas/TP4.RDatas/pp6.his.RData"); load("RDatas/TP4.RDatas/evap6.his.RData")
+load("RDatas/TP4.RDatas/t6.his.RData")#;  load("RDatas/TP4.RDatas/hu5.his.RData")
+pp = pp6.his[[1]]  # prueba...(ram)
+evap = evap6.his[[1]]
+temp = t6.his[[1]]
+# # hu = hu5.his[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos = cbind(datos, as.data.frame(evap[[1]]))
+datos = cbind(datos, as.data.frame(temp[[1]]))
+
+
+load("RDatas/TP4.RDatas/pp6.85_49.RData"); load("RDatas/TP4.RDatas/evap6.85_49.RData")
+load("RDatas/TP4.RDatas/t6.85_49.RData")#;  load("RDatas/TP4.RDatas/hu5.85_49.RData")
+pp = pp6.85_49[[1]]  # prueba...(ram)
+evap = evap6.85_49[[1]]
+temp = t6.85_49[[1]]
+
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos = cbind(datos, Años = seq(1976, 2005, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+datos = rbind(datos, NA, datos2)
+
+load("RDatas/TP4.RDatas/pp6.85_99.RData"); load("RDatas/TP4.RDatas/evap6.85_99.RData")
+load("RDatas/TP4.RDatas/t6.85_99.RData")#;  load("RDatas/TP4.RDatas/hu5.85_99.RData")
+pp = pp6.85_99[[1]]  # prueba...(ram)
+evap = evap6.85_99[[1]]
+temp = t6.85_99[[1]]
+# hu = hu5.85_99[[1]]
+
+pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
+evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)
+temp_ens = apply(temp, c(1,2,3), mean, na.rm = T)
+# hu_ens = apply(hu, c(1,2,3), mean, na.rm = T)
+
+
+pp.ts = apply(pp_ens*lats, c(3), mean, na.rm = T)
+evap.ts = apply(evap_ens*lats, c(3), mean, na.rm = T)
+temp.ts = apply(temp_ens, c(3), mean, na.rm = T)
+# hu.ts = apply(# hu_ens*lats, c(3), mean, na.rm = T)
+
+pp = Tendencia.ts(pp.ts)
+evap = Tendencia.ts(evap.ts)
+temp = Tendencia.ts(temp.ts)
+# hu = Tendencia.ts(# hu.ts)
+
+datos2 = as.data.frame(pp[[1]])
+#datos2 = cbind(datos2, Años = seq(2070, 2099, by = 1))
+datos2 = cbind(datos2, as.data.frame(evap[[1]]))
+datos2 = cbind(datos2, as.data.frame(temp[[1]]))
+
+datos = rbind(datos, NA, datos2)
+
+aux = seq(1976, 2005); aux1 = seq(2020,2049); aux2 = seq(2070, 2099)
+años = c(aux, 2010 , aux1, 2060 , aux2)
+
+datos = cbind(datos, años)
+
+aux = datos
+
+
+datos = aux
+aux1 =  mean(datos[32:61,5]) - mean(datos[1:30,5])
+aux2 = mean(datos[63:92,5]) - mean(datos[1:30,5])
+
+datos[1:30,5] = datos[1:30,5] - mean(datos[1:30,5])
+datos[32:61,5] = datos[32:61,5] - mean(datos[32:61,5]) + aux1
+datos[63:92,5] = datos[63:92,5] - mean(datos[63:92,5]) + aux2
+
+PlotTs(datos = datos, escala = seq(650, 725, by = 15), escala2 = seq(-1, 1, by = 0.2), titulo = "CNRM-CM6 SSP585", nombre = "CM6.85", c = 665)
+
+
 
