@@ -2924,11 +2924,11 @@ Tabla7.1 = function(pp, evap, nombre, salida, r = F){
     tabla3[4,4] = round(mean(ep_c[1:20,1:55], na.rm = T),  digits = 2)
     tabla3[4,5] = round(mean(p_ep_c[1:20,1:55], na.rm = T),  digits = 2)
     
-    tabla3[5,1] = round(mean(p_c[40:80,1:50], na.rm = T),  digits = 2) 
-    tabla3[5,2] = round(mean(e_c[40:80,1:50], na.rm = T),  digits = 2) 
-    tabla3[5,3] = round(mean(p_e_c[40:80,1:50], na.rm = T),  digits = 2)
-    tabla3[5,4] = round(mean(ep_c[40:80,1:50], na.rm = T),  digits = 2)
-    tabla3[5,5] = round(mean(p_ep_c[40:80,1:50], na.rm = T),  digits = 2)
+    tabla3[5,1] = round(mean(p_c[40:70,1:32], na.rm = T),  digits = 2) 
+    tabla3[5,2] = round(mean(e_c[40:70,1:32], na.rm = T),  digits = 2) 
+    tabla3[5,3] = round(mean(p_e_c[40:70,1:32], na.rm = T),  digits = 2)
+    tabla3[5,4] = round(mean(ep_c[40:70,1:32], na.rm = T),  digits = 2)
+    tabla3[5,5] = round(mean(p_ep_c[40:70,1:32], na.rm = T),  digits = 2)
     
     
     
@@ -2967,8 +2967,13 @@ Tabla7.1 = function(pp, evap, nombre, salida, r = F){
     lat = read.table("lat.txt")
     lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
     
-    pp_r = pp*lats
-    evap_r = evap*lats
+    if(r == 1){
+      pp_r = pp*lats
+      evap_r = evap*lats 
+    } else {
+      pp_r = pp*lats
+      evap_r = evap[,,,1:r]*lats 
+    }
     
     p_e = apply(pp_r - evap_r, c(1,2,4), mean, na.rm = T)
     ep = apply(evap_r/pp_r, c(1,2,4), mean, na.rm = T)
@@ -3063,11 +3068,10 @@ Tabla7.1 = function(pp, evap, nombre, salida, r = F){
 
 
 
-
-Tabla7.1Grafico = function(tabla,v = 3, limites, global = F, limites2 = NULL, escala2 = F, titulo, nombre, salida, width = 20, height = 20){
+Tabla7.1Grafico = function(data.his, data.49, data.99,v = 3, limites, global = F, limites2 = NULL, escala2 = F, titulo, nombre, salida, width = 20, height = 20){
   library(ggplot2)
   ruta = getwd()
- 
+  
   l = vector(length = 20)
   i = 0
   
@@ -3078,41 +3082,55 @@ Tabla7.1Grafico = function(tabla,v = 3, limites, global = F, limites2 = NULL, es
     i = i + 1
     print(length(l))
   }
-
   
-
-  aux = cbind(tabla, lats =  seq(-13, 8, by = 1))
-  g = ggplot(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v] > 0)) +
-    geom_bar(stat = "identity", show.legend = F) +
-    scale_fill_manual(values = c("tan3", "steelblue3" )) +
+  
+  aux = cbind(data.his, lats =  seq(-13, 8, by = 1))
+  aux2  = cbind(data.49, lats =  seq(-13, 8, by = 1))
+  aux3  = cbind(data.99, lats =  seq(-13, 8, by = 1))
+  
+  g = ggplot() + theme_minimal()+
+    
+    geom_bar(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
+    geom_bar(data = aux2, aes(x = aux2[,v], y = lats, color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
+    geom_bar(data = aux3, aes(x = aux3[,v], y = lats, color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
+    scale_color_manual(values = c("red", "blue")) +
+    scale_fill_manual(values = c("tan", "lightblue"))+
     scale_y_continuous(labels=c("-13" = "HS", "-12" = "HN", "-11" = "Global", "-10" = "" ,"-9" = "80-90S", "-8" = "70-80S", "-7" = "60-70S", "-6" = "50-60S", "-5" = "40-50S",
                                 "-4" = "30-40S", "-3" = "20-30S", "-2" = "10-20S", "-1" = "0-10S", 
                                 "0" = "0-10N", "1" = "10-20N", "2" = "20-30N", "3" = "30-40N", "4" = "40-50N", "5" = "50-60N", 
                                 "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1))+
-  scale_x_continuous(breaks = breaks.mm, limits = limites) +
+    
+    scale_x_continuous(breaks = breaks.mm, limits = limites) +
     
     theme_minimal() +
     ylab("")+xlab("mm")+ ggtitle(titulo)+
-  theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
-        axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        panel.border = element_rect(colour = "black", fill = NA, size = 1),
-        panel.ontop = F,
-        plot.title = element_text(hjust = 0.5))
+    theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+          axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5))
   
   ggsave(paste(ruta, salida, nombre, ".jpg", sep = ""), plot = g, width = width, height = height, units = "cm")
   
- 
+  
   if(global == T){
     
     aux = aux[1:3,]
+    aux2 = aux2[1:3,]
+    aux3 = aux3[1:3,]
     # para la parte global
-    g = ggplot(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v] > 0)) +
-      geom_bar(stat = "identity", show.legend = F) +
-      scale_fill_manual(values = c("tan3", "steelblue3" )) +
+    g = ggplot() + theme_minimal() +
+      geom_bar(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
+      geom_bar(data = aux2, aes(x = aux2[,v], y = lats, color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
+      geom_bar(data = aux3, aes(x = aux3[,v], y = lats, color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
+      scale_color_manual(values = c("red", "blue")) +
+      scale_fill_manual(values = c("tan", "lightblue"))+
+      
       scale_y_continuous(labels=c("-13" = "HS", "-12" = "HN", "-11" = "Global", "-10" = "" ,"-9" = "80-90S", "-8" = "70-80S", "-7" = "60-70S", "-6" = "50-60S", "-5" = "40-50S",
                                   "-4" = "30-40S", "-3" = "20-30S", "-2" = "10-20S", "-1" = "0-10S", 
                                   "0" = "0-10N", "1" = "10-20N", "2" = "20-30N", "3" = "30-40N", "4" = "40-50N", "5" = "50-60N", 
-                                  "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1)) 
+                                  "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1))
+    
     if(escala2 == T){
       
       l = vector(length = 20)
@@ -3144,7 +3162,7 @@ Tabla7.1Grafico = function(tabla,v = 3, limites, global = F, limites2 = NULL, es
 } 
 
 
-Tabla7.1Grafico_Continental = function(tabla,v = 3, limites, titulo, nombre, salida, width = 20, height = 20){
+Tabla7.1Grafico_Continental = function(data.his, data.49, data.99, v = 3, limites, titulo, nombre, salida, width = 20, height = 20){
   library(ggplot2)
   ruta = getwd()
   
@@ -3160,12 +3178,19 @@ Tabla7.1Grafico_Continental = function(tabla,v = 3, limites, titulo, nombre, sal
   }
   
   
+  aux = cbind(data.his, lats =  seq(1, 5, by = 1))
+  aux2  = cbind(data.49, lats =  seq(1, 5, by = 1))
+  aux3  = cbind(data.99, lats =  seq(1, 5, by = 1))
   
-  aux = cbind(tabla, lats =  seq(1, 5, by = 1))
-  g = ggplot(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v] > 0)) +
-    geom_bar(stat = "identity", show.legend = F) +
-    scale_fill_manual(values = c("steelblue3", "tan3" )) +
-    scale_y_continuous(labels=c( "1" = "Sudamerica", "2" = "Norte America", "3" = "Eurasia", "4" = "Africa", "5" = "Oceania"),breaks = seq(1, 5, by = 1))+
+  g = ggplot() + theme_minimal()+
+    
+    geom_bar(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
+    geom_bar(data = aux2, aes(x = aux2[,v], y = lats, color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
+    geom_bar(data = aux3, aes(x = aux3[,v], y = lats, color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
+    scale_color_manual(values = c("red", "blue")) +   # esto esta asi porque si...
+    scale_fill_manual(values = c("tan","lightblue"))+
+    
+    scale_y_continuous(labels=c( "1" = "Sudamerica", "2" = "Norte America", "3" = "Eurasia", "4" = "Africa", "5" = "Australia"),breaks = seq(1, 5, by = 1))+
     scale_x_continuous(breaks = breaks.mm, limits = limites) +
     
     theme_minimal() +
