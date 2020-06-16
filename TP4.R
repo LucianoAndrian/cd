@@ -703,7 +703,7 @@ for( i in 1:2){
   }
 }
 
-#############
+############
 aux = CorecLat(pp = pp, e = evap, t = temp)
 
 pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)   # este paso puede q este al dope... 
