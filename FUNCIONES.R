@@ -2826,244 +2826,308 @@ S = function(t){
   return(s)
   
 }
+#### CorecLat ####
+
+CorecLat = function(pp, e, t){
+  
+  r = length(pp[1,1,1,])
+  if(r  == 1){
+    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30))
+    
+    aux = pp[,,,1]*lats/sum(cospi((lat)/180)) ### ???
+    aux.p = apply(apply(aux, c(2,3), mean), c(2), sum)
+    
+    aux = e[,,,1]*lats/sum(cospi((lat)/180)) #
+    aux.e = apply(apply(aux, c(2,3), mean), c(2), sum)
+    
+    aux = (t[,,,1]-273)*lats/sum(cospi((lat)/180)) 
+    aux.t = apply(apply(aux, c(2,3), mean), c(2), sum)
+    
+    aux = list(); aux[[1]] = aux.e; aux[[2]] = aux.p; aux[[3]] = aux.t 
+    return(aux)
+    
+  } else {
+    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
+    
+    aux = pp*lats/sum(cospi((lat)/180)) 
+    aux.p = apply(apply(aux, c(2,3,4), mean), c(2,3), sum)
+    
+    aux = e[,,,1:r]*lats/sum(cospi((lat)/180))
+    aux.e = apply(apply(aux, c(2,3,4), mean), c(2,3), sum)
+    
+    aux = (t[,,,1:r]-273)*lats/sum(cospi((lat)/180)) 
+    aux.t = apply(apply(aux, c(2,3,4), mean), c(2,3), sum)
+    
+    aux = list(); aux[[1]] = aux.e; aux[[2]] = aux.p; aux[[3]] = aux.t 
+    return(aux)
+  }
+}
+
+
 #### Tabla7.1 ####
 
 
-Tabla7.1 = function(pp, evap, nombre, salida, r = F){
+Tabla7.1 = function(pp, evap, nombre, salida, r = F, clat = T){
   #Tabla 7.1 Pexioto.
   
     
-    lat = read.table("lat.txt") # o seq(-90,90, by = 2.5).. es lo mismo
-    lat.breaks = seq(-90, 90, by = 10)
-    lat2 = array(data = NA, c(length(lat.breaks)-1,5))
-    for(i in 1:(length(lat.breaks)-1)){
-      lat2[i,]  = seq(which(lat == lat.breaks[i]),which(lat == lat.breaks[i+1]))
-    }
-    
-    lat = read.table("lat.txt")
-    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30))
-    
-    pp_ens = apply(pp, c(1,2,3), mean, na.rm = T)*lats
-    evap_ens = apply(evap, c(1,2,3), mean, na.rm = T)*lats
-    
-    p_e = apply(pp_ens - evap_ens, c(1,2), mean, na.rm = T)
-    ep = apply(evap_ens/pp_ens, c(1,2), mean, na.rm = T)
-    p_ep = apply((pp_ens - evap_ens)/pp_ens, c(1,2), mean, na.rm = T)
-    p = apply(pp_ens, c(1,2), mean, na.rm = T)
-    e = apply(evap_ens, c(1,2), mean, na.rm = T)
-    
-    mask = as.matrix(read.table("mask.txt"))
-    mask2 = mask; mask2[which(is.na(mask2))] = 2; mask2[which(mask2==1)] = NA; mask2[which(mask2==2)] = 1
-    p_c = p*mask
-    e_c = e*mask
-    p_ep_c = p_ep*mask
-    p_e_c = p_e*mask
-    ep_c = ep*mask
-    
-    p_e_o = p_e*mask2
-    
-    
-    # por latitudes
-    aux = c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
-            , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N" )
-    tabla = data.frame(P = seq(1, length(lat.breaks)-1), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = aux)
-    
-    for(i in 1:(length(lat.breaks)-1)){
-      tabla[i,1] = round(mean(p[,lat2[i,]]), digits = 2) 
-      tabla[i,2] = round(mean(e[,lat2[i,]]), digits = 2) 
-      tabla[i,3] = round(mean(p_e[,lat2[i,]]), digits = 2)
-      tabla[i,4] = round(mean(ep[,lat2[i,]]), digits = 2)
-      tabla[i,5] = round(mean(p_ep[,lat2[i,]]), digits = 2)
-      
-    }
-    
-    
-    # Por hemisferio y global
-    tabla2 = data.frame(P = c(1,2,3), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = c("HS", "HN", "Global"))
-    
-    tabla2[1,1] = round(mean(p[,1:37]), digits = 2) 
-    tabla2[1,2] = round(mean(e[,1:37]), digits = 2) 
-    tabla2[1,3] = round(mean(p_e[,1:37]), digits = 2)
-    tabla2[1,4] = round(mean(ep[,1:37]), digits = 2)
-    tabla2[1,5] = round(mean(p_ep[,1:37]), digits = 2)
-    
-    tabla2[2,1] = round(mean(p[,37:73]), digits = 2) 
-    tabla2[2,2] = round(mean(e[,37:73]), digits = 2) 
-    tabla2[2,3] = round(mean(p_e[,37:73]), digits = 2)
-    tabla2[2,4] = round(mean(ep[,37:73]), digits = 2)
-    tabla2[2,5] = round(mean(p_ep[,37:73]), digits = 2)
-    
-    tabla2[3,1] = round(mean(p), digits = 2) 
-    tabla2[3,2] = round(mean(e), digits = 2) 
-    tabla2[3,3] = round(mean(p_e), digits = 2)
-    tabla2[3,4] = round(mean(ep), digits = 2)
-    tabla2[3,5] = round(mean(p_ep), digits = 2)
-    
-    tabla3 = data.frame(P = c(1,2,3,4,5), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = c("SA", "NA", "EA", "AF", "OC"))
-    tabla3[1,1] = round(mean(p_c[110:132,1:45], na.rm = T), digits = 2) 
-    tabla3[1,2] = round(mean(e_c[110:132,1:45], na.rm = T), digits = 2) 
-    tabla3[1,3] = round(mean(p_e_c[110:132,1:45], na.rm = T),  digits = 2)
-    tabla3[1,4] = round(mean(ep_c[110:132,1:45], na.rm = T),  digits = 2)
-    tabla3[1,5] = round(mean(p_ep_c[110:132,1:45], na.rm = T),  digits = 2)
-    
-    tabla3[2,1] = round(mean(p_c[75:130,45:73], na.rm = T),  digits = 2) 
-    tabla3[2,2] = round(mean(e_c[75:130,45:73], na.rm = T),  digits = 2) 
-    tabla3[2,3] = round(mean(p_e_c[75:130,45:73], na.rm = T),  digits = 2)
-    tabla3[2,4] = round(mean(ep_c[75:130,45:73], na.rm = T),  digits = 2)
-    tabla3[2,5] = round(mean(p_ep_c[75:130,45:73], na.rm = T),  digits = 2)
-    
-    tabla3[3,1] = round(mean(p_c[1:75,40:73], na.rm = T),  digits = 2) 
-    tabla3[3,2] = round(mean(e_c[1:75,40:73], na.rm = T),  digits = 2) 
-    tabla3[3,3] = round(mean(p_e_c[1:75,40:73], na.rm = T),  digits = 2)
-    tabla3[3,4] = round(mean(ep_c[1:75,40:73], na.rm = T),  digits = 2)
-    tabla3[3,5] = round(mean(p_ep_c[1:75,40:73], na.rm = T),  digits = 2)
-    
-    tabla3[4,1] = round(mean(p_c[1:20,1:55], na.rm = T),  digits = 2) 
-    tabla3[4,2] = round(mean(e_c[1:20,1:55], na.rm = T),  digits = 2) 
-    tabla3[4,3] = round(mean(p_e_c[1:20,1:55], na.rm = T),  digits = 2)
-    tabla3[4,4] = round(mean(ep_c[1:20,1:55], na.rm = T),  digits = 2)
-    tabla3[4,5] = round(mean(p_ep_c[1:20,1:55], na.rm = T),  digits = 2)
-    
-    tabla3[5,1] = round(mean(p_c[40:70,1:32], na.rm = T),  digits = 2) 
-    tabla3[5,2] = round(mean(e_c[40:70,1:32], na.rm = T),  digits = 2) 
-    tabla3[5,3] = round(mean(p_e_c[40:70,1:32], na.rm = T),  digits = 2)
-    tabla3[5,4] = round(mean(ep_c[40:70,1:32], na.rm = T),  digits = 2)
-    tabla3[5,5] = round(mean(p_ep_c[40:70,1:32], na.rm = T),  digits = 2)
-    
-    
-    
-    V = list()
-    V[[1]] = rbind(tabla2, 0, tabla)
-    V[[2]] = tabla3
-    V[[3]] = p_e_c
-    V[[4]] = p_e_o
-    V[[5]] = p_e
-    
-    colnames(tabla) = c("P", "E", "P-E", "E/P", "(P-E)/P")
-    colnames(tabla2) = c("P", "E", "P-E", "E/P", "(P-E)/P")
-    colnames(tabla3) = c("P", "E", "P-E", "E/P", "(P-E)/P")
-    tabla = as.table(as.matrix(tabla))
-    tabla2 = as.table(as.matrix(tabla2))
-    tabla3 = as.table(as.matrix(tabla3))
-    write.table(x = V[[1]], file = paste(getwd(), salida, nombre,".csv", sep = ""), sep = "  ")
-    
-    write.table(x = tabla3, file = paste(getwd(), salida, nombre,"continental.csv", sep = ""), sep = "  ")
-    
-    print(paste("Tablas guardadas como", paste(nombre,".csv", sep = ""), " y ", paste(nombre,"continental.csv", sep =""), "en ", salida), sep = "")
-    
-    
-    
-  if(r ==T){
-    
-    lat = read.table("lat.txt") # o seq(-90,90, by = 2.5).. es lo mismo
-    lat.breaks = seq(-90, 90, by = 10)
-    lat2 = array(data = NA, c(length(lat.breaks)-1,5))
-    for(i in 1:(length(lat.breaks)-1)){
-      lat2[i,]  = seq(which(lat == lat.breaks[i]),which(lat == lat.breaks[i+1]))
-    }
-    
-    r = length(pp[1,1,1,])
+  lat = read.table("lat.txt") # o seq(-90,90, by = 2.5).. es lo mismo
+  lat.breaks = seq(-90, 90, by = 10)
+  lat2 = array(data = NA, c(length(lat.breaks)-1,5))
+  for(i in 1:(length(lat.breaks)-1)){
+    lat2[i,]  = seq(which(lat == lat.breaks[i]),which(lat == lat.breaks[i+1]))
+  }
+  
+  r = length(pp[1,1,1,])
+  if(r == 1){
     
     lat = read.table("lat.txt")
     lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
     
-    if(r == 1){
-      pp_r = pp*lats
-      evap_r = evap*lats 
-    } else {
-      pp_r = pp*lats
-      evap_r = evap[,,,1:r]*lats 
+    p = array(NA, dim = c(18,9)); e = array(NA, dim = dim(p))
+    
+    for(i in 1:(length(lat.breaks)-1)){
+      aux.p = apply(pp[,lat2[i,],,], c(2), mean, na.rm = T)*lats[1,lat2[i,],1,]/sum((cospi(lat/180))[lat2[i,],1])
+      aux.e = apply(evap[,lat2[i,],,], c(2), mean, na.rm = T)*lats[1,lat2[i,],1,]/sum((cospi(lat/180))[lat2[i,],1])
+      p[i,] = sum(aux.p)
+      e[i,] = sum(aux.e)
     }
     
-    p_e = apply(pp_r - evap_r, c(1,2,4), mean, na.rm = T)
-    ep = apply(evap_r/pp_r, c(1,2,4), mean, na.rm = T)
-    p_ep = apply((pp_r - evap_r)/pp_r, c(1,2,4), mean, na.rm = T)
-    p = apply(pp_r, c(1,2,4), mean, na.rm = T)
-    e = apply(evap_r, c(1,2,4), mean, na.rm = T)
+    p_e = p-e; ep = e/p; p_ep = (p-e)/p
+    
+    tabla = data.frame(P = rev(round(apply(p, c(1), mean), digits = 2)), E = rev(round(apply(e, c(1), mean), digits = 2))
+                       , P_E = rev(round(apply(p_e, c(1), mean), digits = 2)), EP = rev(round(apply(ep, c(1), mean), digits = 2))
+                       , P_EP  = rev(round(apply(ep, c(1), mean), digits = 2))
+                       , row.names = rev(c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
+                                           , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N")))
+    
+    
+    SD = data.frame(P = rev(round(apply(p, c(1), sd), digits = 2)), E = rev(round(apply(e, c(1), sd), digits = 2))
+                    , P_E = rev(round(apply(p_e, c(1), sd), digits = 2)), EP = rev(round(apply(ep, c(1), sd), digits = 3))
+                    , P_EP  = rev(round(apply(ep, c(1), sd), digits = 3))
+                    , row.names = rev(c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
+                                        , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N")))
+    
+    
+    
+    p = array(NA, dim = c(3,9)); e = array(NA, dim = dim(p))
+    h = data.frame(hs = seq(1,37,1), hn = seq(37,73,1))
+    
+    for(i in 1:2){
+      aux.p = apply(pp[,h[,i],,], c(2), mean, na.rm = T)*lats[1,h[,i],1,]/sum((cospi(lat/180))[h[,i],1])
+      aux.e = apply(evap[,h[,i],,], c(2), mean, na.rm = T)*lats[1,h[,i],1,]/sum((cospi(lat/180))[h[,i],1])
+      p[i,] = sum(aux.p)
+      e[i,] = sum(aux.e)
+    }
+    
+    aux.p = apply(pp, c(2), mean, na.rm = T)*lats[1,,1,]/sum((cospi(lat/180))[,1])
+    aux.e = apply(evap, c(2), mean, na.rm = T)*lats[1,,1,]/sum((cospi(lat/180))[,1])
+    p[3,] = sum(aux.p)
+    e[3,] = sum(aux.e)
+    
+    p_e = p[1:2,]-e[1:2,]; ep = e[1:2,]/p[1:2,]; p_ep = p_e/p[1:2,]
+    
+    tabla2 = data.frame(P = rev(round(apply(p[1:2,], c(1), mean), digits = 2)), E = rev(round(apply(e[1:2,], c(1), mean), digits = 2))
+                        , P_E = rev(round(apply(p_e, c(1), mean), digits = 2)), EP = rev(round(apply(ep, c(1), mean), digits = 2))
+                        , P_EP  = rev(round(apply(ep, c(1), mean), digits = 2)), row.names = c("HN", "HS"))
+    
+    SD2 = data.frame(P = rev(round(apply(p[1:2,], c(1), sd), digits = 2)), E = rev(round(apply(e[1:2,], c(1), sd), digits = 2))
+                     , P_E = rev(round(apply(p_e, c(1), sd), digits = 2)), EP = rev(round(apply(ep, c(1), sd), digits = 3))
+                     , P_EP  = rev(round(apply(ep, c(1), sd), digits = 3)), row.names = c("HN", "HS"))
+    
+    
+    p_e = p[3,]-e[3,]; ep = e[3,]/p[3,]; p_ep = p_e/p[3,]
+    tabla2 = rbind(tabla2, G = data.frame(P = round(mean(p[3,]), digits = 2), E = round(mean(e[3,]), digits = 2)
+                                          , P_E = round(mean(p_e), digits = 2), EP = round(mean(ep), digits = 2)
+                                          , P_EP  = round(mean(ep), digits = 2)))
+    
+    SD2 = rbind(SD2, G = data.frame(P = round(sd(p[3,]), digits = 2), E = round(sd(e[3,]), digits = 2)
+                                    , P_E = round(sd(p_e), digits = 2), EP = round(sd(ep), digits = 2)
+                                    , P_EP  = round(sd(ep), digits = 2)))
+    
     
     mask = as.matrix(read.table("mask.txt"))
+    mask = array(mask, dim = c(144,73, 30, r))
+    
+    pp_c = pp*mask
+    evap_c = evap*mask
+    
+    r = length(pp[1,1,1,])
+    
+    lon3 = list(); lat3 = list()
+    lon3[[1]] = seq(110,132, by = 1); lon3[[2]] = seq(75, 130, by = 1); lon3[[3]] = seq(1, 75, by = 1)
+    lon3[[4]] = seq(1,20, by = 1); lon3[[5]] = seq(40, 70, by = 1)
+    
+    lat3[[1]] = seq(1, 45, by = 1); lat3[[2]] = seq(45, 73, by = 1); lat3[[3]] = seq(40, 73, by = 1)
+    lat3[[4]] = seq(1, 20, by = 1); lat3[[5]] = seq(1, 32, by = 1)
     
     
-    mask = array(mask, dim = c(dim(mask), r))
+    lat = read.table("lat.txt")
+    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
     
-    p_c = p*mask
-    e_c = e*mask
-    p_ep_c = p_ep*mask
-    p_e_c = p_e*mask
-    ep_c = ep*mask
+    p = array(NA, dim = c(5,9)); e = array(NA, dim = dim(p))
     
-    # por latitudes
-    aux = c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
-            , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N" )
-    tabla = data.frame(P = seq(1, length(lat.breaks)-1), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = aux)
-    tabla = array(NA, dim = c(18,5,r))
-    for(j in 1:r){
-      for(i in 1:(length(lat.breaks)-1)){
-        tabla[i,1,j] = round(mean(p[,lat2[i,],j]), digits = 2) 
-        tabla[i,2,j] = round(mean(e[,lat2[i,],j]), digits = 2) 
-        tabla[i,3,j] = round(mean(p_e[,lat2[i,],j]), digits = 2)
-        tabla[i,4,j] = round(mean(ep[,lat2[i,],j]), digits = 2)
-        tabla[i,5,j] = round(mean(p_ep[,lat2[i,],j]), digits = 2)
-        
-      }
+    for(i in 1:5){
+      aux.p = apply(pp_c[lon3[[i]],lat3[[i]],,], c(2), mean, na.rm = T)*lats[1,lat3[[i]],1,]/sum((cospi(lat/180))[lat3[[i]],1])
+      aux.e = apply(evap_c[lon3[[i]],lat3[[i]],,], c(2), mean, na.rm = T)*lats[1,lat3[[i]],1,]/sum((cospi(lat/180))[lat3[[i]],1])
+      p[i,] = sum(aux.p, na.rm = T)
+      e[i,] = sum(aux.e, na.rm = T)
     }
     
-    SD = data.frame(P = seq(1, length(lat.breaks)-1), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = aux)
-    for(i in 1:(length(lat.breaks)-1)){
-      SD[i,1] = round(sd(tabla[i,1,]), digits = 2) 
-      SD[i,2] = round(sd(tabla[i,2,]), digits = 2) 
-      SD[i,3] = round(sd(tabla[i,3,]), digits = 2)
-      SD[i,4] = round(sd(tabla[i,4,]), digits = 3)
-      SD[i,5] = round(sd(tabla[i,5,]), digits = 3)
-      
-    }
+    p_e = p-e; ep = e/p; p_ep = (p-e)/p
+    
+    tabla_c = data.frame(P = rev(round(apply(p, c(1), mean), digits = 2)), E = rev(round(apply(e, c(1), mean), digits = 2))
+                         , P_E = rev(round(apply(p_e, c(1), mean), digits = 2)), EP = rev(round(apply(ep, c(1), mean), digits = 2))
+                         , P_EP  = rev(round(apply(ep, c(1), mean), digits = 2))
+                         , row.names = rev(c("SA", "NA", "EA", "AF", "OC")))
     
     
-    # Por hemisferio y global
-    tabla2 = data.frame(P = c(1,2,3), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = c("HS", "HN", "Global"))
-    tabla2 = array(NA, dim = c(3,5,r))
-    for(j in 1:r){
-      
-      tabla2[1,1,j] = round(mean(p[,1:37,j]), digits = 2) 
-      tabla2[1,2,j] = round(mean(e[,1:37,j]), digits = 2) 
-      tabla2[1,3,j] = round(mean(p_e[,1:37,j]), digits = 2)
-      tabla2[1,4,j] = round(mean(ep[,1:37,j]), digits = 2)
-      tabla2[1,5,j] = round(mean(p_ep[,1:37,j]), digits = 2)
-      
-      tabla2[2,1,j] = round(mean(p[,37:73,j]), digits = 2) 
-      tabla2[2,2,j] = round(mean(e[,37:73,j]), digits = 2) 
-      tabla2[2,3,j] = round(mean(p_e[,37:73,j]), digits = 2)
-      tabla2[2,4,j] = round(mean(ep[,37:73,j]), digits = 2)
-      tabla2[2,5,j] = round(mean(p_ep[,37:73,j]), digits = 2)
-      
-      tabla2[3,1,j] = round(mean(p[,,j]), digits = 2) 
-      tabla2[3,2,j] = round(mean(e[,,j]), digits = 2) 
-      tabla2[3,3,j] = round(mean(p_e[,,j]), digits = 2)
-      tabla2[3,4,j] = round(mean(ep[,,j]), digits = 2)
-      tabla2[3,5,j] = round(mean(p_ep[,,j]), digits = 2)
-      
-    }
+    SD_c = data.frame(P = rev(round(apply(p, c(1), sd), digits = 2)), E = rev(round(apply(e, c(1), sd), digits = 2))
+                      , P_E = rev(round(apply(p_e, c(1), sd), digits = 2)), EP = rev(round(apply(ep, c(1), sd), digits = 3))
+                      , P_EP  = rev(round(apply(ep, c(1), sd), digits = 3))
+                      , row.names = rev(c("SA", "NA", "EA", "AF", "OC")))
     
     
-    SD2 = data.frame(P = c(1,2,3), E = NA, P_E = NA, EP = NA, P_EP = NA, row.names = c("HS", "HN", "Global"))
-    for(i in 1:3){
-      SD2[i,1] = round(sd(tabla2[i,1,]), digits = 2) 
-      SD2[i,2] = round(sd(tabla2[i,2,]), digits = 2) 
-      SD2[i,3] = round(sd(tabla2[i,3,]), digits = 2)
-      SD2[i,4] = round(sd(tabla2[i,4,]), digits = 3)
-      SD2[i,5] = round(sd(tabla2[i,5,]), digits = 3)
-      
-    }
+    V = list()
+    V[[1]] = rbind(tabla, 0, tabla2)
+    V[[2]] = tabla_c
     
-    V[[6]] = rbind(SD, 0, SD2)
-    write.table(x = V[[6]], file = paste(getwd(), salida, nombre,"SD.csv", sep = ""), sep = "  ")
-    print("SD guardado")
+    write.table(x = V[[1]], file = paste(getwd(), salida, nombre,".csv", sep = ""), sep = "  ")
+    write.table(x = rbind(SD, SD2), file = paste(getwd(), salida, nombre,"SD.csv", sep = ""), sep = "  ")
+    write.table(x = V[[2]], file = paste(getwd(), salida, nombre,"continental.csv", sep = ""), sep = "  ")
+    write.table(x = rbind(SD_c), file = paste(getwd(), salida, nombre,"SD_c.csv", sep = ""), sep = "  ")
+    print(paste("Tablas guardadas como", paste(nombre,".csv", sep = ""), " y ", paste(nombre,"continental.csv", sep =""), "en ", salida), sep = "")
     
-  }
-  
     
     return(V)
     
+    
+  } else {
+    
+    lat = read.table("lat.txt")
+    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
+    
+    p = array(NA, dim = c(18,r)); e = array(NA, dim = dim(p))
+    
+    for(i in 1:(length(lat.breaks)-1)){
+      aux.p = apply(pp[,lat2[i,],,], c(2,4), mean, na.rm = T)*lats[1,lat2[i,],1,]/sum((cospi(lat/180))[lat2[i,],1])
+      aux.e = apply(evap[,lat2[i,],,1:r], c(2,4), mean, na.rm = T)*lats[1,lat2[i,],1,]/sum((cospi(lat/180))[lat2[i,],1])
+      p[i,] = apply(aux.p, c(2), sum, na.rm = T)
+      e[i,] = apply(aux.e, c(2), sum, na.rm = T)
+    }
+    
+    p_e = p-e; ep = e/p; p_ep = (p-e)/p
+    
+    tabla = data.frame(P = rev(round(apply(p, c(1), mean), digits = 2)), E = rev(round(apply(e, c(1), mean), digits = 2))
+                       , P_E = rev(round(apply(p_e, c(1), mean), digits = 2)), EP = rev(round(apply(ep, c(1), mean), digits = 2))
+                       , P_EP  = rev(round(apply(ep, c(1), mean), digits = 2))
+                       , row.names = rev(c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
+                                           , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N")))
+    
+    
+    SD = data.frame(P = rev(round(apply(p, c(1), sd), digits = 2)), E = rev(round(apply(e, c(1), sd), digits = 2))
+                    , P_E = rev(round(apply(p_e, c(1), sd), digits = 2)), EP = rev(round(apply(ep, c(1), sd), digits = 3))
+                    , P_EP  = rev(round(apply(ep, c(1), sd), digits = 3))
+                    , row.names = rev(c("80-90S", "70-80S", "60-70S", "50-60S", "40-50S", "30-40S", "20-30S", "10-20S", "0-10S"
+                                        , "0-10N", "10-20N", "20-30N", "30-40N", "40-50N", "50-60N", "60-70N", "70-80N", "80-90N")))
+    
+    
+    
+    p = array(NA, dim = c(3,r)); e = array(NA, dim = dim(p))
+    h = data.frame(hs = seq(1,37,1), hn = seq(37,73,1))
+    
+    for(i in 1:2){
+      aux.p = apply(pp[,h[,i],,], c(2,4), mean, na.rm = T)*lats[1,h[,i],1,]/sum((cospi(lat/180))[h[,i],1])
+      aux.e = apply(evap[,h[,i],,1:r], c(2,4), mean, na.rm = T)*lats[1,h[,i],1,]/sum((cospi(lat/180))[h[,i],1])
+      p[i,] = apply(aux.p, c(2), sum, na.rm = T)
+      e[i,] = apply(aux.e, c(2), sum, na.rm = T)
+    }
+    
+    aux.p = apply(pp, c(2,4), mean, na.rm = T)*lats[1,,1,]/sum((cospi(lat/180))[,1])
+    aux.e = apply(evap[,,,1:r], c(2,4), mean, na.rm = T)*lats[1,,1,]/sum((cospi(lat/180))[,1])
+    p[3,] = apply(aux.p, c(2), sum, na.rm = T)
+    e[3,] = apply(aux.e, c(2), sum, na.rm = T)
+    
+    p_e = p[1:2,]-e[1:2,]; ep = e[1:2,]/p[1:2,]; p_ep = p_e/p[1:2,]
+    
+    tabla2 = data.frame(P = rev(round(apply(p[1:2,], c(1), mean), digits = 2)), E = rev(round(apply(e[1:2,], c(1), mean), digits = 2))
+                        , P_E = rev(round(apply(p_e, c(1), mean), digits = 2)), EP = rev(round(apply(ep, c(1), mean), digits = 2))
+                        , P_EP  = rev(round(apply(ep, c(1), mean), digits = 2)), row.names = c("HN", "HS"))
+    
+    SD2 = data.frame(P = rev(round(apply(p[1:2,], c(1), sd), digits = 2)), E = rev(round(apply(e[1:2,], c(1), sd), digits = 2))
+                     , P_E = rev(round(apply(p_e, c(1), sd), digits = 2)), EP = rev(round(apply(ep, c(1), sd), digits = 3))
+                     , P_EP  = rev(round(apply(ep, c(1), sd), digits = 3)), row.names = c("HN", "HS"))
+    
+    
+    p_e = p[3,]-e[3,]; ep = e[3,]/p[3,]; p_ep = p_e/p[3,]
+    tabla2 = rbind(tabla2, G = data.frame(P = round(mean(p[3,]), digits = 2), E = round(mean(e[3,]), digits = 2)
+                                          , P_E = round(mean(p_e), digits = 2), EP = round(mean(ep), digits = 2)
+                                          , P_EP  = round(mean(ep), digits = 2)))
+    
+    SD2 = rbind(SD2, G = data.frame(P = round(sd(p[3,]), digits = 2), E = round(sd(e[3,]), digits = 2)
+                                    , P_E = round(sd(p_e), digits = 2), EP = round(sd(ep), digits = 2)
+                                    , P_EP  = round(sd(ep), digits = 2)))
+    
+    
+    
+    
+    mask = as.matrix(read.table("mask.txt"))
+    mask = array(mask, dim = c(144,73, 30, r))
+    
+    pp_c = pp*mask
+    evap_c = evap[,,,1:r]*mask
+    
+    r = length(pp[1,1,1,])
+    
+    lon3 = list(); lat3 = list()
+    lon3[[1]] = seq(110,132, by = 1); lon3[[2]] = seq(75, 130, by = 1); lon3[[3]] = seq(1, 75, by = 1)
+    lon3[[4]] = seq(1,20, by = 1); lon3[[5]] = seq(40, 70, by = 1)
+    
+    lat3[[1]] = seq(1, 45, by = 1); lat3[[2]] = seq(45, 73, by = 1); lat3[[3]] = seq(40, 73, by = 1)
+    lat3[[4]] = seq(1, 20, by = 1); lat3[[5]] = seq(1, 32, by = 1)
+    
+    
+    lat = read.table("lat.txt")
+    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
+    
+    p = array(NA, dim = c(5,r)); e = array(NA, dim = dim(p))
+    
+    for(i in 1:5){
+      aux.p = apply(pp_c[lon3[[i]],lat3[[i]],,], c(2,4), mean, na.rm = T)*lats[1,lat3[[i]],1,]/sum((cospi(lat/180))[lat3[[i]],1])
+      aux.e = apply(evap_c[lon3[[i]],lat3[[i]],,1:r], c(2,4), mean, na.rm = T)*lats[1,lat3[[i]],1,]/sum((cospi(lat/180))[lat3[[i]],1])
+      p[i,] = apply(aux.p, c(2), sum, na.rm = T)
+      e[i,] = apply(aux.e, c(2), sum, na.rm = T)
+    }
+    
+    p_e = p-e; ep = e/p; p_ep = (p-e)/p
+    
+    tabla_c = data.frame(P = rev(round(apply(p, c(1), mean), digits = 2)), E = rev(round(apply(e, c(1), mean), digits = 2))
+                         , P_E = rev(round(apply(p_e, c(1), mean), digits = 2)), EP = rev(round(apply(ep, c(1), mean), digits = 2))
+                         , P_EP  = rev(round(apply(ep, c(1), mean), digits = 2))
+                         , row.names = rev(c("SA", "NA", "EA", "AF", "OC")))
+    
+    
+    SD_c = data.frame(P = rev(round(apply(p, c(1), sd), digits = 2)), E = rev(round(apply(e, c(1), sd), digits = 2))
+                      , P_E = rev(round(apply(p_e, c(1), sd), digits = 2)), EP = rev(round(apply(ep, c(1), sd), digits = 3))
+                      , P_EP  = rev(round(apply(ep, c(1), sd), digits = 3))
+                      , row.names = rev(c("SA", "NA", "EA", "AF", "OC")))
+    
+    
+    V = list()
+    V[[1]] = rbind(tabla, 0, tabla2)
+    V[[2]] = tabla_c
+    
+    write.table(x = V[[1]], file = paste(getwd(), salida, nombre,".csv", sep = ""), sep = "  ")
+    
+    write.table(x = V[[2]], file = paste(getwd(), salida, nombre,"continental.csv", sep = ""), sep = "  ")
+    
+    print(paste("Tablas guardadas como", paste(nombre,".csv", sep = ""), " y ", paste(nombre,"continental.csv", sep =""), "en ", salida), sep = "")
+    
+    
+    return(V)
+    
+    
+  }
 }
 
 
@@ -3075,30 +3139,29 @@ Tabla7.1Grafico = function(data.his, data.49, data.99,v = 3, limites, global = F
   l = vector(length = 20)
   i = 0
   
-  while(length(l)>=15){
-    stp = 50+50*i
+  #while(length(l)>=15){
+    stp = 180
     breaks.mm =  seq(limites[1], limites[2], by = stp)
     l = breaks.mm
     i = i + 1
-    print(length(l))
-  }
+   # print(length(l))
+  #}
   
   
-  aux = cbind(data.his, lats =  seq(-13, 8, by = 1))
-  aux2  = cbind(data.49, lats =  seq(-13, 8, by = 1))
-  aux3  = cbind(data.99, lats =  seq(-13, 8, by = 1))
+  aux = cbind(data.his, lats =  seq(1, 22, by = 1))
+  aux2  = cbind(data.49, lats =  seq(1, 22, by = 1))
+  aux3  = cbind(data.99, lats =  seq(1,22, by = 1))
   
   g = ggplot() + theme_minimal()+
     
-    geom_bar(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
-    geom_bar(data = aux2, aes(x = aux2[,v], y = lats, color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
-    geom_bar(data = aux3, aes(x = aux3[,v], y = lats, color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
+    geom_bar(data = aux, aes(x = aux[,v], y = rev(lats), fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
+    geom_bar(data = aux2, aes(x = aux2[,v], y = rev(lats), color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
+    geom_bar(data = aux3, aes(x = aux3[,v], y = rev(lats), color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
     scale_color_manual(values = c("red", "blue")) +
     scale_fill_manual(values = c("tan", "lightblue"))+
-    scale_y_continuous(labels=c("-13" = "HS", "-12" = "HN", "-11" = "Global", "-10" = "" ,"-9" = "80-90S", "-8" = "70-80S", "-7" = "60-70S", "-6" = "50-60S", "-5" = "40-50S",
-                                "-4" = "30-40S", "-3" = "20-30S", "-2" = "10-20S", "-1" = "0-10S", 
-                                "0" = "0-10N", "1" = "10-20N", "2" = "20-30N", "3" = "30-40N", "4" = "40-50N", "5" = "50-60N", 
-                                "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1))+
+    scale_y_continuous(labels=rev(c("1" = "80-90N", "2" = "70-80N", "3" = "60-70N", "4" = "50-60N", "5" = "40-50N", "6" = "30-40N", "7" = "20-30N", "8" = "10-20N",
+                                "9" = "0-10N", "10" = "0-10S", "11" = "10-20S", "12" = "20-30S", "13" = "30-40S", "14" = "40-50S", "15" = "50-60S", "16" = "60-70S", 
+                                "17" = "70-80S", "18" = "80-90S", "19" = "", "20" = "HN", "21" = "HS", "Global")),breaks = seq(1, 22, by = 1))+
     
     scale_x_continuous(breaks = breaks.mm, limits = limites) +
     
@@ -3115,21 +3178,20 @@ Tabla7.1Grafico = function(data.his, data.49, data.99,v = 3, limites, global = F
   
   if(global == T){
     
-    aux = aux[1:3,]
-    aux2 = aux2[1:3,]
-    aux3 = aux3[1:3,]
+    aux = aux[20:22,]
+    aux2 = aux2[20:22,]
+    aux3 = aux3[20:22,]
     # para la parte global
-    g = ggplot() + theme_minimal() +
-      geom_bar(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
-      geom_bar(data = aux2, aes(x = aux2[,v], y = lats, color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
-      geom_bar(data = aux3, aes(x = aux3[,v], y = lats, color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
+    g = ggplot() + theme_minimal()+
+      
+      geom_bar(data = aux, aes(x = aux[,v], y = rev(lats), fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
+      geom_bar(data = aux2, aes(x = aux2[,v], y = rev(lats), color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
+      geom_bar(data = aux3, aes(x = aux3[,v], y = rev(lats), color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
       scale_color_manual(values = c("red", "blue")) +
       scale_fill_manual(values = c("tan", "lightblue"))+
-      
-      scale_y_continuous(labels=c("-13" = "HS", "-12" = "HN", "-11" = "Global", "-10" = "" ,"-9" = "80-90S", "-8" = "70-80S", "-7" = "60-70S", "-6" = "50-60S", "-5" = "40-50S",
-                                  "-4" = "30-40S", "-3" = "20-30S", "-2" = "10-20S", "-1" = "0-10S", 
-                                  "0" = "0-10N", "1" = "10-20N", "2" = "20-30N", "3" = "30-40N", "4" = "40-50N", "5" = "50-60N", 
-                                  "6" = "60-70N", "7" = "70-80N", "8" = "80-90N"),breaks = seq(-13, 8, by = 1))
+      scale_y_continuous(labels=rev(c("1" = "HN", "2" = "HS", "3" = "Global", "4" = "Global", "5" = "40-50N", "6" = "30-40N", "7" = "20-30", "8" = "10-20N",
+                                      "9" = "0-10N", "10" = "0-10S", "11" = "10-20S", "12" = "20-30S", "13" = "30-40S", "14" = "40-50S", "15" = "50-60S", "16" = "60-70S", 
+                                      "17" = "70-80S", "18" = "80-90S", "19" = "", "20" = "HN", "21" = "HS", "Global")),breaks = seq(1, 22, by = 1))
     
     if(escala2 == T){
       
@@ -3137,7 +3199,7 @@ Tabla7.1Grafico = function(data.his, data.49, data.99,v = 3, limites, global = F
       i = 0
       
       while(length(l)>15){
-        stp = 10+10*i
+        stp2 = 10+10*i
         breaks.mm2 =  seq(limites2[1], limites2[2], by = stp)
         l = breaks.mm2
         i = i + 1
@@ -3169,13 +3231,13 @@ Tabla7.1Grafico_Continental = function(data.his, data.49, data.99, v = 3, limite
   l = vector(length = 20)
   i = 0
   
-  while(length(l)>=15){
-    stp = 50+50*i
+  #while(length(l)>=15){
+    stp = 100
     breaks.mm =  seq(limites[1], limites[2], by = stp)
     l = breaks.mm
     i = i + 1
-    print(length(l))
-  }
+   # print(length(l))
+  #}
   
   
   aux = cbind(data.his, lats =  seq(1, 5, by = 1))
@@ -3184,13 +3246,13 @@ Tabla7.1Grafico_Continental = function(data.his, data.49, data.99, v = 3, limite
   
   g = ggplot() + theme_minimal()+
     
-    geom_bar(data = aux, aes(x = aux[,v], y = lats, fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
-    geom_bar(data = aux2, aes(x = aux2[,v], y = lats, color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
-    geom_bar(data = aux3, aes(x = aux3[,v], y = lats, color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
-    scale_color_manual(values = c("red", "blue")) +   # esto esta asi porque si...
-    scale_fill_manual(values = c("tan","lightblue"))+
+    geom_bar(data = aux, aes(x = aux[,v], y = rev(lats), fill = aux[,v]>0), stat = "identity", alpha = 1, show.legend = F) +
+    geom_bar(data = aux2, aes(x = aux2[,v], y = rev(lats), color = aux2[,v] > 0, linetype = "1"), stat = "identity", alpha = 0, show.legend = F, size = 0.2) +
+    geom_bar(data = aux3, aes(x = aux3[,v], y = rev(lats), color = aux3[,v] > 0 ), stat = "identity", alpha = 0, show.legend = F, size = 0.5) +
+    scale_color_manual(values = c("blue", "red")) +   # ahora es como antes... el primer color toma el valor de F, si no hay F entonces ese color va ser el T
+    scale_fill_manual(values = c("lightblue", "tan"))+
     
-    scale_y_continuous(labels=c( "1" = "Sudamerica", "2" = "Norte America", "3" = "Eurasia", "4" = "Africa", "5" = "Australia"),breaks = seq(1, 5, by = 1))+
+    scale_y_continuous(labels=c( "5" = "Sudamerica", "4" = "Norte America", "3" = "Eurasia", "2" = "Africa", "1" = "Australia"),breaks = seq(1, 5, by = 1))+
     scale_x_continuous(breaks = breaks.mm, limits = limites) +
     
     theme_minimal() +
@@ -3302,30 +3364,29 @@ PlotLat = function(pp, evap, titulo, y.breaks, nombre, salida){
 PlotTs = function(datos, escala,escala2,  titulo, nombre,c){
   library(ggplot2)
   
-   colnames(datos) = c("PP", "TendenciaP", "E", "TendenciaE", "Temp", "TendenciaT", "Años")
+   colnames(datos) = c("P", "E", "Temp", "Años")
 g =  ggplot(datos, aes(x = Años))+ theme_minimal()+
-    geom_line(aes(y = PP, colour = "P"), size = 1) +
- #geom_line(aes(y = TendenciaP), show.legend = F, color = "steelblue3") + 
+    geom_line(aes(y = P, colour = "P"), size = 1) +
     geom_line(aes(y = E, colour = "E"), size = 1) +
-    #geom_line(aes(y = TendenciaE), show.legend = F, color = "orange2")+
-    geom_line(aes(y = (Temp*20)+c, colour = "T"), size = 1)+
-    scale_colour_manual("", 
-                        breaks = c("P", "E", "T"),
-                        values = c("steelblue3", "orange2", "firebrick"))+
-    scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)), 
-                       sec.axis = sec_axis(~(.-c), name = "Anomalía [ºC]", labels = function(b) { paste0(b/20)}))+
-    ylab("[mm]")+ ggtitle(titulo)+
-    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
-          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
-          panel.border = element_rect(colour = "black", fill = NA, size = 1),
-          panel.ontop = F,
-          plot.title = element_text(hjust = 0.5, size = 18),
-          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
-  
-  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
-  
+  geom_line(aes(y = (Temp*20)+1110, colour = "T"), size = 1)+
+  scale_colour_manual("", 
+                      breaks = c("P", "E", "T"),
+                      values = c("steelblue4", "orange2", "firebrick")) +
+  scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)), 
+                     sec.axis = sec_axis(~(.-1110), name = "[ºC]", labels = function(b) { paste0(b/20)}))+
+  scale_x_continuous(breaks = seq(1976, 2099, by = 20))+
+  ylab("[mm]")+ ggtitle(titulo)+xlab("")+
+  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        panel.ontop = F,
+        plot.title = element_text(hjust = 0.5, size = 18),
+        legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+
+ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+
   g = ggplot(datos, aes(x = Años))+ theme_minimal()+
-    geom_line(aes(y = PP-E, colour = "P-E"), size = 1) +
+    geom_line(aes(y = P-E, colour = "P-E"), size = 1) +
     geom_hline(yintercept = 0) +
     scale_colour_manual("", 
                         breaks = c("P-E"),
@@ -3342,3 +3403,59 @@ g =  ggplot(datos, aes(x = Años))+ theme_minimal()+
   ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,"resta.jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
   
 }  
+
+
+
+PlotTs2 = function(data, titulo, nombre.fig, escala, spr = T, c1, c2){
+  
+  aux = data
+  
+  if(!is.null(dim(aux[[1]]))){
+    
+    datos = array(NA, c(30,7))
+    datos[,1] = apply(aux[[1]], c(1), mean)
+    datos[,2] = apply(aux[[1]], c(1), max)
+    datos[,3] = apply(aux[[1]], c(1), min)
+    datos[,4] = apply(aux[[2]], c(1), mean)
+    datos[,5] = apply(aux[[2]], c(1), max)
+    datos[,6] = apply(aux[[2]], c(1), min)
+    datos[,7] = apply(aux[[3]], c(1), mean)
+    
+  } else{
+    
+    datos = array(NA, c(30,7))
+    datos[,1] = aux[[1]]
+    datos[,4] = aux[[2]]
+    datos[,7] = aux[[3]]
+  }
+  
+  
+  
+  datos = cbind(as.data.frame(datos), anios = seq(1976,2005))
+  
+  g = ggplot(datos, aes(x = anios)) + theme_minimal()
+  if(spr == T){
+    g = g +  geom_ribbon(aes(x = anios, ymin = datos[,6], ymax = datos[,5]), fill="tan3", alpha = .4) +
+      geom_ribbon(aes(x = anios, ymin = datos[,3], ymax = datos[,2]), fill="steelblue2", alpha = .4) 
+  }
+  g = g + geom_line(aes(y = datos[,1], colour = "P"), size = 1) +
+    geom_line(aes(y = datos[,4], colour = "E"), size = 1) +
+    geom_line(aes(y = (datos[,7]*30)+c1, colour = "T"), size = 1)+
+    scale_colour_manual("", 
+                        breaks = c("P", "E", "T"),
+                        values = c("steelblue4", "orange2", "firebrick")) +
+    scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)), 
+                       sec.axis = sec_axis(~(.-c2), name = "[ºC]", labels = function(b) { paste0(b/20)}))+
+    scale_x_continuous(breaks = seq(1976, 2005, by = 5))+
+    ylab("[mm]")+ ggtitle(titulo)+xlab("")+
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+
+  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+
+  
+}
