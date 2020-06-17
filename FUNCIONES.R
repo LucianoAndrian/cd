@@ -2828,7 +2828,7 @@ S = function(t){
 }
 #### CorecLat ####
 
-CorecLat = function(pp, e, t){
+CorecLat = function(pp, e){
   
   r = length(pp[1,1,1,])
   if(r  == 1){
@@ -2840,10 +2840,7 @@ CorecLat = function(pp, e, t){
     aux = e[,,,1]*lats/sum(cospi((lat)/180)) #
     aux.e = apply(apply(aux, c(2,3), mean), c(2), sum)
     
-    aux = (t[,,,1]-273)*lats/sum(cospi((lat)/180)) 
-    aux.t = apply(apply(aux, c(2,3), mean), c(2), sum)
-    
-    aux = list(); aux[[1]] = aux.e; aux[[2]] = aux.p; aux[[3]] = aux.t 
+    aux = list(); aux[[1]] = aux.p; aux[[2]] = aux.e
     return(aux)
     
   } else {
@@ -2855,10 +2852,7 @@ CorecLat = function(pp, e, t){
     aux = e[,,,1:r]*lats/sum(cospi((lat)/180))
     aux.e = apply(apply(aux, c(2,3,4), mean), c(2,3), sum)
     
-    aux = (t[,,,1:r]-273)*lats/sum(cospi((lat)/180)) 
-    aux.t = apply(apply(aux, c(2,3,4), mean), c(2,3), sum)
-    
-    aux = list(); aux[[1]] = aux.e; aux[[2]] = aux.p; aux[[3]] = aux.t 
+    aux = list(); aux[[1]] = aux.p; aux[[2]] = aux.e
     return(aux)
   }
 }
@@ -2873,16 +2867,29 @@ Tabla7.1 = function(pp, evap, nombre, salida, r = F, clat = T){
     
   lat = read.table("lat.txt") # o seq(-90,90, by = 2.5).. es lo mismo
   lat.breaks = seq(-90, 90, by = 10)
-  lat2 = array(data = NA, c(length(lat.breaks)-1,5))
-  for(i in 1:(length(lat.breaks)-1)){
-    lat2[i,]  = seq(which(lat == lat.breaks[i]),which(lat == lat.breaks[i+1]))
+
+  aux2 = array(NA, dim = c(9,4))
+  j = 1
+  for(i in seq(2,37, by = 4)){
+   aux2[j,] = seq(i, i+3)
+  j = j + 1
   }
+  aux3 = array(NA, dim = c(9,4))
+  j = 1
+  for(i in seq(37,72, by = 4)){
+    aux3[j,] = seq(i, i+3)
+    j = j + 1
+  }
+  
+  
+  lat2 = rbind(aux2, aux3)
+  
   
   r = length(pp[1,1,1,])
   if(r == 1){
     
     lat = read.table("lat.txt")
-    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
+    lats = array(data = t(array(data = cospi((lat)/180)[,1], c(73,144))), c(144,73,30,r))
     
     p = array(NA, dim = c(18,9)); e = array(NA, dim = dim(p))
     
@@ -3197,9 +3204,9 @@ Tabla7.1Grafico = function(data.his, data.49, data.99,v = 3, limites, global = F
       
       l = vector(length = 20)
       i = 0
-      
+    
       while(length(l)>15){
-        stp2 = 10+10*i
+        stp = 10+10*i
         breaks.mm2 =  seq(limites2[1], limites2[2], by = stp)
         l = breaks.mm2
         i = i + 1
@@ -3364,16 +3371,16 @@ PlotLat = function(pp, evap, titulo, y.breaks, nombre, salida){
 PlotTs = function(datos, escala,escala2,  titulo, nombre,c){
   library(ggplot2)
   
-   colnames(datos) = c("P", "E", "Temp", "Años")
+   colnames(datos) = c("P", "E", "Años")
 g =  ggplot(datos, aes(x = Años))+ theme_minimal()+
     geom_line(aes(y = P, colour = "P"), size = 1) +
     geom_line(aes(y = E, colour = "E"), size = 1) +
-  geom_line(aes(y = (Temp*20)+1110, colour = "T"), size = 1)+
+
   scale_colour_manual("", 
-                      breaks = c("P", "E", "T"),
-                      values = c("steelblue4", "orange2", "firebrick")) +
-  scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)), 
-                     sec.axis = sec_axis(~(.-1110), name = "[ºC]", labels = function(b) { paste0(b/20)}))+
+                      breaks = c("P", "E"),
+                      values = c("steelblue4", "orange2")) +
+  scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)))+
+                  
   scale_x_continuous(breaks = seq(1976, 2099, by = 20))+
   ylab("[mm]")+ ggtitle(titulo)+xlab("")+
   theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
@@ -3383,14 +3390,14 @@ g =  ggplot(datos, aes(x = Años))+ theme_minimal()+
         plot.title = element_text(hjust = 0.5, size = 18),
         legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
 
-ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,"tendPE.jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
 
   g = ggplot(datos, aes(x = Años))+ theme_minimal()+
     geom_line(aes(y = P-E, colour = "P-E"), size = 1) +
     geom_hline(yintercept = 0) +
     scale_colour_manual("", 
                         breaks = c("P-E"),
-                        values = c("darkorchid4")) +
+                        values = c("forestgreen")) +
     scale_y_continuous(breaks = escala2, limits = c(min(escala2), max(escala2)))+
     ylab("mm")+ ggtitle(titulo)+
     theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
@@ -3406,27 +3413,29 @@ ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre,".jpg",sep =""), plot = g, wid
 
 
 
-PlotTs2 = function(data, titulo, nombre.fig, escala, spr = T, c1, c2){
+PlotTs2 = function(data, titulo, nombre.fig, escala, escala2){
   
   aux = data
   
   if(!is.null(dim(aux[[1]]))){
-    
-    datos = array(NA, c(30,7))
+    spr = T
+    datos = array(NA, c(30,10))
     datos[,1] = apply(aux[[1]], c(1), mean)
     datos[,2] = apply(aux[[1]], c(1), max)
     datos[,3] = apply(aux[[1]], c(1), min)
     datos[,4] = apply(aux[[2]], c(1), mean)
     datos[,5] = apply(aux[[2]], c(1), max)
     datos[,6] = apply(aux[[2]], c(1), min)
-    datos[,7] = apply(aux[[3]], c(1), mean)
+    datos[,8] = apply(aux[[1]]-aux[[2]], c(1), max)
+    datos[,9] = apply(aux[[1]]-aux[[2]], c(1), min)
+    datos[,10] = apply(aux[[1]]-aux[[2]], c(1), mean)
     
   } else{
-    
-    datos = array(NA, c(30,7))
+    spr = F
+    datos = array(NA, c(30,10))
     datos[,1] = aux[[1]]
     datos[,4] = aux[[2]]
-    datos[,7] = aux[[3]]
+    datos[,10] = aux[[1]]-aux[[2]]
   }
   
   
@@ -3440,12 +3449,11 @@ PlotTs2 = function(data, titulo, nombre.fig, escala, spr = T, c1, c2){
   }
   g = g + geom_line(aes(y = datos[,1], colour = "P"), size = 1) +
     geom_line(aes(y = datos[,4], colour = "E"), size = 1) +
-    geom_line(aes(y = (datos[,7]*30)+c1, colour = "T"), size = 1)+
+   
     scale_colour_manual("", 
-                        breaks = c("P", "E", "T"),
-                        values = c("steelblue4", "orange2", "firebrick")) +
-    scale_y_continuous(breaks = escala, limits = c(min(escala), max(escala)), 
-                       sec.axis = sec_axis(~(.-c2), name = "[ºC]", labels = function(b) { paste0(b/20)}))+
+                        breaks = c("P", "E"),
+                        values = c("steelblue4", "orange2")) +
+    
     scale_x_continuous(breaks = seq(1976, 2005, by = 5))+
     ylab("[mm]")+ ggtitle(titulo)+xlab("")+
     theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
@@ -3455,7 +3463,29 @@ PlotTs2 = function(data, titulo, nombre.fig, escala, spr = T, c1, c2){
           plot.title = element_text(hjust = 0.5, size = 18),
           legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
 
-  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre.fig,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre.fig,"spr.jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  
+
+
+  g = ggplot(datos, aes(x = anios)) + theme_minimal()
+  if(spr == T){
+    g = g +  geom_ribbon(aes(x = anios, ymin = datos[,9], ymax = datos[,8]), fill="forestgreen", alpha = .4) 
+  }
+  g = g + geom_line(aes(y = datos[,10], colour = "P-E"), size = 1) +
+    scale_colour_manual("", 
+                        breaks = c("P-E"),
+                        values = c("forestgreen")) +
+    scale_y_continuous(breaks = escala2, limits = c(min(escala2), max(escala2)))+
+    geom_hline(yintercept = 0, color = "gray4")+
+    scale_x_continuous(breaks = seq(1976, 2005, by = 5))+
+    ylab("[mm]")+ ggtitle(titulo)+xlab("")+
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre.fig,"p_e.jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
 
   
 }
