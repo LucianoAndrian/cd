@@ -1,7 +1,7 @@
 # TP4 Balance de Masa ( E y P)
 # trabjar con RDatas guardados en TP4_apertura_y_seleccion.R
 source("FUNCIONES.R")
-
+library(ggplot2)
 # para pesar los promedios por la latitud
 lat = read.table("lat.txt")
 lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,10))
@@ -14,13 +14,15 @@ FunAux = function(pp, e, escala2, titulo, nombre.fig){
   
   
   r = length(pp[1,1,1,])
-  if(r == 1){
+  r2 = length(e[1,1,1,])
+  e =if(r == 1 & r2 == 1){
     
     pp = pp[,,,1]
     e = e[,,,1]
     
     lat = read.table("lat.txt")
     lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30))
+  
     lat2 = seq(1, 73, by = 1)
     aux.p = array(NA, c(73,10)); aux.e = array(NA, c(73,10))
     
@@ -33,24 +35,46 @@ FunAux = function(pp, e, escala2, titulo, nombre.fig){
     datos[,1] = aux.p[,1]
     datos[,2] = aux.e[,1]
     datos = as.data.frame(cbind(datos, lat = lat[,1]))
-  } else {
     
-    e = e[,,,1:r]
+  } else if(r == 1 & r2 != 1){
+    
+    pp = pp[,,,1]
+    
+    lat = read.table("lat.txt")
+    lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30))
+    lats2 = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r2))
+    lat2 = seq(1, 73, by = 1)
+    aux.p = array(NA, c(73,r)); aux.e = array(NA, c(73,r2+1))
+    
+    for(i in 2:72){
+      aux.p[i,1] = mean(pp[,i,])*lats[1,lat2[i],1]/sum((cospi(lat/180))[lat2[i],1])
+      aux.e[i,1:r2] = mean(e[,i,,])*lats2[1,lat2[i],1,]/sum((cospi(lat/180))[lat2[i],1])
+      aux.e[i,r2+1] = mean(aux.e[i,1:r2])
+    }
+    
+    datos = array(NA, c(73, 2))
+    datos[,1] = aux.p[,1]
+    datos[,2] = aux.e[,1]
+    datos = as.data.frame(cbind(datos, lat = lat[,1]))
+    
+    
+    } else {
     
     lat = read.table("lat.txt")
     lats = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r))
+    lats2 = array(data = t(array(data = cos((lat*pi)/180)[,1], c(73,144))), c(144,73,30,r2))
     lat2 = seq(1, 73, by = 1)
-    aux.p = array(NA, c(73,r+1)); aux.e = array(NA, c(73,r+1))
+    aux.p = array(NA, c(73,r+1)); aux.e = array(NA, c(73,r2+1))
     
     for(i in 2:72){
       aux.p[i,1:r] = apply(pp[,i,,], c(3), mean, na.rm = T)*lats[1,lat2[i],1,]/sum((cospi(lat/180))[lat2[i],1])
-      aux.e[i,1:r] = apply(e[,i,,], c(3), mean, na.rm = T)*lats[1,lat2[i],1,]/sum((cospi(lat/180))[lat2[i],1])
+      aux.e[i,1:r2] = apply(e[,i,,], c(3), mean, na.rm = T)*lats[1,lat2[i],1,]/sum((cospi(lat/180))[lat2[i],1])
       aux.p[i,r+1] = mean(aux.p[i,1:r])
-      aux.e[i,r+1] = mean(aux.e[i,1:r])
+      aux.e[i,r2+1] = mean(aux.e[i,1:r2])
     }
       datos = array(NA, c(73, 2))
       datos[,1] = aux.p[,r+1]
-      datos[,2] = aux.e[,r+1]
+      datos[,2] = aux.e[,r2+1]
       datos = as.data.frame(cbind(datos, lat = lat[,1]))
     
   }
@@ -74,7 +98,7 @@ FunAux = function(pp, e, escala2, titulo, nombre.fig){
           legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
   
   ggsave(paste(getwd(), "/Salidas/TP4/Tend/",nombre.fig,"PE.jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
-  
+
   escala2 = seq(-1500,1500, by = 250)
   g = ggplot(datos, aes(x = lat)) + theme_minimal() +
     geom_line(aes(y = datos[,1] - datos[,2], colour = "P - E"), size = 1) +
@@ -341,7 +365,7 @@ for( i in 1:2){
     titulo = paste("P - E  CNRM-CM", cm[i], " RCP", rcp[j] ,sep = "")
     nombre = paste(cm[i], "_", rcp[j], sep ="")
     
-    Tabla7.1Grafico(data.his =  tabla[[1]], data.49 = tabla2[[1]], data.99 = tabla3[[1]], v = 3,limites = c(-900, 900), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
+    Tabla7.1Grafico(data.his =  tabla[[1]], data.49 = tabla2[[1]], data.99 = tabla3[[1]], v = 3,limites = c(-1000, 1000), titulo = titulo, nombre = nombre, salida = "/Salidas/TP4/"
                     , escala2 = T, limites2 = c(-100, 100), global = T, width = 20, height = 15)
     
     Tabla7.1Grafico_Continental(data.his = tabla[[2]], data.49 = tabla2[[2]], data.99 = tabla3[[2]], v = 3, limites = c(-400,400), titulo = titulo, nombre = paste(nombre, "_", sep = ""),  salida = "/Salidas/TP4/"
@@ -357,7 +381,6 @@ for( i in 1:2){
 
 
 ### TENDENCIA  en rcp####
-##### revisar estooo#####
 lat = read.table("lat.txt")
 cm = c("5", "6")
 rcp = c("26", "85")
@@ -365,8 +388,7 @@ rcp2 = c("RCP", "RCP", "SSP1", "SSP5")
 source("FUNCIONES.R")
 escala = list(); escala[[1]] = seq(1090, 1130, by = 10); escala[[2]] = seq(1050, 1100, by = 10)
 escala2 = list(); escala2[[1]] = seq(1090, 1190, by = 10); escala2[[2]] = seq(1020, 1160, by = 10)
-escala3 = list(); escala3[[1]] = seq(-2, 2, by = 0.5); escala3[[2]] = seq(-26, 26, by = 4) 
-escala4 = list(); escala4[[1]] = seq(-2, 2, by = 0.5); escala4[[2]] = seq(-6, 6, by = 1) 
+
 for( i in 1:2){
   for(j in 1:2){
     
@@ -377,7 +399,7 @@ for( i in 1:2){
     
     aux = CorecLat(pp = pp, e = evap)
     PlotTs2(data = aux, titulo = paste("CNRM-CM",cm[i], "  1976-2005", sep = ""), nombre.fig = paste(cm[i], ".his", sep = ""),
-           escala = escala[[i]], escala2 = escala3[[i]])
+           escala = escala[[i]], escala2 = seq(-3, 3, by = 0.5))
     
     datos = as.data.frame(apply(aux[[1]], c(1), mean))
     datos = cbind(datos, apply(aux[[2]], c(1), mean))
@@ -430,7 +452,7 @@ for( i in 1:2){
     
     datos = cbind(datos, años)
     
-    PlotTs(datos = datos, escala = escala2[[i]], escala2 = escala4[[i]], titulo = paste("CNRM-CM", cm[i], " ", rcp2[i+j],rcp[j], sep = "")
+    PlotTs(datos = datos, escala = escala2[[i]], escala2 = seq(-3, 3, by = 0.5), titulo = paste("CNRM-CM", cm[i], " ", rcp2[i+j],rcp[j], sep = "")
            , nombre = paste(cm[i], ".", rcp[j], "_49", sep = ""), c = 700)
     
     
