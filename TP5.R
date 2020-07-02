@@ -107,6 +107,53 @@ for(p in 1:3){
 
 
 
+aux = aux.corr[,,,,,2]
+
+SigRs = function(aux){
+  
+  sig = array(data = NA, dim = c(144,73,3,2))
+  
+  for(rcp in 1:2){
+    for(p in 1:3){
+      for(i in 1:144){
+        for(j in 1:73){
+          
+          if(p == 1){
+            
+            x = aux[i,j,,rcp,p]
+            if(length( x[which(x== 1)])>6){
+              sig[i,j,p,rcp] = 1
+            } else {
+              sig[i,j,p,rcp] = NA
+            }
+            
+          } else {
+            
+            if(m == 1){
+              x = aux[i,j,,rcp,p]
+              if(length( x[which(x== 1)])>=2){
+                sig[i,j,p,rcp] = 1
+              }
+            } else {
+              x = aux[i,j,,rcp,p]
+              if(length( x[which(x== 1)])>=4){
+                sig[i,j,p,rcp] = 1
+              }
+            }
+          }
+          
+          
+        } 
+      }
+    }
+  }
+  
+  return(sig)
+}
+
+sig =  SigRs(aux = aux.corr[,,,,,2])
+sig2=  SigRs(aux = aux.corr2[,,,,,2])
+
 
 # config esto
 lat2 = as.matrix(read.table("lat.txt"))
@@ -121,13 +168,13 @@ for(rcp in 1:2){
   for(p in 1:3){
     
     aux = array(ens.corr[,,rcp,p,1], dim = c(dim(ens.corr[,,rcp,p,1]),1))
-    aux2 = array(ens.corr[,,rcp,p,2], dim = c(dim(ens.corr[,,rcp,p,2]),1))
-    
-    mapa_topo3(variable = aux, variable.sig = aux2, lon = lon2, lat = lat2
+    mask = array(sig[,,p,rcp], dim = c(144,73,1))
+    mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
+    mapa_topo3(variable = aux, variable.sig = mask, lon = lon2, lat = lat2
                , titulo = paste("Correlación E vs T - CNRM-", toupper(modelos[m]), " ", rcp.name[rcp], " ", periodo[p], sep = "")
-               , colorbar = "RdBu", escala = seq(-1,1, by = 0.1), sig = F, color.vsig = "white", contour.fill = T
+               , colorbar = "RdBu", escala = seq(-1,1, by = 0.1), sig = T, color.vsig = "black", contour.fill = T, type.sig = "point2"
                , mapa = "mundo", salida = "/Salidas/TP5/", nombre.fig = paste("corrETT.", toupper(modelos[m]),"_", periodo.n[p],"_", rcp.name[rcp], sep = "")
-               , alpha.vsig = 1, na.fill = 0, revert = T, colorbar.pos = "bottom", label.escala = ""
+               , alpha.vsig = 0.5, na.fill = 0, revert = T, colorbar.pos = "bottom", label.escala = ""
                , width = 30, height = 20)
   }
 }
@@ -141,13 +188,13 @@ for(rcp in 1:2){
   for(p in 1:3){
     
     aux = array(ens.corr2[,,rcp,p,1], dim = c(dim(ens.corr2[,,rcp,p,1]),1))
-    aux2 = array(ens.corr2[,,rcp,p,2], dim = c(dim(ens.corr2[,,rcp,p,2]),1))
-    
-    mapa_topo3(variable = aux, variable.sig = aux2, lon = lon2, lat = lat2
+    mask = array(sig2[,,p,rcp], dim = c(144,73,1))
+    mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
+    mapa_topo3(variable = aux, variable.sig = mask, lon = lon2, lat = lat2
                , titulo = paste("Correlación E vs PP - CNRM-", toupper(modelos[m]), " ", rcp.name[rcp], " ", periodo[p], sep = "")
-               , colorbar = "RdBu", escala = seq(-1,1, by = 0.1), sig = F, color.vsig = "white", contour.fill = T
+               , colorbar = "RdBu", escala = seq(-1,1, by = 0.1), sig = T, color.vsig = "black", contour.fill = T, type.sig = "point2"
                , mapa = "mundo", salida = "/Salidas/TP5/", nombre.fig = paste("corrETP.", toupper(modelos[m]),"_", periodo.n[p],"_", rcp.name[rcp], sep = "")
-               , alpha.vsig = 1, na.fill = 0, revert = F, colorbar.pos = "bottom", label.escala = ""
+               , alpha.vsig = 0.5, na.fill = 0, revert = F, colorbar.pos = "bottom", label.escala = ""
                , width = 30, height = 20)
   }
 }
