@@ -36,6 +36,9 @@ c = ifelse(test = m == 1, yes = 1, no = 10)
 
 EPP = apply(((v.mean[,,,,,5]/c)/v.mean[,,,,,3]), c(1,2,4,5), mean, na.rm = T)
 
+EP.r = (v.mean[,,,,,4]/v.mean[,,,,,3])
+EPP.r = (v.mean[,,,,,5]/c)/v.mean[,,,,,3]
+
 
 lat2 = as.matrix(read.table("lat.txt"))
 lon2 = as.matrix(read.table("lon.txt"))
@@ -249,6 +252,213 @@ for(rcp in 1:2){
     
   }
 }
+
+
+
+# lo mismo pero con cada miembro de ensamble
+rcp.name = c(NULL, "RCP2.6", "RCP8.5")
+periodo.fig = c(NA, "49", "99")
+periodo = c("Historico", "2020-2049", "2070-2099")
+for(rcp in 1:2){
+  for(p in 1:3){
+    
+    titulo = paste(periodo[p], rcp.name[rcp], modelo[m], sep = " - ")
+    if(p == 1){
+      nombre = paste("Bko.his.", modelos[m], sep = "")
+    } else {
+      nombre = paste("Bko.", modelos[m], ".", periodo.fig[p], "_", rcp.name[rcp], sep = "")
+    }
+    
+    
+    
+    EP.sa = array(EP[lon.sa,lat.sa,p,rcp], dim = c(length(lon.sa),length(lat.sa),1))*mask.budiko
+    EPP.sa = array(EPP[lon.sa,lat.sa,p,rcp], dim = c(length(lon.sa),length(lat.sa),1))*mask.budiko
+    
+    puntos.EP_1 = array(EP.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 24), which(lat.sa == 27)) ,]
+                        , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 24), which(lat.sa == 27)))))
+    
+    puntos.EP_2 = array(EP.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 27), which(lat.sa == 30)) ,]
+                        , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 27), which(lat.sa == 30)))))
+    
+    puntos.EP_3 = array(EP.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 30), which(lat.sa == 33)) ,]
+                        , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 30), which(lat.sa == 33)))))
+    
+    puntos.EP_4 = array(EP.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 33), which(lat.sa == 36)) ,]
+                        , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 33), which(lat.sa == 36)))))
+    
+    
+    puntos.EPP_1 = array(EPP.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 24), which(lat.sa == 27)) ,]
+                         , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 24), which(lat.sa == 27)))))
+    
+    puntos.EPP_2 = array(EPP.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 27), which(lat.sa == 30)) ,]
+                         , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 27), which(lat.sa == 30)))))
+    
+    puntos.EPP_3 = array(EPP.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 30), which(lat.sa == 33)) ,]
+                         , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 30), which(lat.sa == 33)))))
+    
+    puntos.EPP_4 = array(EPP.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 33), which(lat.sa == 36)) ,]
+                         , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 33), which(lat.sa == 36)))))
+    
+    datos = matrix(NA, nrow = 20, ncol = 3)
+    datos[,1] = puntos.EPP_1; datos[,2] = puntos.EP_1; datos[,3] = 1
+    
+    datos2 = matrix(NA, nrow = 20, ncol = 3)
+    datos2[,1] = puntos.EPP_2; datos2[,2] = puntos.EP_2; datos2[,3] = 2
+    
+    datos3 = matrix(NA, nrow = 32, ncol = 3)
+    datos3[,1] = puntos.EPP_3; datos3[,2] = puntos.EP_3; datos3[,3] = 3
+    
+    datos4 = matrix(NA, nrow = 32, ncol = 3)
+    datos4[,1] = puntos.EPP_4; datos4[,2] = puntos.EP_4; datos4[,3] = 4
+    
+    puntos = as.data.frame(rbind(datos, datos2, datos3, datos4))
+    
+    colnames(puntos)= c("x", "y", "zona")
+    
+    puntos$zona = as.factor(puntos$zona)
+    
+    dataline = matrix(data = NA, nrow = 3, ncol = 2)
+    dataline[,1] = c(0,1,3)
+    dataline[,2] = c(0,1,1)
+    dataline = as.data.frame(dataline)
+    colnames(dataline) = c("XX", "YY")
+    
+    g = ggplot(data = puntos, mapping = aes(x = x, y = y)) + theme_minimal()+
+      geom_point(aes(color = zona),show.legend = F, size = 3)+
+      geom_line(data = dataline, aes(x = XX, y = YY))+
+      geom_line(data = curva, aes(y = omega1, x = x), color = "grey2")+
+      geom_line(data = curva, aes(y = omega2, x = x), color = "tomato3")+
+      
+      
+      scale_x_continuous(limits = c(0,3), breaks = seq(0,3,by = 0.25), name = "EP/P")+
+      scale_y_continuous(limits = c(0,1.5),breaks = seq(0,1.5,by = 0.25), name = "E/P")+
+      scale_color_manual(values = c("steelblue3", "seagreen3", "sandybrown", "tomato2"))+
+      
+      ggtitle(paste(titulo, sep = ""))+
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14),
+            panel.border = element_rect(colour = "black", fill = NA, size = 3),
+            panel.ontop = F,
+            plot.title = element_text(hjust = 0.5))
+    
+    ggsave(paste(getwd(), "/Salidas/TP5/2daparte/", nombre,".jpg",sep =""), plot = g, width = 20, height = 15  , units = "cm")
+    
+    
+    
+  }
+}
+
+
+
+# lo mismo pero con cada miembro de ensamble
+
+mask.budiko_r = array(mask.budiko, dim = c(length(lon.sa), length(lat.sa), rs[m], 1))
+rcp.name = c(NULL, "RCP2.6", "RCP8.5")
+
+periodo.fig = c(NA, "49", "99")
+periodo = c("Historico", "2020-2049", "2070-2099")
+for(rcp in 1:2){
+  for(p in 1:3){
+    
+    titulo = paste(periodo[p], rcp.name[rcp], modelo[m], sep = " - ")
+    if(p == 1){
+      nombre = paste("BkoR.his.", modelos[m], sep = "")
+    } else {
+      nombre = paste("BkoR.", modelos[m], ".", periodo.fig[p], "_", rcp.name[rcp], sep = "")
+    }
+    
+    
+    
+    EP.r.sa = array(EP.r[lon.sa,lat.sa,,p,rcp], dim = c(length(lon.sa),length(lat.sa),rs[m],1))*mask.budiko_r
+    EPP.r.sa = array(EPP.r[lon.sa,lat.sa,,p,rcp], dim = c(length(lon.sa),length(lat.sa),rs[m],1))*mask.budiko_r
+    
+    datos = matrix(NA, nrow = 20*rs[m], ncol = 4)
+    datos2 = matrix(NA, nrow = 20*rs[m], ncol = 4)
+    datos3 = matrix(NA, nrow = 32*rs[m], ncol = 4)
+    datos4 = matrix(NA, nrow = 32*rs[m], ncol = 4)
+    
+    c = 1; f = 20
+    c2 = 1; f2 = 32
+    for(r in 1:rs[m]){
+      puntos.EP_1 = array(EP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 24), which(lat.sa == 27)),r,]
+                          , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 24), which(lat.sa == 27)))))
+      
+      puntos.EP_2 = array(EP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 27), which(lat.sa == 30)), r,]
+                          , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 27), which(lat.sa == 30)))))
+      
+      puntos.EP_3 = array(EP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 30), which(lat.sa == 33)), r,]
+                          , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 30), which(lat.sa == 33)))))
+      
+      puntos.EP_4 = array(EP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 33), which(lat.sa == 36)), r,]
+                          , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 33), which(lat.sa == 36)))))
+      
+      
+      puntos.EPP_1 = array(EPP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 24), which(lat.sa == 27)),r ,]
+                           , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 24), which(lat.sa == 27)))))
+      
+      
+      puntos.EPP_2 = array(EPP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 123)), seq(which(lat.sa == 27), which(lat.sa == 30)), r,]
+                           , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 123)))*length(seq(which(lat.sa == 27), which(lat.sa == 30)))))
+      
+      puntos.EPP_3 = array(EPP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 30), which(lat.sa == 33)), r,]
+                           , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 30), which(lat.sa == 33)))))
+      
+      puntos.EPP_4 = array(EPP.r.sa[seq(which(lon.sa == 119), which(lon.sa == 126)), seq(which(lat.sa == 33), which(lat.sa == 36)), r,]
+                           , dim = c(length(seq(which(lon.sa == 119), which(lon.sa == 126)))*length(seq(which(lat.sa == 33), which(lat.sa == 36)))))
+      
+      
+      datos[c:f,1] = puntos.EPP_1; datos[c:f,2] = puntos.EP_1; datos[c:f,3] = 1; datos[c:f,4] = r
+      datos2[c:f,1] = puntos.EPP_2; datos2[c:f,2] = puntos.EP_2; datos2[c:f,3] = 2; datos2[c:f,4] = r
+      datos3[c2:f2,1] = puntos.EPP_3; datos3[c2:f2,2] = puntos.EP_3; datos3[c2:f2,3] = 3; datos3[c2:f2,4] = r
+      datos4[c2:f2,1] = puntos.EPP_4; datos4[c2:f2,2] = puntos.EP_4; datos4[c2:f2,3] = 4; datos4[c2:f2,4] = r
+      
+      c = c + 20
+      f = f + 20
+      c2 = c2 + 32
+      f2 = f2 + 32
+    }
+    
+    
+    puntos = as.data.frame(rbind(datos, datos2, datos3, datos4))
+    
+    colnames(puntos)= c("x", "y", "zona", "Miembros")
+    
+    puntos$zona = as.factor(puntos$zona)
+    puntos$Miembros = as.factor(puntos$Miembros)
+    
+    dataline = matrix(data = NA, nrow = 3, ncol = 2)
+    dataline[,1] = c(0,1,3)
+    dataline[,2] = c(0,1,1)
+    dataline = as.data.frame(dataline)
+    colnames(dataline) = c("XX", "YY")
+    
+    g =  ggplot(data = puntos, mapping = aes(x = x, y = y)) + theme_minimal()+
+      geom_point(aes(color = Miembros, shape = zona),show.legend = T, size = 5, stroke = 1)+
+      geom_line(data = dataline, aes(x = XX, y = YY))+
+      geom_line(data = curva, aes(y = omega1, x = x), color = "grey2")+
+      geom_line(data = curva, aes(y = omega2, x = x), color = "tomato3")+
+      
+      
+      scale_x_continuous(limits = c(0,3), breaks = seq(0,3,by = 0.25), name = "EP/P")+
+      scale_y_continuous(limits = c(0,1.5),breaks = seq(0,1.5,by = 0.25), name = "E/P")+
+      #scale_color_manual(values = c("steelblue3", "seagreen3", "sandybrown", "tomato2"))+
+      scale_shape_manual(values = c(seq(1,rs[m])))+
+      
+      ggtitle(paste(titulo, sep = ""))+
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14),
+            panel.border = element_rect(colour = "black", fill = NA, size = 3),
+            panel.ontop = F,
+            plot.title = element_text(hjust = 0.5))
+    
+    ggsave(paste(getwd(), "/Salidas/TP5/2daparte/", nombre,".jpg",sep =""), plot = g, width = 20, height = 15  , units = "cm")
+    
+    
+    
+  }  
+}
+
+
 
 rm(list = ls())
 .rs.restartR()
