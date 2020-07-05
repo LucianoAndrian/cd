@@ -2162,11 +2162,11 @@ mapa_topo3 = function(variable, variable.sig = NULL, variable.cont = NULL, u = N
     
   } else if(mapa == "SA") {
     
-    load("topo_sa.RData")
-    topo2 = topo_sa
-    rm(topo_sa)
+    #load("topo_sa.RData")
+    #topo2 = topo_sa
+    #rm(topo_sa)
     
-    topo2[which(topo2$h<altura.topo)]=NA
+    #topo2[which(topo2$h<altura.topo)]=NA
     
     map <- map_data("world2", regions = c("Brazil", "French Guiana", "Suriname", "Colombia", "Venezuela","Argentina", "Chile", "Uruguay",
                                           "Bolivia", "Ecuador", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", "Nicaragua",
@@ -2189,7 +2189,7 @@ mapa_topo3 = function(variable, variable.sig = NULL, variable.cont = NULL, u = N
     
     colnames(data)<-c("lon", "lat", "var")
     
-    if(mapa == "SA"){
+    if(mapa == "SAlalala"){
       
       g = ggplot(topo2, aes(lon, lat)) + theme_minimal() +
         xlab(x.label) + ylab(y.label) + 
@@ -2285,7 +2285,7 @@ mapa_topo3 = function(variable, variable.sig = NULL, variable.cont = NULL, u = N
     } 
     
     
-    if(mapa == "SA"){
+    if(mapa == "SAlalala"){
       
       g = g + geom_tile(data = topo2, aes(x = lon, y = lat, fill = h ), na.rm = T, alpha = 1, color = "black", show.legend = F) 
       
