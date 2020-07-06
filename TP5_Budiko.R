@@ -516,7 +516,6 @@ for(rcp in 1:2){
                  , width = 30, height = 20)
       
       
-      
       mask.p = array(mask.p, dim = c(dim(resta2)))
       mask.p[which(!is.na(mask.p))] = 0; mask.p[which(mask.p == 1)] = NA 
       mapa_topo3(variable = resta2, variable.sig = mask.p, lon = lon2, lat = lat2
