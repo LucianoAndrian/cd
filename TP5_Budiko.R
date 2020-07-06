@@ -32,6 +32,8 @@ v.mean = apply(v, c(1,2,4,5,6,7), mean)  # promedio de años
 
 EP = apply((v.mean[,,,,,4]/v.mean[,,,,,3]), c(1,2,4,5), mean, na.rm = T)
 
+P_E = apply(v.mean[,,,,,3] - v.mean[,,,,,4], c(1,2,4,5), mean, na.rm = T)
+
 c = ifelse(test = m == 1, yes = 1, no = 10)
 
 EPP = apply(((v.mean[,,,,,5]/c)/v.mean[,,,,,3]), c(1,2,4,5), mean, na.rm = T)
@@ -459,6 +461,75 @@ for(rcp in 1:2){
 }
 
 
+# P- E continental 
+#> dim(P_E)
+#[1] 144  73   3   2
+#> 
+  
+mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
+
+periodo = c("Historico", "F. Cercano", "F. Lejano")
+periodo.fig = c("his", "49", "99")
+
+for(rcp in 1:2){
+  for(p in 1:3){
+    
+    aux = array(P_E[,,p,rcp], dim = c(dim(P_E[,,1,1]),1))
+    mask = array(mask, dim = c(dim(P_E[,,1,1]),1))
+    mapa_topo3(variable = aux, variable.sig = mask, lon = lon2, lat = lat2
+               , titulo = paste("P-E - CNRM-", toupper(modelos[m]), " ", rcp.name[rcp], " ", periodo[p], sep = "")
+               , colorbar = "RdYlBu", escala = seq(-800,800, by = 200), sig = T, color.vsig = "white", contour.fill = T, type.sig = "tile"
+               , mapa = "mundo", salida = "/Salidas/TP5/2daparte/", nombre.fig = paste("P_E.", toupper(modelos[m]),"_", periodo.fig[p],"_", rcp.name[rcp], sep = "")
+               , alpha.vsig = 1, na.fill = 0, revert = F, colorbar.pos = "bottom", label.escala = "mm"
+               , width = 30, height = 20)
+    
+    
+    if(p != 1){
+      
+      P_E.n = P_E
+      P_E.n[which(P_E.n[,,1,1]>0)]=NA #zonas secas en el periodo historico
+      mask.n = P_E.n[,,1,1]
+      mask.n[which(!is.na(mask.n))] = 1
+      P_E.seco = P_E*array(mask.n, dim = c(dim(P_E)))*-1
+      
+      resta1 = P_E.seco[,,p,rcp] - P_E.seco[,,1,rcp]
+      resta1 = array(resta1, dim = c(dim(resta1),1))
+      
+      
+      P_E.p = P_E
+      P_E.p[which(P_E.p[,,1,1]<0)]=NA #zonas humedas en el p. historico
+      mask.p = P_E.p[,,1,1]
+      mask.p[which(!is.na(mask.p))] = 1
+      P_E.humedo = P_E*array(mask.p, dim = c(dim(P_E)))
+      
+      resta2 = P_E.humedo[,,p,rcp] - P_E.humedo[,,1,rcp]
+      resta2 = array(resta2, dim = c(dim(resta2),1))
+      
+      
+      mask.n = array(mask.n, dim = c(dim(resta1)))
+      mask.n[which(!is.na(mask.n))] = 0; mask.n[which(mask.n == 1)] = NA 
+      mapa_topo3(variable = resta1, variable.sig = mask.n, lon = lon2, lat = lat2
+                 , titulo = paste("Cambio en zonas secas - CNRM-", toupper(modelos[m]), " - ", rcp.name[rcp], " - ", periodo[p],  " - Històrico", sep = "")
+                 , colorbar = "RdYlBu", escala = seq(-6,6, by = 1), sig = T, color.vsig = "white", contour.fill = F, type.sig = "tile"
+                 , mapa = "mundo", salida = "/Salidas/TP5/2daparte/", nombre.fig = paste("secos.", toupper(modelos[m]),"_", periodo.fig[p],"_", rcp.name[rcp], sep = "")
+                 , alpha.vsig = 0.5, na.fill = 0, revert = T, colorbar.pos = "bottom", label.escala = "mm"
+                 , width = 30, height = 20)
+      
+      
+      
+      mask.p = array(mask.p, dim = c(dim(resta2)))
+      mask.p[which(!is.na(mask.p))] = 0; mask.p[which(mask.p == 1)] = NA 
+      mapa_topo3(variable = resta2, variable.sig = mask.p, lon = lon2, lat = lat2
+                 , titulo = paste("Cambio en zonas humedas - CNRM-", toupper(modelos[m]), " - ", rcp.name[rcp], " - ", periodo[p],  " - Històrico", sep = "")
+                 , colorbar = "RdYlBu", escala = seq(-50,50, by = 5), sig = T, color.vsig = "white", contour.fill = T, type.sig = "tile"
+                 , mapa = "mundo", salida = "/Salidas/TP5/2daparte/", nombre.fig = paste("hum.", toupper(modelos[m]),"_", periodo.fig[p],"_", rcp.name[rcp], sep = "")
+                 , alpha.vsig = 1, na.fill = 0, revert = F, colorbar.pos = "bottom", label.escala = "mm"
+                 , width = 30, height = 20)
+      
+  
+    }
+  }
+}
 
 rm(list = ls())
 .rs.restartR()
