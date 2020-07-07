@@ -78,7 +78,7 @@ for(rcp in 1:2){
   for(p in 2:3){
     
     aux = array(EP[,,p,rcp] - EP[,,1,1], dim = c(144,73,1))
-    mapa_topo3(variable = aux, lon = lon2, lat = lat2, colorbar = "RdBu", escala = seq(-0.2, 0.2, by = 0.02)
+    mapa_topo3(variable = aux, lon = lon2, lat = lat2, colorbar = "RdBu", escala = seq(-0.1, 0.1, by = 0.02)
                , revert = T, titulo = paste("E/P Dif.", periodo[p-1], "-  Historico ", rcp.name[rcp], " - ", modelo[m]), niveles = 11
                , mapa = "mundo", colorbar.pos = "bottom", label.escala = "", na.fill = 0
                , nombre.fig = paste("Dif_EP.", modelos[m], "_",  rcp.name[rcp], "_", periodo.fig[p-1], sep = "") , width = 30, height = 20
@@ -87,7 +87,7 @@ for(rcp in 1:2){
     
     
     aux = array(EPP[,,p,rcp] - EPP[,,1,1], dim = c(144,73,1))
-    mapa_topo3(variable = aux, lon = lon2, lat = lat2, colorbar = "RdBu", escala = seq(-0.5, 0.5, by = 0.05)
+    mapa_topo3(variable = aux, lon = lon2, lat = lat2, colorbar = "RdBu", escala = seq(-0.5, 0.5, by = 0.1)
                , revert = T, titulo = paste("Ep/P Dif.", periodo[p-1], "-  Historico ", rcp.name[rcp], " - ", modelo[m]), niveles = 11
                , mapa = "mundo", colorbar.pos = "bottom", label.escala = "", na.fill = 0
                , nombre.fig = paste("Dif_EPP.", modelos[m], "_",  rcp.name[rcp], "_", periodo.fig[p-1], sep = ""), width = 30, height = 20
@@ -414,7 +414,7 @@ for(rcp in 1:2){
       mask.n = array(mask.n, dim = c(dim(resta1)))
       mask.n[which(!is.na(mask.n))] = 0; mask.n[which(mask.n == 1)] = NA 
       mapa_topo3(variable = resta1, variable.sig = mask.n, lon = lon2, lat = lat2
-                 , titulo = paste("Cambio en zonas secas - CNRM-", toupper(modelos[m]), " - ", rcp.name[rcp], " - ", periodo[p],  " - Històrico", sep = "")
+                 , titulo = paste("Cambio en (P-E)<0 - CNRM-", toupper(modelos[m]), " - ", rcp.name[rcp], " - ", periodo[p],  " - Històrico", sep = "")
                  , colorbar = "RdYlBu", escala = seq(-6,6, by = 1), sig = T, color.vsig = "white", contour.fill = F, type.sig = "tile"
                  , mapa = "mundo", salida = "/Salidas/TP5/2daparte/", nombre.fig = paste("secos.", toupper(modelos[m]),"_", periodo.fig[p],"_", rcp.name[rcp], sep = "")
                  , alpha.vsig = 0.5, na.fill = 0, revert = T, colorbar.pos = "bottom", label.escala = "mm"
@@ -424,7 +424,7 @@ for(rcp in 1:2){
       mask.p = array(mask.p, dim = c(dim(resta2)))
       mask.p[which(!is.na(mask.p))] = 0; mask.p[which(mask.p == 1)] = NA 
       mapa_topo3(variable = resta2, variable.sig = mask.p, lon = lon2, lat = lat2
-                 , titulo = paste("Cambio en zonas humedas - CNRM-", toupper(modelos[m]), " - ", rcp.name[rcp], " - ", periodo[p],  " - Històrico", sep = "")
+                 , titulo = paste("Cambio en (P-E)>0 - CNRM-", toupper(modelos[m]), " - ", rcp.name[rcp], " - ", periodo[p],  " - Històrico", sep = "")
                  , colorbar = "RdYlBu", escala = seq(-50,50, by = 5), sig = T, color.vsig = "white", contour.fill = T, type.sig = "tile"
                  , mapa = "mundo", salida = "/Salidas/TP5/2daparte/", nombre.fig = paste("hum.", toupper(modelos[m]),"_", periodo.fig[p],"_", rcp.name[rcp], sep = "")
                  , alpha.vsig = 1, na.fill = 0, revert = F, colorbar.pos = "bottom", label.escala = "mm"
@@ -434,6 +434,121 @@ for(rcp in 1:2){
     }
   }
 }
+
+
+#fig 4...
+c = ifelse(test = m == 1, yes = 1, no = 10)
+EPP = apply(((v.mean[,,,,,5]/c)/v.mean[,,,,,3]), c(1,2,4,5), mean, na.rm = T)
+
+# historico
+EPP.his = EPP[,,1,1]
+EPP.his[which(EPP.his>2)] = 3
+EPP.his[which(EPP.his<2)] = 1
+
+aux = array(EPP.his, dim = c(144, 73, 1))
+mask = as.matrix(read.table("mask.txt"))
+mask[which(!is.na(mask))] = 0; mask[which(mask == 1)] = NA 
+
+mapa_topo3(variable = aux, variable.sig = array(mask, dim = c(144,73,1)), lon = lon2, lat = lat2
+           , titulo = paste(modelo[m],  " - Històrico", sep = "")
+           , colorbar = "RdBu", escala = seq(1,3, by = 1), sig = T, color.vsig = "white", contour.fill = T, type.sig = "tile"
+           , mapa = "mundo", salida = "/Salidas/TP5/2daparte/", nombre.fig = paste("fig4_1", toupper(modelos[m]),"_his", sep = "")
+           , alpha.vsig = 1, na.fill = 0, revert = T, colorbar.pos = "bottom", label.escala = "mm"
+           , width = 30, height = 20)
+
+aux = EPP[,,1,1]
+aux[which(aux<2)] = NA
+aux[which(!is.na(aux))] = 1
+EPP.mask.arid = aux
+
+aux = EPP[,,1,1]
+aux[which(aux>2)] = NA
+aux[which(!is.na(aux))] = 1
+EPP.mask.hum = aux
+
+EPP.arid = EPP*array(EPP.mask.arid, dim = c(dim(EPP)))
+EPP.hum = EPP*array(EPP.mask.hum, dim = c(dim(EPP)))
+
+mask = as.matrix(read.table("mask.txt"))
+periodo = c("F.Cercano", "F.Lejano")
+periodo.name = c("49", "99")
+x.label = NULL; y.label = NULL # esto nse donde esta pero lo pide
+library(metR)
+for(rcp in 1:2){
+  for(p in 2:3){
+    
+    titulo = paste(periodo[p-1] , "  ", rcp.name[rcp], " - ", modelo[m], sep = "")
+    nombre = paste("Fig4.Zonas_", periodo.name[p-1],".", rcp.name[rcp], "_", modelos[m], sep = "")   
+    
+    
+    aux1 = EPP.arid[,,p,rcp] - EPP.arid[,,1,1]
+    dgd = aux1; dgw = aux1
+    dgd[which(dgd>0)] = NA
+    dgw[which(dgw<0)] = NA
+    
+    aux2 = EPP.hum[,,p,rcp] - EPP.hum[,,1,1]
+    wgd = aux2; wgw = aux2
+    wgd[which(wgd<0)] = NA
+    wgw[which(wgw>0)] = NA
+    
+    data1 = expand.grid(lon = lon2, lat = lat2)
+    data1[,3:4] = 1
+    colnames(data1)<-c("lon", "lat", "v", "Zonas")
+    data1$v = data1$v*array(mask, dim = 144*73)
+    
+    data1$v[which(!is.na(array(dgd, dim = 144*73)))] = data1$v[which(!is.na(array(dgd, dim = 144*73)))]*array(dgd, dim = 144*73)[which(!is.na(array(dgd, dim = 144*73)))]
+    data1$Zonas[which(!is.na(array(dgd, dim = 144*73)))] = "DGD"
+
+    data1$v[which(!is.na(array(dgw, dim = 144*73)))] = data1$v[which(!is.na(array(dgw, dim = 144*73)))]*array(dgw, dim = 144*73)[which(!is.na(array(dgw, dim = 144*73)))]
+    data1$Zonas[which(!is.na(array(dgw, dim = 144*73)))] = "DGW"
+    
+    data1$v[which(!is.na(array(wgd, dim = 144*73)))] = data1$v[which(!is.na(array(wgd, dim = 144*73)))]*array(wgd, dim = 144*73)[which(!is.na(array(wgd, dim = 144*73)))]
+    data1$Zonas[which(!is.na(array(wgd, dim = 144*73)))] = "WGD"
+    
+    data1$v[which(!is.na(array(wgw, dim = 144*73)))] = data1$v[which(!is.na(array(wgw, dim = 144*73)))]*array(wgw, dim = 144*73)[which(!is.na(array(wgw, dim = 144*73)))]
+    data1$Zonas[which(!is.na(array(wgw, dim = 144*73)))] = "WGW"
+    
+    data1$v[which(is.nan(data1$v))] = NA
+   
+    data1$Zonas[which(data1$Zonas == 1)] = 0
+    data1$Zonas = as.factor(data1$Zonas)
+    
+
+    
+    mask.frame = expand.grid(lon = lon2, lat = lat2)
+    mask.frame[,3] = array(mask, dim = 144*73)
+    colnames(mask.frame) = c("lon", "lat", "v")
+
+    map = map_data("world2", colour = "black")
+    breaks.lon = seq(0, 360, by = 30); limits.lon = c(min(breaks.lon), max(breaks.lon))
+    breaks.lat = seq(-90, 90, by = 20); limits.lat = c(min(breaks.lat), max(breaks.lat))
+
+   g = ggplot(data1, aes(x = lon, y = lat)) + theme_minimal() +
+      xlab(NULL) + ylab(NULL) + 
+      theme(panel.border = element_blank(), panel.grid.major = element_line(colour = "grey"), panel.grid.minor = element_blank()) +
+      geom_tile(aes(fill = Zonas), alpha = 1, na.rm = T) +
+      scale_fill_manual( breaks = c("DGD","DGW","WGD","WGW"),
+                         values = c("white", "red2", "springgreen3", "yellow", "darkblue"))+
+      geom_polygon(data = map, aes(x = long ,y = lat, group = group),fill = NA, color = "black") +
+      ggtitle(titulo) +
+      scale_x_longitude(breaks = breaks.lon, name = x.label, limits = limits.lon)+
+      scale_y_latitude(breaks = breaks.lat, name = y.label, limits = limits.lat)+
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, size = 3),
+            panel.ontop = TRUE,
+            plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black")  + theme(legend.position = "bottom")
+    
+    ggsave(paste(getwd(), "/Salidas/TP5/2daparte/", nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+    
+    
+  }
+}
+
+
+
+
+
 
 rm(list = ls())
 .rs.restartR()
