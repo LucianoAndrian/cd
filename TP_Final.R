@@ -80,9 +80,32 @@ g = ggplot(datos, aes(x = meses)) + theme_minimal() +
   
 }
 
+Vinf = function(data){
+  # velocidad inferida a partir de las diferencias de presion
+  
+  R = 6371000
+  num = 2*pi*R**2
+  den = 86400*30*1013*100*2*pi*R
+  
+  x = vector()
+  
+  for(i in 0:11){
+    if((i + 1) == 1){
+      aux = data[12]-data[1]
+      x[i+1] = (num*aux)/den
+    } else {
+      aux = data[1+i]-data[0+i]
+      x[i+1] = (num*aux)/den
+    }
+  }
+  
+  return(x*1000) # mm/s
+}  
+
+
 ####
 
-aux = nc_open(paste(ruta_nc, "PSL_CNRM-CM6.nc", sep = ""))
+aux = nc_open(paste(ruta_nc, "PSL_2099_585.CNRM-CM6.nc", sep = ""))
 psl = ncvar_get(aux, "psl")
 nc_close(aux)
 
@@ -92,18 +115,25 @@ psl = psl*lats
 
 PlotMonthsTS(data = Fig7.3(psl), titulo = "probandp", nombre = "prueba")
 
+aux = Fig7.3(psl)
+
+psl_mean_hn = apply(aux[[3]], c(1), mean)
+  
+x1 = Vinf(psl_mean_hn)
+plot.ts(x1)
 
 
-##--------------------
 
-# ver velocidad inferida tambien.
+##--------------------#
 aux = nc_open(paste(ruta_nc, "V_CNRM-CM6.nc", sep = ""))
 v = ncvar_get(aux, "viento")[,37,,,,2]
 nc_close(aux)
-v_mean = apply(v, c(3,4), mean, na.rm = T)
+v_mean = apply(v[,3:4,,], c(4), mean, na.rm = T)
 aux1 = apply(v, c(3,4), mean, na.rm = T)
 global_anom = array(NA, dim = c(12,29))
 for(i in 1:29){
   global_anom[,i] = aux1[,i] - v_mean[i]
   
 }
+y = apply(global_anom,c(1), mean)
+plot.ts(y*1000, col = "blue")
