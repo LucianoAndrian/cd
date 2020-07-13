@@ -6,7 +6,7 @@ source("FUNCIONES.R")
 
 ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
 
-
+#### Funciones ####
 Fig7.3 = function(data){
   
   r.dim = length(data[1,1,1,])
@@ -35,48 +35,119 @@ Fig7.3 = function(data){
   
 }
 
-
-PlotMonthsTS = function(data, titulo, nombre){
+PlotMonthsTS = function(data, titulo, nombre, tl = F, data2049 = NULL, data2099 = NULL){
   
-  datos = array(NA, c(12,10))
+  datos = array(NA, c(12,9))
   datos[,1] = apply(data[[1]], c(1), mean)
   datos[,2] = apply(data[[1]], c(1), max)
   datos[,3] = apply(data[[1]], c(1), min)
   datos[,4] = apply(data[[2]], c(1), mean)
   datos[,5] = apply(data[[2]], c(1), max)
   datos[,6] = apply(data[[2]], c(1), min)
-  datos[,8] = apply(data[[3]], c(1), mean)
-  datos[,9] = apply(data[[3]], c(1), max)
-  datos[,10] = apply(data[[3]], c(1), min)
+  datos[,7] = apply(data[[3]], c(1), mean)
+  datos[,8] = apply(data[[3]], c(1), max)
+  datos[,9] = apply(data[[3]], c(1), min)
   
-  datos = as.data.frame(cbind(datos/100,meses = seq(1,12)))
+
   
+  if(tl == T){
+    datos = array(NA, c(12,9))
+    datos[,1] = apply(data[[1]], c(1), mean)
+    datos[,2] = apply(data[[1]], c(1), max)
+    datos[,3] = apply(data[[1]], c(1), min)
+    datos[,4] = apply(data[[2]], c(1), mean)
+    datos[,5] = apply(data[[2]], c(1), max)
+    datos[,6] = apply(data[[2]], c(1), min)
+    datos[,7] = apply(data[[3]], c(1), mean)
+    datos[,8] = apply(data[[3]], c(1), max)
+    datos[,9] = apply(data[[3]], c(1), min)
+    
+ if(is.null(data2049[[1]])){
+   print("Sin datos!")
+ }  else {
+   
+   datos2 = array(NA, c(12,9))
+   datos2[,1] = apply(data2049[[1]], c(1), mean)
+   datos2[,2] = apply(data2049[[1]], c(1), max)
+   datos2[,3] = apply(data2049[[1]], c(1), min)
+   datos2[,4] = apply(data2049[[2]], c(1), mean)
+   datos2[,5] = apply(data2049[[2]], c(1), max)
+   datos2[,6] = apply(data2049[[2]], c(1), min)
+   datos2[,7] = apply(data2049[[3]], c(1), mean)
+   datos2[,8] = apply(data2049[[3]], c(1), max)
+   datos2[,9] = apply(data2049[[3]], c(1), min)
+   
+   datos3 = array(NA, c(12,9))
+   datos3[,1] = apply(data2099[[1]], c(1), mean)
+   datos3[,2] = apply(data2099[[1]], c(1), max)
+   datos3[,3] = apply(data2099[[1]], c(1), min)
+   datos3[,4] = apply(data2099[[2]], c(1), mean)
+   datos3[,5] = apply(data2099[[2]], c(1), max)
+   datos3[,6] = apply(data2099[[2]], c(1), min)
+   datos3[,7] = apply(data2099[[3]], c(1), mean)
+   datos3[,8] = apply(data2099[[3]], c(1), max)
+   datos3[,9] = apply(data2099[[3]], c(1), min)
+   
+   datos = cbind(datos, datos2, datos3)
+   
+ }
+}
   
-g = ggplot(datos, aes(x = meses)) + theme_minimal() + 
-    geom_ribbon(aes(x = meses, ymin = datos[,3], ymax = datos[,2]), fill="black", alpha = .4) +
-    geom_ribbon(aes(x = meses, ymin = datos[,6], ymax = datos[,5]), fill="steelblue2", alpha = .4) +
-    geom_ribbon(aes(x = meses, ymin = datos[,10], ymax = datos[,9]), fill="springgreen", alpha = .4) +
+  datos = as.data.frame(rbind(datos/100, datos[1,]/100))
+  datos = as.data.frame(cbind(datos, meses = seq(1, 13)))
+
+
+if(tl == T){
+  g = ggplot(datos, aes(x = meses)) + theme_minimal() + 
+    geom_line(aes(y = datos[,1], colour = "Historico", linetype = "Global"), size = 1) +
+    geom_line(aes(y = datos[,4], colour = "Historico", linetype = "HS"), size = 1) +
+    geom_line(aes(y = datos[,7], colour = "Historico", linetype = "HN"), size = 1) +
+    geom_line(aes(y = datos[,1+9], colour = "2020 - 2049", linetype = "Global"), size = 1) +
+    geom_line(aes(y = datos[,4+9], colour = "2020 - 2049", linetype = "HS"), size = 1) +
+    geom_line(aes(y = datos[,7+9], colour = "2020 - 2049", linetype = "HN"), size = 1) +
+    geom_line(aes(y = datos[,1+9*2], colour = "2070 - 2099", linetype = "Global"), size = 1) +
+    geom_line(aes(y = datos[,4+9*2], colour = "2070 - 2099", linetype = "HS"), size = 1) +
+    geom_line(aes(y = datos[,7+9*2], colour = "2070 - 2099", linetype = "HN"), size = 1) + 
     geom_hline(yintercept = 0, color = "black", size = 0.2)+
-    geom_line(aes(y = datos[,1], colour = "Global"), size = 0.5) +
-    geom_line(aes(y = datos[,4], colour = "HS"), size = 1) +
-    geom_line(aes(y = datos[,8], colour = "HN"), size = 1) +
     scale_colour_manual("", 
-                        breaks = c("Global", "HS", "HN"),
-                        values = c("black", "steelblue4", "springgreen")) +
+                        breaks = c("Historico", "2020 - 2049", "2070 - 2099"),
+                        values = c("black", "turquoise2", "coral")) +
+    scale_linetype_manual("",
+                          breaks = c("Global", "HS", "HN"),
+                          values = c(1, 2, 3))+
+    scale_x_continuous(labels = c(month.abb, month.abb[1]),
+                       breaks = seq(1, 13, by = 1)) +
+    scale_y_continuous(breaks = seq(-2,2, by = 1), limits = c(-2,2))
+  
+  nombre = paste(nombre, "_futuro", sep = "")
     
-    scale_x_continuous(labels = month.abb,
-                       breaks = seq(1, 12, by = 1)) +
-    scale_y_continuous(breaks = seq(-2,2, by = 1), limits = c(-2,2))+
-    
-    ylab("[hPa]") + ggtitle(titulo) + xlab("") +
+} else {
+  
+  g = ggplot(datos, aes(x = meses)) + theme_minimal() + 
+    geom_ribbon(aes(x = meses, ymin = datos[,3], ymax = datos[,2]), fill="snow4", alpha = .4) +
+    geom_ribbon(aes(x = meses, ymin = datos[,6], ymax = datos[,5]), fill="steelblue3", alpha = .3) +
+    geom_ribbon(aes(x = meses, ymin = datos[,9], ymax = datos[,8]), fill="springgreen3", alpha = .3) +
+    geom_line(aes(y = datos[,1], colour = "Global"), size = 1, linetype = 1) +
+    geom_line(aes(y = datos[,4], colour = "HS"), size = .8, linetype = 1) +
+    geom_line(aes(y = datos[,7], colour = "HN"), size = .8, linetype = 1) +
+    geom_hline(yintercept = 0, color = "black", size = 0.2)+
+    scale_color_manual("", 
+                      breaks = c("Global", "HS", "HN"),
+                      values = c("black", "steelblue3", "springgreen3")) +
+    scale_x_continuous(labels = c(month.abb, month.abb[1]),
+                       breaks = seq(1, 13, by = 1)) +
+    scale_y_continuous(breaks = seq(-2,2, by = 1), limits = c(-2,2))
+  
+}
+  g =  g + ylab("[hPa]") + ggtitle(titulo) + xlab("") +
     theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
           panel.border = element_rect(colour = "black", fill = NA, size = 1),
           panel.ontop = F,
           plot.title = element_text(hjust = 0.5, size = 18),
-          legend.position = "bottom", legend.key.width = unit(2, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
   
-  ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 20, height = 10  , units = "cm")
+  ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
   
 }
 
@@ -102,29 +173,79 @@ Vinf = function(data){
   return(x*1000) # mm/s
 }  
 
+#### Difrencias de Presion ####
 
-####
+SSP = c("126", "585")
 
-aux = nc_open(paste(ruta_nc, "PSL_2099_585.CNRM-CM6.nc", sep = ""))
-psl = ncvar_get(aux, "psl")
-nc_close(aux)
+for(ssp in 1:2){
+  
+  ncs = c("PSL_CNRM-CM6.nc", paste("PSL_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("PSL_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+  psl = list()
+  
+  for(i in 1:3){
+    
+    aux = nc_open(paste(ruta_nc, ncs[i], sep = ""))
+    psl[[i]] = ncvar_get(aux, "psl")
+    nc_close(aux)
+    
+    if(i>1){
+      psl[[i]] = psl[[i]]*lats[,,,1:6]
+    } else {
+      lat = seq(-90, 90, by = 2.5)
+      lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl[[i]]))) # solo lo va hacer una vez y ya queda lats.
+      psl[[i]] = psl[[i]]*lats
+    }
+  }
+  
+  nombre = paste("PSL_ANOM_", SSP[ssp], sep ="")
+  PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
+               tl = T, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
+  
+  
+  PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
+               tl = F, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
+  
+}
 
-lat = seq(-90, 90, by = 2.5)
-lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl)))
-psl = psl*lats
 
-PlotMonthsTS(data = Fig7.3(psl), titulo = "probandp", nombre = "prueba")
 
-aux = Fig7.3(psl)
+#####---------------------TRANSPORTE MERID. PROBANDO----------------------------#####
 
+
+
+# INFERIDO
+aux = Fig7.3(psl[[1]])
 psl_mean_hn = apply(aux[[3]], c(1), mean)
   
 x1 = Vinf(psl_mean_hn)
-plot.ts(x1)
+x1[13]=x1[1]
+# los data frame como mierda se creaban?
+data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2))
+data[,1] = x1; data[,2] = seq(1, 13, by = 1)
+colnames(data) = c("v", "meses")
+
+titulo = "Viento meridional inferiod a partir de las diferencias de PSL [mm/s] ¿?"
+nombre = "v_inf"
+g = ggplot(data) + theme_minimal()+
+  geom_line(aes(y = v, x = meses)) +
+  geom_hline(yintercept = 0, color = "black", alpha = .2)+
+  scale_x_continuous("", 
+                     breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
+  scale_y_continuous("[mm/s]", breaks = seq(-3,3), limits = c(-3,3)) +
+  ggtitle(titulo) +
+  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        panel.ontop = F,
+        plot.title = element_text(hjust = 0.5, size = 18),
+        legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+  
 
 
 
-##--------------------#
+# CON V DEL MODELO
 aux = nc_open(paste(ruta_nc, "V_CNRM-CM6.nc", sep = ""))
 v = ncvar_get(aux, "viento")[,37,,,,2]
 nc_close(aux)
@@ -136,4 +257,47 @@ for(i in 1:29){
   
 }
 y = apply(global_anom,c(1), mean)
-plot.ts(y*1000, col = "blue")
+
+y[13] = y[1]
+data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2))
+data[,1] = y; data[,2] = seq(1, 13, by = 1)
+colnames(data) = c("v", "meses")
+
+titulo = "Promedio vertical de V sobre el ecuador [m/s]"
+nombre = "v"
+g = ggplot(data) + theme_minimal()+
+  geom_line(aes(y = v, x = meses)) +
+  geom_hline(yintercept = 0, color = "black", alpha = .2)+
+  scale_x_continuous("", 
+                     breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
+  scale_y_continuous("[m/s]", breaks = seq(-1,1, by = .25), limits = c(-1,1)) +
+  ggtitle(titulo) +
+  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        panel.ontop = F,
+        plot.title = element_text(hjust = 0.5, size = 18),
+        legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rm(list = ls())
+.rs.restartR()
