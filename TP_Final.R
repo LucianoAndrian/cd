@@ -8,8 +8,10 @@ ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
 
 #### Funciones ####
 Fig7.3 = function(data){
+  #Funcion para calcular las anomalias de P 
+  # dim de data de entrada c(lon, lat, meses, miembros de ensamble)
   
-  r.dim = length(data[1,1,1,])
+  r.dim = length(data[1,1,1,]) # cantidad de miembros de ensamble
   
   global_mean = apply(data, c(4), mean, na.rm = T)
   SH_mean = apply(data[,1:37,,], c(4), mean, na.rm = T)
@@ -37,6 +39,9 @@ Fig7.3 = function(data){
 
 PlotMonthsTS = function(data, titulo, nombre, tl = F, data2049 = NULL, data2099 = NULL){
   
+  # graficado de salida de Fig7.3
+  
+  # todo esto es para poder graficar el spread (ggplot::geom_ribbon)
   datos = array(NA, c(12,9))
   datos[,1] = apply(data[[1]], c(1), mean)
   datos[,2] = apply(data[[1]], c(1), max)
@@ -65,7 +70,7 @@ PlotMonthsTS = function(data, titulo, nombre, tl = F, data2049 = NULL, data2099 
  if(is.null(data2049[[1]])){
    print("Sin datos!")
  }  else {
-   
+   # esto al final no se usa para el spread porque queda todo junto en un grafico y no se entiende
    datos2 = array(NA, c(12,9))
    datos2[,1] = apply(data2049[[1]], c(1), mean)
    datos2[,2] = apply(data2049[[1]], c(1), max)
@@ -156,11 +161,12 @@ Vinf = function(data){
   
   R = 6371000
   num = 2*pi*R**2
-  den = 86400*30*1013*100*2*pi*R
+  den = 86400*30*1013*100*2*pi*R # la entrada es Pa, aca tambien mantengo Pa. P0 = 1013*100
   
   x = vector()
   
   for(i in 0:11){
+    # calculo del delta de P entre un mes y otro
     if((i + 1) == 1){
       aux = data[12]-data[1]
       x[i+1] = (num*aux)/den
@@ -170,16 +176,23 @@ Vinf = function(data){
     }
   }
   
-  return(x*1000) # mm/s
+  return(x*1000) # pasa a mm/s
 }  
 
-#### Difrencias de Presion ####
+####----------------------------- Difrencias de Presion ---------------------------------####
 
 SSP = c("126", "585")
 
 for(ssp in 1:2){
   
+  
   ncs = c("PSL_CNRM-CM6.nc", paste("PSL_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("PSL_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+  # estos nc tienen el promedio de cada mes para todo el periodo,
+  # fueron creados previamente porque consumia todo el RAM en leer los nc solamente
+  # y trabajar con arrays muy grandes que ademas de los meses abarquen todos los años,
+  # implicaba tener arrays de 1gb ***. q sumando todo me dejaba 
+  # muy poco espacio en la RAM para hacer las cuentas
+  # estos NC tienen estas dimenciones (lon, lat, meses, miembros de ensamble)
   psl = list()
   
   for(i in 1:3){
@@ -188,8 +201,8 @@ for(ssp in 1:2){
     psl[[i]] = ncvar_get(aux, "psl")
     nc_close(aux)
     
-    if(i>1){
-      psl[[i]] = psl[[i]]*lats[,,,1:6]
+    if(i>1){ # peso por las latitudes
+      psl[[i]] = psl[[i]]*lats[,,,1:6] # en lo proyectado tiene solo 6 miembros 
     } else {
       lat = seq(-90, 90, by = 2.5)
       lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl[[i]]))) # solo lo va hacer una vez y ya queda lats.
@@ -197,6 +210,7 @@ for(ssp in 1:2){
     }
   }
   
+  # aca usa las dos funciones juntas PlotMonthsTS y Fig7.3
   nombre = paste("PSL_ANOM_", SSP[ssp], sep ="")
   PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
                tl = T, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
@@ -218,9 +232,10 @@ aux = Fig7.3(psl[[1]])
 psl_mean_hn = apply(aux[[3]], c(1), mean)
   
 x1 = Vinf(psl_mean_hn)
-x1[13]=x1[1]
-# los data frame como mierda se creaban?
-data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2))
+x1[13]=x1[1]  # para que vaya de enereo a enero
+
+# grafico
+data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2)) # REC--> como se creaba un dataframe!!!?
 data[,1] = x1; data[,2] = seq(1, 13, by = 1)
 colnames(data) = c("v", "meses")
 
@@ -247,10 +262,16 @@ ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, wid
 
 # CON V DEL MODELO
 aux = nc_open(paste(ruta_nc, "V_CNRM-CM6.nc", sep = ""))
-v = ncvar_get(aux, "viento")[,37,,,,2]
+# este NC, tambien creado antes, tiene dimenciones c(lon, lat, niveles(9), meses, miemrbos de ensamble, u y v ) ***
+
+v = ncvar_get(aux, "viento")[,37,,,,2] # tomo solo sobre el ecuador y la componente v
 nc_close(aux)
-v_mean = apply(v[,3:4,,], c(4), mean, na.rm = T)
+
+# v tiene dimenciones c(lon, niveles, meses, miembros de ensamble)
+
+v_mean = apply(v, c(4), mean, na.rm = T)
 aux1 = apply(v, c(3,4), mean, na.rm = T)
+
 global_anom = array(NA, dim = c(12,29))
 for(i in 1:29){
   global_anom[,i] = aux1[,i] - v_mean[i]
@@ -258,12 +279,13 @@ for(i in 1:29){
 }
 y = apply(global_anom,c(1), mean)
 
+# grafico
 y[13] = y[1]
 data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2))
 data[,1] = y; data[,2] = seq(1, 13, by = 1)
 colnames(data) = c("v", "meses")
 
-titulo = "Promedio vertical de V sobre el ecuador [m/s]"
+titulo = "Promedio vertical de anomalia de V sobre el ecuador [m/s]"
 nombre = "v"
 g = ggplot(data) + theme_minimal()+
   geom_line(aes(y = v, x = meses)) +
