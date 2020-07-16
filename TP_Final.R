@@ -268,7 +268,7 @@ nc_close(aux)
 
 
 
-t = 297
+t = 297 # calculada a partir de los datos de TAS del modelo, sobre el ecuador
 res_t = -c(0.7, 4.9, 9.4, 19, 36, 46, 59, 76, 102) # valores que se deben restar a T media en sfc calculados a partir de formula
                                                   # de grad. adiabatico seco y altitud segun presion.
 
@@ -321,7 +321,7 @@ y2 = apply(aux, c(1), mean) # promedio de los miembros
 y2[13] = y2[1]
 
 data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 3))
-data[,1] = y; data[,2] = y3; data[,3] = seq(1, 13)
+data[,1] = y; data[,2] = y2; data[,3] = seq(1, 13)
 colnames(data) = c("Forma1", "Forma2", "meses")
 
 titulo = "Promedio vertical de anomalia de V sobre el ecuador [m/s], valores esperados del orden 0.002 m/s"
@@ -339,7 +339,7 @@ g = ggplot(data) + theme_minimal()+
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
         panel.border = element_rect(colour = "black", fill = NA, size = 1),
         panel.ontop = F,
-        plot.title = element_text(hjust = 0.5, size = 18),
+        plot.title = element_text(hjust = 0.5, size = 15),
         legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
 
 ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
