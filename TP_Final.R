@@ -263,36 +263,77 @@ ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, wid
 # CON V DEL MODELO
 aux = nc_open(paste(ruta_nc, "V_CNRM-CM6.nc", sep = ""))
 # este NC, tambien creado antes, tiene dimenciones c(lon, lat, niveles(9), meses, miemrbos de ensamble, u y v ) ***
-
 v = ncvar_get(aux, "viento")[,37,,,,2] # tomo solo sobre el ecuador y la componente v
 nc_close(aux)
 
-# v tiene dimenciones c(lon, niveles, meses, miembros de ensamble)
 
-v_mean = apply(v, c(4), mean, na.rm = T)
-aux1 = apply(v, c(3,4), mean, na.rm = T)
+
+t = 297
+res_t = -c(0.7, 4.9, 9.4, 19, 36, 46, 59, 76, 102) # valores que se deben restar a T media en sfc calculados a partir de formula
+                                                  # de grad. adiabatico seco y altitud segun presion.
+
+x = t+res_t
+niveles = c(100000, 92500, 85000, 70000, 50000, 40000, 30000, 20000, 10000) # Pa
+
+pesos = (niveles/(286.9*x)) # Kg m-3
+# print(pesos)  
+#[1] 1,1763534 1,1037726 1,0301477 0,8776527 0,6677270 0,5554637
+#[7] 0,4393532 0,3154330 0,1787454
+
+v2 = array(NA, c(dim(v))) # v tiene dimenciones c(lon, niveles, meses, miembros de ensamble)
+for(i in 1:9){
+  v2[,i,,] = v[,i,,]*pesos[i] # pesando. unidades Kg m-3 m s-1
+}
+
+
+
+## forma 1
+v_mean = apply(v2, c(4), mean, na.rm = T) # media total, para cada miembro de ensamble
+aux1 = apply(v2, c(3,4), mean, na.rm = T) # media zonal y vertical, queda un valor para cada mes para cada miembro
 
 global_anom = array(NA, dim = c(12,29))
 for(i in 1:29){
   global_anom[,i] = aux1[,i] - v_mean[i]
   
 }
-y = apply(global_anom,c(1), mean)
+y = apply(global_anom,c(1), mean)/1.18 # rho cero
 
-# grafico
+
 y[13] = y[1]
-data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2))
-data[,1] = y; data[,2] = seq(1, 13, by = 1)
-colnames(data) = c("v", "meses")
 
-titulo = "Promedio vertical de anomalia de V sobre el ecuador [m/s]"
+
+
+
+## forma 2
+v_mean = apply(v2, c(2,4), mean, na.rm = T) # media para cada nivel y miembro de ensamble
+aux1 = apply(v2, c(2,3,4), mean, na.rm = T) # media zonal para cada nivel, mes y miembro
+
+global_anom = array(NA, dim = c(9,12,29)) # va guardar, anomalia de cada nivel, para cada mes y miembro
+for(i in 1:12){
+  global_anom[,i,] = aux1[,i,] - v_mean
+  
+}
+
+#y2 = apply(apply(global_anom, c(2,3), sum, na.rm = T)/sum(pesos),c(1), mean)
+aux = apply(global_anom, c(2,3), sum, na.rm = T)/sum(pesos) # promedio pesado. unidades m s-1
+y2 = apply(aux, c(1), mean) # promedio de los miembros
+
+y2[13] = y2[1]
+
+data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 3))
+data[,1] = y; data[,2] = y3; data[,3] = seq(1, 13)
+colnames(data) = c("Forma1", "Forma2", "meses")
+
+titulo = "Promedio vertical de anomalia de V sobre el ecuador [m/s], valores esperados del orden 0.002 m/s"
 nombre = "v"
 g = ggplot(data) + theme_minimal()+
-  geom_line(aes(y = v, x = meses)) +
+  geom_line(aes(y = Forma1, x = meses, colour = "Forma 1")) +
+  geom_line(aes(y = Forma2, x = meses, colour = "Forma 2")) +
   geom_hline(yintercept = 0, color = "black", alpha = .2)+
+  scale_color_manual("", breaks = c("Forma 1", "Forma 2"), values = c("black", "firebrick"))+
   scale_x_continuous("", 
                      breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
-  scale_y_continuous("[m/s]", breaks = seq(-1,1, by = .25), limits = c(-1,1)) +
+  scale_y_continuous("[m/s]", breaks = seq(-2,2, by = .5), limits = c(-1.5,1.5)) +
   ggtitle(titulo) +
   theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
@@ -302,20 +343,6 @@ g = ggplot(data) + theme_minimal()+
         legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
 
 ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
