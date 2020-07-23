@@ -224,7 +224,7 @@ for(ssp in 1:2){
 
 
 #####---------------------TRANSPORTE MERID. PROBANDO----------------------------#####
-
+### HACER PARA EL RESTO DE LOS TIEMPOS ###
 
 
 # INFERIDO
@@ -269,7 +269,7 @@ nc_close(aux)
 
 
 t = 297 # calculada a partir de los datos de TAS del modelo, sobre el ecuador
-res_t = -c(0.7, 4.9, 9.4, 19, 36, 46, 59, 76, 102) # valores que se deben restar a T media en sfc calculados a partir de formula
+res_t = -c(1.06, 7.44, 14.3, 29.5, 54, 70.3, 89, 115.3, 154) # valores que se deben restar a T media en sfc calculados a partir de formula
                                                   # de grad. adiabatico seco y altitud segun presion.
 
 x = t+res_t
@@ -325,7 +325,7 @@ data[,1] = y; data[,2] = y2; data[,3] = seq(1, 13)
 colnames(data) = c("Forma1", "Forma2", "meses")
 
 titulo = "Promedio vertical de anomalia de V sobre el ecuador [m/s], valores esperados del orden 0.002 m/s"
-nombre = "v"
+nombre = "v2"
 g = ggplot(data) + theme_minimal()+
   geom_line(aes(y = Forma1, x = meses, colour = "Forma 1")) +
   geom_line(aes(y = Forma2, x = meses, colour = "Forma 2")) +
@@ -345,7 +345,197 @@ g = ggplot(data) + theme_minimal()+
 ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
 
 
+#### PSL ANOM LONS ####
+# Presion por lon.
+#TP final 
+library(ncdf4)
+library(ggplot2)
 
+source("FUNCIONES.R")
+
+ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
+
+Fig7.3Lons = function(data){
+  lon = seq(1,360, by = 2.5)
+  lons = list()
+  lons[[1]] = seq(which(lon == 51), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+  aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
+  lons[[3]] = c(aux1, aux2)
+  
+  r.dim = length(data[1,1,1,]) # cantidad de miembros de ensamble
+  
+  global_mean = apply(data, c(4), mean, na.rm = T)
+  SH_mean = apply(data[,1:37,,], c(4), mean, na.rm = T)
+  NH_mean = apply(data[,37:73,,], c(4), mean, na.rm = T)
+  
+  aux1 = apply(data, c(3,4), mean, na.rm = T)
+  aux2 = apply(data[,1:37,,], c(1,3,4), mean, na.rm = T)
+  aux3 = apply(data[,37:73,,], c(1,3,4), mean, na.rm = T)
+  
+  global_anom = array(NA, dim = c(12,r.dim))
+  SH_anom = array(NA, dim = c(144,12,r.dim))
+  NH_anom = array(NA, dim = c(144,12,r.dim))
+  
+  for(i in 1:r.dim){ # puede no ser necesario.
+    global_anom[,i] = aux1[,i] - global_mean[i]
+    SH_anom[,,i] = aux2[,,i] - SH_mean[i]
+    NH_anom[,,i] = aux3[,,i] - NH_mean[i]
+  }
+  
+  # por lons
+  SH_anom_global = apply(SH_anom, c(2,3), mean); NH_anom_global = apply(NH_anom, c(2,3), mean)
+  
+  SH_anom_lons = array(NA, dim = c(12,3,r.dim)); NH_anom_lons = array(NA, dim = c(12,3,r.dim))
+  for(l in 1:3){
+    SH_anom_lons[,l,] = apply(SH_anom[lons[[l]],,], c(2,3), mean)
+    NH_anom_lons[,l,] = apply(NH_anom[lons[[l]],,], c(2,3), mean)
+  }
+  
+  
+  V = list()
+  V[[1]] = global_anom; V[[2]] = SH_anom_global; V[[3]] = NH_anom_global
+  V[[4]] = SH_anom_lons; V[[5]] = NH_anom_lons
+  return(V)
+  
+}
+
+PlotMonthsTSLons = function(data, titulo, nombre, lons.rm = c(1, 1, 1)){
+  # graficado de salida de Fig7.3
+  
+  datos = array(NA, c(12,8))
+  datos[,1] = apply(data[[2]], c(1), mean)
+  datos[,2] = apply(data[[3]], c(1), mean)
+  datos[,3:5] = apply(data[[4]], c(1,2), mean)
+  datos[,6:8] = apply(data[[5]], c(1,2), mean)
+  
+  datos = as.data.frame(rbind(datos/100, datos[1,]/100))
+  datos = as.data.frame(cbind(datos, meses = seq(1, 13))) 
+  
+  breaks = c("50º - 120º", "150º - 280º", "280º - 30º")
+  values = c("firebrick", "steelblue3", "springgreen3")
+  
+  breaks = breaks[which(!is.na(lons.rm))] 
+  values = values[which(!is.na(lons.rm))] 
+  
+  g =  ggplot(datos, aes(x = meses)) + theme_minimal() + 
+    geom_line(aes(y = datos[,1], linetype = "HS"), size = 1, alpha = .5, color = "black") +
+    geom_line(aes(y = datos[,2], linetype = "HN"), size = 1, alpha = .5, color = "black") 
+  
+  if(is.na(lons.rm[1] & !is.na(lons.rm[2]) & !is.na(lons.rm[3]))){
+    
+    g = g + geom_line(aes(y = datos[,4], linetype = "HS", colour = "150º - 280º"), size = 1) + 
+      geom_line(aes(y = datos[,5], linetype = "HS", colour = "280º - 30º"), size = 1) + 
+      geom_line(aes(y = datos[,7], linetype = "HN", colour = "150º - 280º"), size = 1) + 
+      geom_line(aes(y = datos[,8], linetype = "HN", colour = "280º - 30º"), size = 1) +
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+    
+  } else if(is.na(lons.rm[2] & !is.na(lons.rm[1]) & !is.na(lons.rm[3]))){
+    
+    g = g + geom_line(aes(y = datos[,3], linetype = "HS", colour = "50º - 120º"), size = 1) +
+      geom_line(aes(y = datos[,5], linetype = "HS", colour = "280º - 30º"), size = 1) +
+      geom_line(aes(y = datos[,6], linetype = "HN", colour = "50º - 120º"), size = 1) +
+      geom_line(aes(y = datos[,8], linetype = "HN", colour = "280º - 30º"), size = 1) +
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+    
+  } else if(is.na(lons.rm[3] & !is.na(lons.rm[2]) & !is.na(lons.rm[1]))) {
+    
+    g = g + geom_line(aes(y = datos[,3], linetype = "HS", colour = "50º - 120º"), size = 1) +
+      geom_line(aes(y = datos[,4], linetype = "HS", colour = "150º - 280º"), size = 1) + 
+      geom_line(aes(y = datos[,6], linetype = "HN", colour = "50º - 120º"), size = 1) + 
+      geom_line(aes(y = datos[,7], linetype = "HN", colour = "150º - 280º"), size = 1) + 
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+  } else if(is.na(lons.rm[1] & is.na(lons.rm[2]) & !is.na(lons.rm[3]))){
+    
+    g = g + geom_line(aes(y = datos[,5], linetype = "HS", colour = "280º - 30º"), size = 1) +
+      geom_line(aes(y = datos[,8], linetype = "HN", colour = "280º - 30º"), size = 1) +
+      
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+    
+  } else if(is.na(lons.rm[1] & is.na(lons.rm[3]) & !is.na(lons.rm[2]))){
+    
+    g = g + geom_line(aes(y = datos[,4], linetype = "HS", colour = "150º - 280º"), size = 1) + 
+      geom_line(aes(y = datos[,7], linetype = "HN", colour = "150º - 280º"), size = 1) + 
+      
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+  } else if(is.na(lons.rm[2] & is.na(lons.rm[3]) & !is.na(lons.rm[1]))){
+    
+    g = g + geom_line(aes(y = datos[,3], linetype = "HS", colour = "50º - 120º"), size = 1) +
+      geom_line(aes(y = datos[,6], linetype = "HN", colour = "50º - 120º"), size = 1) +
+      
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+    
+  } else {
+    
+    g = g + geom_line(aes(y = datos[,3], linetype = "HS", colour = "50º - 120º"), size = 1) +
+      geom_line(aes(y = datos[,4], linetype = "HS", colour = "150º - 280º"), size = 1) + 
+      geom_line(aes(y = datos[,5], linetype = "HS", colour = "280º - 30º"), size = 1) + 
+      geom_line(aes(y = datos[,6], linetype = "HN", colour = "50º - 120º"), size = 1) + 
+      geom_line(aes(y = datos[,7], linetype = "HN", colour = "150º - 280º"), size = 1) + 
+      geom_line(aes(y = datos[,8], linetype = "HN", colour = "280º - 30º"), size = 1) +
+      scale_color_manual("", 
+                         breaks = breaks,
+                         values = values)
+    
+  }
+  
+  g = g + geom_hline(yintercept = 0, color = "black", size = .5, alpha = 1) + 
+    scale_linetype("") + 
+    scale_x_continuous(labels = c(month.abb, month.abb[1]),
+                       breaks = seq(1, 13, by = 1)) +
+    scale_y_continuous(breaks = seq(-4,4, by = 1), limits = c(-4,4)) + 
+    ylab("[hPa]") + ggtitle(titulo) + xlab("") +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 18),
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP_FINAL/lons/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+  
+}
+
+SSP = c("126", "585")
+nom = c("_hist", "_49", "_99")
+for(ssp in 1:2){
+  
+  
+  ncs = c("PSL_CNRM-CM6.nc", paste("PSL_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("PSL_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+  print(ssp)
+  for(i in 1:3){
+    print(i)
+    aux = nc_open(paste(ruta_nc, ncs[i], sep = ""))
+    psl = ncvar_get(aux, "psl")
+    nc_close(aux)
+    
+    if(i>1){ 
+      psl = psl*lats[,,,1:6] # en lo proyectado tiene solo 6 miembros 
+    } else {
+      lat = seq(-90, 90, by = 2.5)
+      lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl))) # solo lo va hacer una vez y ya queda lats.
+      psl = psl*lats
+    }
+    
+    nombre = paste("PSL_Lon_anom",  nom[i], "_" ,SSP[ssp], sep ="")
+    PlotMonthsTSLons(data = Fig7.3Lons(psl), titulo = "Anomalías de presión en superficie", nombre = nombre)
+    
+    
+  }
+}
+
+#####
 
 
 rm(list = ls())
