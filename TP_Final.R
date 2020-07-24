@@ -179,7 +179,7 @@ Vinf = function(data){
   return(x*1000) # pasa a mm/s
 }  
 
-####----------------------------- Difrencias de Presion ---------------------------------####
+####----------------------------- Difrencias de Presion --------------------------------- ####
 
 SSP = c("126", "585")
 
@@ -223,7 +223,7 @@ for(ssp in 1:2){
 
 
 
-#####---------------------TRANSPORTE MERID. PROBANDO----------------------------#####
+#####---------------------TRANSPORTE MERID---------------------------- #####
 ### HACER PARA EL RESTO DE LOS TIEMPOS ###
 
 
@@ -284,24 +284,6 @@ v2 = array(NA, c(dim(v))) # v tiene dimenciones c(lon, niveles, meses, miembros 
 for(i in 1:9){
   v2[,i,,] = v[,i,,]*pesos[i] # pesando. unidades Kg m-3 m s-1
 }
-
-
-
-## forma 1
-v_mean = apply(v2, c(4), mean, na.rm = T) # media total, para cada miembro de ensamble
-aux1 = apply(v2, c(3,4), mean, na.rm = T) # media zonal y vertical, queda un valor para cada mes para cada miembro
-
-global_anom = array(NA, dim = c(12,29))
-for(i in 1:29){
-  global_anom[,i] = aux1[,i] - v_mean[i]
-  
-}
-y = apply(global_anom,c(1), mean)/1.18 # rho cero
-
-
-y[13] = y[1]
-
-
 
 
 ## forma 2
@@ -535,7 +517,104 @@ for(ssp in 1:2){
   }
 }
 
-#####
+##### V C-E lons ####
+
+VCrossEq_Lons = function(nc, year, ssp){
+  
+  library(ncdf4)
+  library(ggplot2)
+  
+  ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
+  
+  aux = nc_open(paste(ruta_nc, nc, sep = ""))
+  aux1 = ncvar_get(aux, "viento")[,37,,,,2] 
+  nc_close(aux)
+  
+  r.dim = length(aux1[1,1,1,]) 
+  
+  Pesos = function(){
+    t = 297 # calculada a partir de los datos de TAS del modelo, sobre el ecuador
+    res_t = -c(1.06, 7.44, 14.3, 29.5, 54, 70.3, 89, 115.3, 154) # valores que se deben restar a T media en sfc calculados a partir de formula
+    # de grad. adiabatico seco y altitud segun presion.
+    x = t+res_t
+    niveles = c(100000, 92500, 85000, 70000, 50000, 40000, 30000, 20000, 10000) # Pa
+    
+    pesos = (niveles/(286.9*x)) # Kg m-3
+    
+    return(pesos)
+  }
+  
+  #> Pesos()
+  #[1] 1,1777844 1,1134549 1,0480031 0,9121026 0,7171883 0,6150040 0,5027214
+  #[8] 0,3836582 0,2437437
+  
+  v2 = array(NA, c(dim(aux1))) # v tiene dimenciones c(lon, niveles, meses, miembros de ensamble)
+  for(i in 1:9){
+    v2[,i,,] = aux1[,i,,]*Pesos()[i] # pesando. unidades Kg m-3 m s-1
+  }
+  
+  lon = seq(1,360, by = 2.5)
+  lons = list()
+  lons[[1]] = seq(which(lon == 51), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+  aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
+  lons[[3]] = c(aux1, aux2)
+  
+  
+  V = list()
+  for(i in 1:3){
+    
+    v_anual.mean = apply(v2[lons[[i]],,,], c(1,2,4), mean, na.rm = T) 
+    
+    month.anom = array(NA, dim = c(length(lons[[i]]),9,12,r.dim))
+    for(mes in 1:12){
+      month.anom[,,mes,] =  v2[lons[[i]],,mes,] - v_anual.mean
+    }
+    
+    aux = apply(month.anom, c(1,3,4), sum, na.rm = T)/sum(Pesos())
+    m.anom_ens = apply(aux, c(2), mean, na.rm = T)
+    m.anom_ens[13] = m.anom_ens[1]
+    
+    
+    V[[i]] = m.anom_ens
+    
+  }
+  
+  
+  
+  data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 4))
+  data[,1] = V[[1]]; data[,2] = V[[2]]; data[,3] = V[[3]]; data[,4] = seq(1, 13)
+  colnames(data) = c("Indico", "Pacifico", "Amer_Atla", "meses")
+  
+  titulo = paste("Promedio vertical de anomalìa de V sobre el ecuador [m/s] - ", year, ssp)
+  nombre = paste("v_mod_lons.", year, ssp, sep = "")
+  g = ggplot(data) + theme_minimal()+
+    geom_line(aes(y = Indico, x = meses, colour = "50º-120º"), size = 1) +
+    geom_line(aes(y = Pacifico, x = meses, colour = "150º-280º"), size = 1) +
+    geom_line(aes(y = Amer_Atla, x = meses, colour = "280º-30º"), size = 1) +
+    geom_hline(yintercept = 0, color = "black", alpha = .2)+
+    scale_color_manual("", breaks = c("50º-120º", "150º-280º", "280º-30º"),  values = c("firebrick", "steelblue3", "springgreen3")) +
+    scale_x_continuous("", 
+                       breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
+    scale_y_continuous("[m/s]", breaks = seq(-2,2, by = .5), limits = c(-1.5,1.5)) +
+    ggtitle(titulo) +
+    theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+          panel.border = element_rect(colour = "black", fill = NA, size = 1),
+          panel.ontop = F,
+          plot.title = element_text(hjust = 0.5, size = 15),
+          legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+  
+  ggsave(paste(getwd(), "/Salidas/TP_FINAL/c_ce/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+  
+  rm(list = ls())
+  
+}
+
+VCrossEq_Lons(nc = "V_CNRM-CM6.nc", year = "Historico", "")
+VCrossEq_Lons(nc = "V_2049_126.CNRM-CM6.nc", year = "2020-2049", ssp = "SSP126")
+VCrossEq_Lons(nc = "V_2099_126.CNRM-CM6.nc", year = "2070-2099", ssp = "SSP126")
+VCrossEq_Lons(nc = "V_2049_585.CNRM-CM6.nc", year = "2020-2049", ssp = "SSP585")
+VCrossEq_Lons(nc = "V_2099_585.CNRM-CM6.nc", year = "2070-2099", ssp = "SSP585")
 
 
 rm(list = ls())
