@@ -1,12 +1,12 @@
-#TP final 
+# TP final # el codigo de las funciones.
 library(ncdf4)
 library(ggplot2)
-
 source("FUNCIONES.R")
 
 ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
 
-#### Funciones ####
+
+#### Funciones1 ####
 Fig7.3 = function(data){
   #Funcion para calcular las anomalias de P 
   # dim de data de entrada c(lon, lat, meses, miembros de ensamble)
@@ -36,7 +36,6 @@ Fig7.3 = function(data){
   return(V)
   
 }
-
 PlotMonthsTS = function(data, titulo, nombre, tl = F, data2049 = NULL, data2099 = NULL){
   
   # graficado de salida de Fig7.3
@@ -155,7 +154,6 @@ if(tl == T){
   ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
   
 }
-
 Vinf = function(data){
   # velocidad inferida a partir de las diferencias de presion
   
@@ -178,154 +176,199 @@ Vinf = function(data){
   
   return(x*1000) # pasa a mm/s
 }  
-
-####----------------------------- Difrencias de Presion --------------------------------- ####
-
-SSP = c("126", "585")
-
-for(ssp in 1:2){
-  
-  
-  ncs = c("PSL_CNRM-CM6.nc", paste("PSL_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("PSL_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
-  # estos nc tienen el promedio de cada mes para todo el periodo,
-  # fueron creados previamente porque consumia todo el RAM en leer los nc solamente
-  # y trabajar con arrays muy grandes que ademas de los meses abarquen todos los años,
-  # implicaba tener arrays de 1gb ***. q sumando todo me dejaba 
-  # muy poco espacio en la RAM para hacer las cuentas
-  # estos NC tienen estas dimenciones (lon, lat, meses, miembros de ensamble)
-  psl = list()
-  
-  for(i in 1:3){
+PslDif = function(graficos = F){
+  V = list()
+  SSP = c("126", "585")
+  for(ssp in 1:2){
     
-    aux = nc_open(paste(ruta_nc, ncs[i], sep = ""))
-    psl[[i]] = ncvar_get(aux, "psl")
-    nc_close(aux)
+    ncs = c("PSL_CNRM-CM6.nc", paste("PSL_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("PSL_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+    # estos nc tienen el promedio de cada mes para todo el periodo,
+    # fueron creados previamente porque consumia todo el RAM en leer los nc solamente
+    # y trabajar con arrays muy grandes que ademas de los meses abarquen todos los años,
+    # implicaba tener arrays de 1gb ***. q sumando todo me dejaba 
+    # muy poco espacio en la RAM para hacer las cuentas
+    # estos NC tienen estas dimenciones (lon, lat, meses, miembros de ensamble)
+    psl = list()
     
-    if(i>1){ # peso por las latitudes
-      psl[[i]] = psl[[i]]*lats[,,,1:6] # en lo proyectado tiene solo 6 miembros 
-    } else {
-      lat = seq(-90, 90, by = 2.5)
-      lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl[[i]]))) # solo lo va hacer una vez y ya queda lats.
-      psl[[i]] = psl[[i]]*lats
+    for(i in 1:3){
+      
+      aux = nc_open(paste(ruta_nc, ncs[i], sep = ""))
+      psl[[i]] = ncvar_get(aux, "psl")
+      nc_close(aux)
+      
+      if(i>1){ # peso por las latitudes
+        psl[[i]] = psl[[i]]*lats[,,,1:6] # en lo proyectado tiene solo 6 miembros 
+      } else {
+        lat = seq(-90, 90, by = 2.5)
+        lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl[[i]]))) # solo lo va hacer una vez y ya queda lats.
+        psl[[i]] = psl[[i]]*lats
+      }
     }
+   
+    if(graficos){
+      # aca usa las dos funciones juntas PlotMonthsTS y Fig7.3
+      nombre = paste("PSL_ANOM_", SSP[ssp], sep ="")
+      PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
+                   tl = T, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
+      
+      
+      PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
+                   tl = F, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
+      
+    } 
+    V[[ssp]] = psl
   }
   
-  # aca usa las dos funciones juntas PlotMonthsTS y Fig7.3
-  nombre = paste("PSL_ANOM_", SSP[ssp], sep ="")
-  PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
-               tl = T, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
-  
-  
-  PlotMonthsTS(data = Fig7.3(psl[[1]]), titulo = "Anomalías de presión en superficie", nombre = nombre,
-               tl = F, data2049 = Fig7.3(psl[[2]]), data2099 = Fig7.3(psl[[3]]))
-  
+  return(V)
 }
 
 
+####  Difrencias de Presion  ####
+psl = PslDif()
 
-#####---------------------TRANSPORTE MERID---------------------------- #####
-### HACER PARA EL RESTO DE LOS TIEMPOS ###
+# ---- Transporte meridiponal ---- #
+#### INFERIDO ####
 
-
-# INFERIDO
-aux = Fig7.3(psl[[1]])
-psl_mean_hn = apply(aux[[3]], c(1), mean)
+ssp_name = c("SSP126", "SSP85")
+year = c("Historico", "2020-2049", "2070-2099")
+for(ssp in 1:2){
   
-x1 = Vinf(psl_mean_hn)
-x1[13]=x1[1]  # para que vaya de enereo a enero
-
-# grafico
-data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 2)) # REC--> como se creaba un dataframe!!!?
-data[,1] = x1; data[,2] = seq(1, 13, by = 1)
-colnames(data) = c("v", "meses")
-
-titulo = "Viento meridional inferiod a partir de las diferencias de PSL [mm/s] ¿?"
-nombre = "v_inf"
-g = ggplot(data) + theme_minimal()+
-  geom_line(aes(y = v, x = meses)) +
-  geom_hline(yintercept = 0, color = "black", alpha = .2)+
-  scale_x_continuous("", 
-                     breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
-  scale_y_continuous("[mm/s]", breaks = seq(-3,3), limits = c(-3,3)) +
-  ggtitle(titulo) +
-  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
-        panel.border = element_rect(colour = "black", fill = NA, size = 1),
-        panel.ontop = F,
-        plot.title = element_text(hjust = 0.5, size = 18),
-        legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
-
-ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+  data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 4)) # REC--> como se creaba un dataframe!!!?
   
+  for(p in 1:3){
+    
+    aux = Fig7.3(psl[[ssp]][[p]])
+    psl_mean_hn = apply(aux[[3]], c(1), mean)
+    
+    x1 = Vinf(psl_mean_hn)
+    x1[13]=x1[1]
+    
+    data[,p] = x1
 
+  }
+  data[,4] = seq(1, 13, by = 1)
+  colnames(data) = c("Historico", "Cercano", "Lejano", "meses")
+  
+  
+    titulo = paste("Viento meridional inferido de ", as.character("\u0394"), "PSL  - ", ssp_name[ssp], sep = "")
+    nombre = paste("v_inf_", ssp_name[ssp], sep = "")
+  
+    g = ggplot(data) + theme_minimal()+
+      geom_line(aes(y = Historico, x = meses, colour = "Historico"), size = 1) +
+      geom_line(aes(y = Cercano, x = meses, colour = "2020 - 2049"), size = 1) +
+      geom_line(aes(y = Lejano, x = meses, colour = "2070 - 2099"), size = 1) +
+      geom_hline(yintercept = 0, color = "black", alpha = .2)+
+      scale_color_manual("", breaks = c("Historico", "2020 - 2049", "2070 - 2099"), values = c("black", "orange2", "red"))+
+      scale_x_continuous("", 
+                         breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
+      scale_y_continuous("[mm/s]", breaks = seq(-1.5,1.5, by = 0.5), limits = c(-1.5,1.5)) +
+      ggtitle(titulo) +
+      theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+            panel.border = element_rect(colour = "black", fill = NA, size = 1),
+            panel.ontop = F,
+            plot.title = element_text(hjust = 0.5, size = 18),
+            legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+    
+    ggsave(paste(getwd(), "/Salidas/TP_FINAL/v_inf/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
 
-
-# CON V DEL MODELO
-aux = nc_open(paste(ruta_nc, "V_CNRM-CM6.nc", sep = ""))
-# este NC, tambien creado antes, tiene dimenciones c(lon, lat, niveles(9), meses, miemrbos de ensamble, u y v ) ***
-v = ncvar_get(aux, "viento")[,37,,,,2] # tomo solo sobre el ecuador y la componente v
-nc_close(aux)
-
-
-
-t = 297 # calculada a partir de los datos de TAS del modelo, sobre el ecuador
-res_t = -c(1.06, 7.44, 14.3, 29.5, 54, 70.3, 89, 115.3, 154) # valores que se deben restar a T media en sfc calculados a partir de formula
-                                                  # de grad. adiabatico seco y altitud segun presion.
-
-x = t+res_t
-niveles = c(100000, 92500, 85000, 70000, 50000, 40000, 30000, 20000, 10000) # Pa
-
-pesos = (niveles/(286.9*x)) # Kg m-3
-# print(pesos)  
-#[1] 1,1763534 1,1037726 1,0301477 0,8776527 0,6677270 0,5554637
-#[7] 0,4393532 0,3154330 0,1787454
-
-v2 = array(NA, c(dim(v))) # v tiene dimenciones c(lon, niveles, meses, miembros de ensamble)
-for(i in 1:9){
-  v2[,i,,] = v[,i,,]*pesos[i] # pesando. unidades Kg m-3 m s-1
 }
 
-
-## forma 2
-v_mean = apply(v2, c(2,4), mean, na.rm = T) # media para cada nivel y miembro de ensamble
-aux1 = apply(v2, c(2,3,4), mean, na.rm = T) # media zonal para cada nivel, mes y miembro
-
-global_anom = array(NA, dim = c(9,12,29)) # va guardar, anomalia de cada nivel, para cada mes y miembro
-for(i in 1:12){
-  global_anom[,i,] = aux1[,i,] - v_mean
+#### CON V DEL MODELO ####
+VCrossEq = function(){
+  
+  library(ncdf4)
+  library(ggplot2)
+  
+  Pesos = function(){
+    t = 297 # calculada a partir de los datos de TAS del modelo, sobre el ecuador
+    res_t = -c(1.06, 7.44, 14.3, 29.5, 54, 70.3, 89, 115.3, 154) # valores que se deben restar a T media en sfc calculados a partir de formula
+    # de grad. adiabatico seco y altitud segun presion.
+    x = t+res_t
+    niveles = c(100000, 92500, 85000, 70000, 50000, 40000, 30000, 20000, 10000) # Pa
+    
+    pesos = (niveles/(286.9*x)) # Kg m-3
+    
+    return(pesos)
+  }
+  
+  ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
+  
+  V = list()
+  
+  SSP = c("126", "585")
+  for(ssp in 1:2){
+    ncs = c("V_CNRM-CM6.nc", paste("V_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("V_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+    
+    for(p in 1:3){
+      
+      aux = nc_open(paste(ruta_nc, ncs[p], sep = ""))
+      aux1 = ncvar_get(aux, "viento")[,37,,,,2] 
+      nc_close(aux)
+      
+      r.dim = length(aux1[1,1,1,]) 
+      
+      
+      v2 = array(NA, c(dim(aux1))) # v tiene dimenciones c(lon, niveles, meses, miembros de ensamble)
+      for(i in 1:9){
+        v2[,i,,] = aux1[,i,,]*Pesos()[i] # pesando. unidades Kg m-3 m s-1
+      }
+      
+      lon = seq(1,360, by = 2.5)
+      lons = list()
+      lons[[1]] = seq(which(lon == 51), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+      aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
+      lons[[3]] = c(aux1, aux2)
+      
+      v_anual.mean = apply(v2, c(1,2,4), mean, na.rm = T) 
+      
+      month.anom = array(NA, dim = c(144,9,12,r.dim))
+      for(mes in 1:12){
+        month.anom[,,mes,] =  v2[,,mes,] - v_anual.mean
+      }
+      
+      aux = apply(month.anom, c(1,3,4), sum, na.rm = T)/sum(Pesos())
+      m.anom_ens = apply(aux, c(2), mean, na.rm = T)
+      m.anom_ens[13] = m.anom_ens[1]
+      
+      
+      V[[p]] = m.anom_ens
+      
+      
+    }
+    
+    
+    data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 4))
+    data[,1] = V[[1]]; data[,2] = V[[2]]; data[,3] = V[[3]]; data[,4] = seq(1, 13)
+    colnames(data) = c("Historico", "Cercano", "Lejano", "meses")
+    
+    titulo = paste("Promedio vertical de anomalìa de V sobre el ecuador")
+    nombre = paste("v_mod.", SSP[ssp], sep = "")
+    g = ggplot(data) + theme_minimal()+
+      geom_line(aes(y = Historico, x = meses, colour = "Historico"), size = 0.7) +
+      geom_line(aes(y = Cercano, x = meses, colour = "2020 - 2049"), size = 0.7) +
+      geom_line(aes(y = Lejano, x = meses, colour = "2070 - 2099"), size = 0.7) +
+      geom_hline(yintercept = 0, color = "black", alpha = .2) +
+      scale_color_manual("", breaks = c("Historico", "2020 - 2049", "2070 - 2099"), values = c("black", "orange2", "red")) +
+      scale_x_continuous("", 
+                         breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
+      scale_y_continuous("[m/s]", breaks = seq(-1,1, by = .25), limits = c(-1,1)) +
+      ggtitle(titulo) +
+      theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+            panel.border = element_rect(colour = "black", fill = NA, size = 1),
+            panel.ontop = F,
+            plot.title = element_text(hjust = 0.5, size = 15),
+            legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+    
+    ggsave(paste(getwd(), "/Salidas/TP_FINAL/c_ce/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+    
+  }
+  
+  rm(list = ls())
   
 }
-
-#y2 = apply(apply(global_anom, c(2,3), sum, na.rm = T)/sum(pesos),c(1), mean)
-aux = apply(global_anom, c(2,3), sum, na.rm = T)/sum(pesos) # promedio pesado. unidades m s-1
-y2 = apply(aux, c(1), mean) # promedio de los miembros
-
-y2[13] = y2[1]
-
-data = as.data.frame(matrix(data = NA, nrow = 13, ncol = 3))
-data[,1] = y; data[,2] = y2; data[,3] = seq(1, 13)
-colnames(data) = c("Forma1", "Forma2", "meses")
-
-titulo = "Promedio vertical de anomalia de V sobre el ecuador [m/s], valores esperados del orden 0.002 m/s"
-nombre = "v2"
-g = ggplot(data) + theme_minimal()+
-  geom_line(aes(y = Forma1, x = meses, colour = "Forma 1")) +
-  geom_line(aes(y = Forma2, x = meses, colour = "Forma 2")) +
-  geom_hline(yintercept = 0, color = "black", alpha = .2)+
-  scale_color_manual("", breaks = c("Forma 1", "Forma 2"), values = c("black", "firebrick"))+
-  scale_x_continuous("", 
-                     breaks = seq(1, 13), labels = c(month.abb, month.abb[1])) +
-  scale_y_continuous("[m/s]", breaks = seq(-2,2, by = .5), limits = c(-1.5,1.5)) +
-  ggtitle(titulo) +
-  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
-        panel.border = element_rect(colour = "black", fill = NA, size = 1),
-        panel.ontop = F,
-        plot.title = element_text(hjust = 0.5, size = 15),
-        legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
-
-ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
-
+VCrossEq()
 
 #### PSL ANOM LONS ####
 # Presion por lon.
@@ -616,6 +659,119 @@ VCrossEq_Lons(nc = "V_2099_126.CNRM-CM6.nc", year = "2070-2099", ssp = "SSP126")
 VCrossEq_Lons(nc = "V_2049_585.CNRM-CM6.nc", year = "2020-2049", ssp = "SSP585")
 VCrossEq_Lons(nc = "V_2099_585.CNRM-CM6.nc", year = "2070-2099", ssp = "SSP585")
 
+#### ATLA B1 CAP 10 #### 
+Jet = function(breaks = 30){
+  
+  library(ncdf4)
+  library(ggplot2)
+  library(metR)
+  
+  ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
+  
+  j.sur = list()
+  j.norte = list()
+  
+  lat = seq(-90, 90, by = 2.5)
+  SSP = c("126", "585")
+  for(ssp in 1:2){
+    
+    ncs = c("V_CNRM-CM6.nc", paste("V_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("V_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+    j.sur = expand.grid(lon = seq(1,360, by = 2.5), lat = seq(-90,90, by = 2.5))
+    j.norte = expand.grid(lon = seq(1,360, by = 2.5), lat = seq(-90,90, by = 2.5))
+    
+    for(p in 1:3){
+      aux = nc_open(paste(ruta_nc, ncs[p], sep = ""))
+      aux1 = ncvar_get(aux, "viento")[,,8,,,] 
+      nc_close(aux)
+      r.dim = length(aux1[1,1,1,,1])
+      
+      aux1 = sqrt(aux1[,,,,1]**2 + aux1[,,,,2]**2)
+      
+      JJA = apply(aux1[,,5:8,], c(1,2,4), mean)
+      DJF = apply(aux1[,,c(12,1,2),], c(1,2,4), mean)
+      
+      lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(JJA)))
+      
+      JJA = JJA*lats; DJF = DJF*lats
+      
+      for(r in 1:r.dim){
+        m = which(JJA[1,,r] == max(JJA[1,,r]), arr.ind = T)
+        JJA[1,m,r] = 100
+        
+        m1 = which(DJF[1,,r] == max(DJF[1,,r]), arr.ind = T)
+        DJF[1,m,r] = 100
+        
+        for(i in 1:143){
+          m2 = which(JJA[1+i,,r] == max(JJA[1+i,m+1,r], JJA[i+1,m-1,r]))
+          #JJA[1+i, m2,r] = 100#; JJA[1+i, (m2-1):(m2+1),r] = 90
+          
+          m3 = which(DJF[1+i,,r] == max(DJF[1+i,m1+1,r], DJF[i+1,m-1,r]))
+          #DJF[1+i, m3,r] = 100#; DJF[1+i, (m3-1):(m3+1),r] = 90
+          
+        }
+      }
+      
+      
+      JJA = apply(JJA, c(1,2), mean)
+      DJF = apply(DJF, c(1,2), mean)
+      
+      j.sur[,p+2] = array(JJA, dim = 144*73)
+      j.norte[,p+2] = array(DJF, dim = 144*73)
+    }
+    
+    colnames(j.sur) = c("lon", "lat", "historico", "cercano", "lejano")
+    colnames(j.norte) = c("lon", "lat", "historico", "cercano", "lejano")
+    
+    
+    map = map_data("world2", colour = "black")
+    breaks.lon = seq(0, 360, by = 30); limits.lon = c(min(breaks.lon), max(breaks.lon))
+    breaks.lat = seq(-90, 90, by = 20); limits.lat = c(min(breaks.lat), max(breaks.lat))
+    
+    
+    
+    titulo = paste("Jet Streak", SSP[ssp])
+    nombre = paste("Jet.", SSP[ssp], sep = "")
+  g =   ggplot() + theme_minimal() + 
+      geom_polygon(data = map, aes(x = long ,y = lat, group = group),fill = "grey", color = "black") +
+      stat_contour_fill(data = j.sur, aes(x = lon, y = lat, z = lejano, fill = "2070-2099", colour = "2070-2099"), 
+                        breaks = breaks, alpha = 1) +
+      stat_contour_fill(data = j.sur, aes(x = lon, y = lat, z = cercano, fill = "2020-2049", colour = "2020-2049"), 
+                        breaks = breaks, alpha = 1) +
+      stat_contour_fill(data = j.sur, aes(x = lon, y = lat, z = historico, fill = "Historico", colour = "Historico"), 
+                        breaks = breaks, alpha = 1) +
+      
+      stat_contour_fill(data = j.norte, aes(x = lon, y = lat, z = lejano, fill = "2070-2099", colour = "2070-2099"), 
+                        breaks = breaks, alpha = 1) +
+      stat_contour_fill(data = j.norte, aes(x = lon, y = lat, z = cercano, fill = "2020-2049", colour = "2020-2049"), 
+                        breaks = breaks, alpha = 1) +
+      stat_contour_fill(data = j.norte, aes(x = lon, y = lat, z = historico, fill = "Historico", colour = "Historico"), 
+                        breaks = breaks, alpha = 1) +
+      
+      scale_fill_manual("", breaks = c("Historico", "2020-2049", "2070-2099"),
+                        values = c("dodgerblue3", "green3", "red3")) +
+      
+      scale_color_manual("", breaks = c("Historico", "2020-2049", "2070-2099"),
+                         values = c("steelblue", "forestgreen", "firebrick")) +
+    ggtitle(paste(titulo)) +
+      scale_x_longitude(breaks = breaks.lon, name = NULL, limits = limits.lon) +
+      scale_y_latitude(breaks = breaks.lat, name = NULL, limits = limits.lat) +
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, size = 3),
+            panel.ontop = T, legend.position = "bottom", 
+            #panel.background = element_rect(color ="paleturquoise"),
+            plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black", size = 1) 
+    
+  
+    ggsave(paste(getwd(), "/Salidas/TP_FINAL/", nombre,  ".jpg", sep = ""), plot = g, width = 20, height = 15, units = "cm")
+    
+    
+  
+}
+  
+}
+Jet(breaks = 30)
 
+#####  
 rm(list = ls())
 .rs.restartR()
