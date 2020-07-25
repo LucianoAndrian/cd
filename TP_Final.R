@@ -383,7 +383,7 @@ ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
 Fig7.3Lons = function(data){
   lon = seq(1,360, by = 2.5)
   lons = list()
-  lons[[1]] = seq(which(lon == 51), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+  lons[[1]] = seq(which(lon == 31), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
   aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
   lons[[3]] = c(aux1, aux2)
   
@@ -598,7 +598,7 @@ VCrossEq_Lons = function(nc, year, ssp){
   
   lon = seq(1,360, by = 2.5)
   lons = list()
-  lons[[1]] = seq(which(lon == 51), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+  lons[[1]] = seq(which(lon == 31), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
   aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
   lons[[3]] = c(aux1, aux2)
   
@@ -671,6 +671,9 @@ Jet = function(breaks = 30){
   j.sur = list()
   j.norte = list()
   
+  j.sur2 = list()
+  j.norte2 = list()
+  
   lat = seq(-90, 90, by = 2.5)
   SSP = c("126", "585")
   for(ssp in 1:2){
@@ -685,38 +688,31 @@ Jet = function(breaks = 30){
       nc_close(aux)
       r.dim = length(aux1[1,1,1,,1])
       
+      JJA2 = apply(aux1[,,5:9,,1], c(1,2,4), mean)
+      DJF2 = apply(aux1[,,c(12,1,2,3),,1], c(1,2,4), mean) 
+      
+      
       aux1 = sqrt(aux1[,,,,1]**2 + aux1[,,,,2]**2)
       
-      JJA = apply(aux1[,,5:8,], c(1,2,4), mean)
-      DJF = apply(aux1[,,c(12,1,2),], c(1,2,4), mean)
+      JJA = apply(aux1[,,5:9,], c(1,2,4), mean)
+      DJF = apply(aux1[,,c(12,1,2,3),], c(1,2,4), mean)
       
       lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(JJA)))
       
       JJA = JJA*lats; DJF = DJF*lats
-      
-      for(r in 1:r.dim){
-        m = which(JJA[1,,r] == max(JJA[1,,r]), arr.ind = T)
-        JJA[1,m,r] = 100
-        
-        m1 = which(DJF[1,,r] == max(DJF[1,,r]), arr.ind = T)
-        DJF[1,m,r] = 100
-        
-        for(i in 1:143){
-          m2 = which(JJA[1+i,,r] == max(JJA[1+i,m+1,r], JJA[i+1,m-1,r]))
-          #JJA[1+i, m2,r] = 100#; JJA[1+i, (m2-1):(m2+1),r] = 90
-          
-          m3 = which(DJF[1+i,,r] == max(DJF[1+i,m1+1,r], DJF[i+1,m-1,r]))
-          #DJF[1+i, m3,r] = 100#; DJF[1+i, (m3-1):(m3+1),r] = 90
-          
-        }
-      }
-      
+      JJA2 = JJA2*lats; DJF2 = DJF2*lats
       
       JJA = apply(JJA, c(1,2), mean)
       DJF = apply(DJF, c(1,2), mean)
       
+      JJA2 = apply(JJA2, c(1,2), mean)
+      DJF2 = apply(DJF2, c(1,2), mean)
+      
       j.sur[,p+2] = array(JJA, dim = 144*73)
       j.norte[,p+2] = array(DJF, dim = 144*73)
+      
+      j.sur2[[p]] = apply(JJA2, c(2), mean)
+      j.norte2[[p]] = apply(DJF2, c(2), mean)
     }
     
     colnames(j.sur) = c("lon", "lat", "historico", "cercano", "lejano")
@@ -766,12 +762,221 @@ Jet = function(breaks = 30){
     ggsave(paste(getwd(), "/Salidas/TP_FINAL/", nombre,  ".jpg", sep = ""), plot = g, width = 20, height = 15, units = "cm")
     
     
+    
+    
+    data = as.data.frame(matrix(data = NA, nrow = 73, ncol = 7))
+    data[,1] = seq(-90, 90, by = 2.5); data[,2] = j.sur2[[1]]
+    data[,3] = j.sur2[[2]]; data[,4] = j.sur2[[3]]
+    data[,5] = j.norte2[[1]]; data[,6] = j.norte2[[2]]
+    data[,7] = j.norte2[[3]]
+    
+    colnames(data) = c("late", "js1", "js2", "js3", "jn1", "jn2", "jn3")
+    nombre = paste("Jet.", SSP[ssp], "lat", sep = "")
+    
+    
+    g = ggplot(data, aes(x = lat)) + theme_minimal() + 
+      geom_line(aes(y = js1, colour = "Historico", linetype = "HS"), size = 0.8) + 
+      geom_line(aes(y = js2, colour = "2020-2049", linetype = "HS"), size = 0.8) + 
+      geom_line(aes(y = js3, colour = "2070-2099", linetype = "HS"), size = 0.8) + 
+      geom_line(aes(y = jn1, colour = "Historico", linetype = "HN"), size = 0.8) + 
+      geom_line(aes(y = jn2, colour = "2020-2049", linetype = "HN"), size = 0.8) + 
+      geom_line(aes(y = jn3, colour = "2070-2099", linetype = "HN"), size = 0.8) +
+      scale_color_manual("", breaks = c("Historico", "2020-2049", "2070-2099"),
+                         values = c("dodgerblue3", "green3", "red3")) +
+      scale_linetype_manual("", breaks = c("HS", "HN"), values = c(2, 1)) +
+    
+    ggtitle(paste(titulo)) +
+      scale_x_latitude(breaks = breaks.lat, name = NULL, limits = limits.lat) +
+      scale_y_continuous(name = "[m/s]", breaks = seq(-10,45, by = 5), limits = c(-10, 45))+
+      theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+            axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, size = 3),
+            panel.ontop = T, legend.position = "bottom", 
+            #panel.background = element_rect(color ="paleturquoise"),
+            plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black", size = 1) 
+    
+    
+    ggsave(paste(getwd(), "/Salidas/TP_FINAL/", nombre,  ".jpg", sep = ""), plot = g, width = 20, height = 15, units = "cm")
+    
+    
+    
+  
   
 }
   
 }
 Jet(breaks = 30)
 
-#####  
+#### Jet Lons ####
+JetLons = function(){
+  
+  library(ncdf4)
+  library(ggplot2)
+  library(metR)
+  
+  ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
+  
+  lon = seq(1,360, by = 2.5)
+  lons = list()
+  lons[[1]] = seq(which(lon == 31), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+  aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
+  lons[[3]] = c(aux1, aux2)
+  
+  map = map_data("world2", colour = "black")
+  breaks.lat = seq(-90, 90, by = 20); limits.lat = c(min(breaks.lat), max(breaks.lat))
+  
+  lat = seq(-90, 90, by = 2.5)
+  
+  SSP = c("126", "585")
+  for(ssp in 1:2){
+    
+    ncs = c("V_CNRM-CM6.nc", paste("V_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("V_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+    
+    for(z in 1:3){
+      
+      j.sur2 = list(); j.norte2 = list()
+      
+      for(p in 1:3){
+        
+        aux = nc_open(paste(ruta_nc, ncs[p], sep = ""))
+        aux1 = ncvar_get(aux, "viento")[,,8,,,] 
+        nc_close(aux)
+        r.dim = length(aux1[1,1,1,,1])
+        
+        JJA = apply(aux1[lons[[z]],,5:9,,1], c(1,2,4), mean)
+        DJF = apply(aux1[lons[[z]],,c(12,1,2,3),,1], c(1,2,4), mean)
+        
+        lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,length(lons[[z]])))), c(dim(JJA)))
+        
+        JJA = JJA*lats; DJF = DJF*lats
+        
+        j.sur2[[p]] = apply(JJA, c(2), mean)
+        j.norte2[[p]] = apply(DJF, c(2), mean)
+        
+      }
+      
+      titulo = paste("Jet Streak ", "SSP", SSP[ssp], sep ="")    
+      nombre = paste("Jet.", SSP[ssp], "lat_lons.zona", z , sep = "")
+      
+      
+      data = as.data.frame(matrix(data = NA, nrow = 73, ncol = 7))
+      data[,1] = seq(-90, 90, by = 2.5); data[,2] = j.sur2[[1]]
+      data[,3] = j.sur2[[2]]; data[,4] = j.sur2[[3]]
+      data[,5] = j.norte2[[1]]; data[,6] = j.norte2[[2]]
+      data[,7] = j.norte2[[3]]
+      
+      colnames(data) = c("late", "js1", "js2", "js3", "jn1", "jn2", "jn3")
+      
+      color.border = c("firebrick", "steelblue3", "springgreen3")
+      
+      g = ggplot(data, aes(x = lat)) + theme_minimal() + 
+        geom_line(aes(y = js1, colour = "Historico", linetype = "HS"), size = 0.8) + 
+        geom_line(aes(y = js2, colour = "2020-2049", linetype = "HS"), size = 0.8) + 
+        geom_line(aes(y = js3, colour = "2070-2099", linetype = "HS"), size = 0.8) + 
+        geom_line(aes(y = jn1, colour = "Historico", linetype = "HN"), size = 0.8) + 
+        geom_line(aes(y = jn2, colour = "2020-2049", linetype = "HN"), size = 0.8) + 
+        geom_line(aes(y = jn3, colour = "2070-2099", linetype = "HN"), size = 0.8) +
+        scale_color_manual("", breaks = c("Historico", "2020-2049", "2070-2099"),
+                           values = c("dodgerblue3", "green3", "red3")) +
+        scale_linetype_manual("", breaks = c("HS", "HN"), values = c(2, 1)) +
+        
+        ggtitle(paste(titulo)) +
+        scale_x_latitude(breaks = breaks.lat, name = NULL, limits = limits.lat) +
+        scale_y_continuous(name = "[m/s]", breaks = seq(0,40, by = 10))+
+        theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+              axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              panel.border = element_rect(colour = color.border[z], fill = NA, size = 3),
+              panel.ontop = T, legend.position = "bottom", 
+              #panel.background = element_rect(color ="paleturquoise"),
+              plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black", size = 1) 
+      
+      
+      ggsave(paste(getwd(), "/Salidas/TP_FINAL/", nombre,  ".jpg", sep = ""), plot = g, width = 20, height = 15, units = "cm")
+      
+    }
+  }
+  
+  rm(list = ls())
+}  
+JetLons()
+#### Mapa Lons ####
+
+library(ggplot2)
+library(metR)
+map = map_data("world2", colour = "black")
+breaks.lat = seq(-90, 90, by = 20); limits.lat = c(min(breaks.lat), max(breaks.lat))
+breaks.lon = seq(0, 360, by = 30); limits.lon = c(min(breaks.lon), max(breaks.lon))
+
+lon = seq(1,360, by = 2.5)
+lons = list()
+lons[[1]] = seq(which(lon == 31), which(lon == 151)); lons[[2]] = seq(which(lon == 151), which(lon == 281))
+aux1 = seq(which(lon == 1), which(lon == 31)); aux2 = seq(which(lon == 281), which(lon == 358.5))
+lons[[3]] = c(aux1, aux2)
+
+zonas = array(NA, dim =c(144,73))
+zonas[lons[[1]],]=10; zonas[lons[[2]],]=20; zonas[lons[[3]],]=30 
+
+data = expand.grid(lon = seq(1,360, by = 2.5), lat = seq(-90,90, by = 2.5))
+data[,3] = array(zonas, dim = 144*73)
+
+data[which(is.na(data[,3]), arr.ind = T),3] = 0
+
+data[which(data[,3] == 10, arr.ind = T),4] = "50º-120º" 
+data[which(data[,3] == 20, arr.ind = T),4] = "150º-280º" 
+data[which(data[,3] == 30, arr.ind = T),4] = "280º-30º" 
+data[which(data[,3] == 0, arr.ind = T),4] = " " 
+colnames(data) = c("lon", "lat", "zonas", "zonas2")
+data[,4] = as.factor(data[,4])
+
+g = ggplot(data, aes(x = lon, y = lat)) + theme_minimal()+
+  geom_polygon(data = map, aes(x = long ,y = lat, group = group),fill = "grey", color = "black") +
+  geom_tile(aes(fill = zonas2, alpha = zonas2)) +
+  scale_alpha_manual(breaks = c(" ","50º-120º","150º-280º","280º-30º"),
+                     values = c(0, 0.5, 0.5, 0.5), guide = F) +
+  scale_fill_manual("", breaks = c(" ","50º-120º","150º-280º","280º-30º"),
+                     values = c("white", "firebrick", "steelblue3", "springgreen3")) +
+  ggtitle("Regiones") +
+  scale_x_longitude(breaks = breaks.lon, name = NULL, limits = limits.lon)+
+  scale_y_latitude(breaks = breaks.lat, name = NULL, limits = limits.lat)+
+  theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+        axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 3),
+        panel.ontop = TRUE,
+        plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black")  + theme(legend.position = "bottom")
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "Mapa_zonas",  ".jpg", sep = ""), plot = g, width = 25, height = 15, units = "cm")
+
+
+
+#####
 rm(list = ls())
 .rs.restartR()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3
