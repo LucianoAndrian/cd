@@ -947,6 +947,251 @@ ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "Mapa_zonas",  ".jpg", sep = ""), pl
 
 
 
-#####
+#### ITCZ min ####
+
+V = list()
+SSP = c("126", "585")
+psl_lat = as.data.frame(matrix(NA, nrow = 73, ncol = 3))
+for(ssp in 1:2){
+  
+  ncs = c("PSL_CNRM-CM6.nc", paste("PSL_2049_", SSP[ssp], ".CNRM-CM6.nc", sep = ""), paste("PSL_2099_", SSP[ssp],".CNRM-CM6.nc", sep = ""))
+
+  psl = list()
+  for(i in 1:3){
+    
+    aux = nc_open(paste(ruta_nc, ncs[i], sep = ""))
+    psl[[i]] = ncvar_get(aux, "psl")
+    nc_close(aux)
+
+    if(ssp == 1){
+      psl_lat[,i] = apply(psl[[i]], c(2), mean, na.rm = T) # esto da lo mismo si se hace todo junto o con los miembros separados
+    } else {
+      psl_lat[,i+3] = apply(psl[[i]], c(2), mean, na.rm = T) 
+    }
+    
+  } 
+  
+}
+psl_lat = cbind(psl_lat, seq(-90,90, by = 2.5))
+colnames(psl_lat) = c("Historico", "Cercano26", "Lejano26", "his2", "Cercano85", "Lejano85", "lat")
+
+breaks.lat = seq(-90, 90, by = 20); limits.lat = c(min(breaks.lat), max(breaks.lat))
+
+g = ggplot(data = psl_lat/100, aes(x = lat*100)) + theme_minimal() +
+  geom_line(aes(y = Historico, colour = "Historico"), size = 1) +
+  geom_line(aes(y = Cercano26, colour = "2020-2049"), size = 1) +
+  geom_line(aes(y = Lejano26, colour = "2070-2099"), size = 1) +
+  scale_color_manual("", breaks = c("Historico", "2020-2049", "2070-2099"), 
+                     values = c("black", "green3", "red2")) + 
+  geom_vline(xintercept = 0, color = "black", alpha = 0.5) +
+  metR::scale_x_latitude("", breaks = breaks.lat, limits = limits.lat) +
+  scale_y_continuous("[hPa]", limits = c(980, 1025)) + 
+  ggtitle("Promedio zonal de PSL - SSP126") +
+  theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+        axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 3),
+        panel.ontop = TRUE,
+        plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black")  + theme(legend.position = "bottom")
+
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "psl_lat_126",  ".jpg", sep = ""), plot = g, width = 25, height = 15, units = "cm")
+
+g = ggplot(data = psl_lat/100, aes(x = lat*100)) + theme_minimal() +
+  geom_line(aes(y = Historico, colour = "Historico"), size = 1) +
+  geom_line(aes(y = Cercano85, colour = "2020-2049"), size = 1) +
+  geom_line(aes(y = Lejano85, colour = "2070-2099"), size = 1) +
+  scale_color_manual("", breaks = c("Historico", "2020-2049", "2070-2099"), 
+                     values = c("black", "green3", "red2")) + 
+  geom_vline(xintercept = 0, color = "black", alpha = 0.5) +
+  metR::scale_x_latitude("", breaks = breaks.lat, limits = limits.lat) +
+  scale_y_continuous("[hPa]", limits = c(980, 1025)) + 
+  ggtitle("Promedio zonal de PSL - SSP585") +
+  theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+        axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 3),
+        panel.ontop = TRUE,
+        plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black")  + theme(legend.position = "bottom")
+
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "psl_lat_585",  ".jpg", sep = ""), plot = g, width = 25, height = 15, units = "cm")
+  
+##### Desempño ####  ORDENAR #
+library(ncdf4)
+
+aux = nc_open(paste(ruta_nc, "X190.191.245.115.209.14.38.33.nc", sep = ""))
+aux2 = ncvar_get(aux, "slp")
+nc_close(aux)
+
+lat = seq(-90, 90, by = 2.5)
+
+x = array(NA, dim = c(144,73,12,30))
+
+for(m in 1:12){
+    for(a in 0:29){ 
+      x[,,m,a+1] = aux2[,,m+12*a]
+    }
+}
+rm(aux2)
+
+# rotando
+psl_obs = x[,ncol(x):1,,]#*array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(x)))
+
+# psl_mod_his
+
+
+
+"PSL_CNRM-CM6.nc"
+
+aux = nc_open(paste(ruta_nc,"PSL_CNRM-CM6_his_años.nc", sep = ""))
+aux2 = ncvar_get(aux, "psl")
+nc_close(aux)
+
+psl = aux2/100#*array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(aux2)))
+rm(aux2)
+
+aux = array(NA, dim = c(144, 73, 12, 29))
+for(r in 1:29){
+  aux[,,,r] = apply(psl_obs - psl[,,,,r], c(1,2,3), sum)/30
+}
+
+  
+  
+aux = apply(aux, c(1,2,3), mean)
+
+mapa_topo3(variable = aux, lon = seq(1, 360, by = 2.5), lat = seq(-90, 90, by = 2.5)
+           , colorbar = "RdBu", niveles = 11, revert = T, escala = seq(-14, 14, by = 2)
+           , titulo = "Bias PSL - Historico", label.escala = "hPa", colorbar.pos = "bottom", mapa = "mundo"
+           , r = 12, na.fill = 0, nombre.fig = "bias_psl", width = 25, height = 20, contour.fill = T)
+  
+# mae    
+aux = array(NA, dim = c(144, 73, 12, 29))
+for(r in 1:29){
+  aux[,,,r] = apply(abs(psl_obs - psl[,,,,r]), c(1,2,3), sum)/30
+}
+
+aux = apply(aux, c(1,2,3), mean)
+mapa_topo3(variable = aux, lon = seq(1, 360, by = 2.5), lat = seq(-90, 90, by = 2.5)
+           , colorbar = "Reds", niveles = 9, revert = F, escala = seq(0, 14, by = 2)
+           , titulo = "Error Absoluto Medio PSL - Historico", label.escala = "hPa", colorbar.pos = "bottom", mapa = "mundo"
+           , r = 12, na.fill = 0, nombre.fig = "mae_psl", width = 25, height = 20, contour.fill = T)
+
+
+
+aux = array(data = NA, c(144,73,9))
+for(i in 1:9){
+  aux[,,i] = apply(abs((tas5_an[[1]][,,,i] -273) - obs_t), c(1,2), sum, na.rm = T)/30
+}
+
+
+
+
+# v inf obs y mod
+data = as.data.frame(matrix(NA, ncol = 3, nrow = 13))
+colnames(data) = c("obs", "mod", "meses")
+data[,3] = seq(1,13)
+
+psl_lat = as.data.frame(matrix(NA, nrow = 73, ncol = 3))
+psl_lat[,3] = seq(-90, 90, by = 2.5)
+colnames(psl_lat) = c("obs", "mod", "lat")
+
+lat = seq(-90, 90, by = 2.5)
+
+# mod
+aux = nc_open(paste(ruta_nc, "PSL_CNRM-CM6.nc", sep = ""))
+psl = ncvar_get(aux, "psl")
+nc_close(aux)
+
+
+psl_lat[,2] = apply(psl, c(2), mean, na.rm = T) 
+
+lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl))) # solo lo va hacer una vez y ya queda lats.
+psl = psl*lats
+
+
+
+psl = Fig7.3(psl)
+psl_mean_hn = apply(psl[[3]], c(1), mean)
+x = Vinf(psl_mean_hn)
+x[13]=x[1]
+
+data[,2] = x
+
+
+aux = nc_open(paste(ruta_nc, "X190.191.245.115.209.14.38.33.nc", sep = ""))
+psl = ncvar_get(aux, "slp")
+nc_close(aux)
+
+x = array(NA, dim = c(144,73,12,30))
+
+for(m in 1:12){
+  for(a in 0:29){ 
+    x[,,m,a+1] = psl[,,m+12*a]
+  }
+}
+
+psl_lat[,1] = rev(apply(psl, c(2), mean, na.rm = T)*100 )
+psl = x[,ncol(x):1,,]*array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(x)))
+
+
+
+global_mean = apply(psl, c(3), mean, na.rm = T)
+SH_mean = apply(psl[,1:37,], c(3), mean, na.rm = T)
+NH_mean = apply(psl[,37:73,], c(3), mean, na.rm = T)
+aux1 = apply(psl - global_mean, c(3), mean, na.rm = T)
+aux2 = apply(psl[,1:37,] - SH_mean, c(3), mean, na.rm = T)
+aux3 = apply(psl[,37:73,] - NH_mean, c(3), mean, na.rm = T)
+
+V = list()
+V[[1]] = array(aux1, dim = c(12, 1))*100 
+V[[2]] = array(aux2, dim = c(12, 1))*100
+V[[3]] = array(aux3, dim = c(12, 1))*100
+
+x = Vinf(aux3*100)
+x[13]=x[1]
+data[,1] = x
+
+g = ggplot(data, aes(x = meses)) + theme_minimal() +
+  geom_line(aes(y = obs, colour = "Observado"), size = 1) + 
+  geom_line(aes(y = mod, colour = "Modelo"), size = 1) +
+  scale_color_manual("", breaks = c("Observado", "Modelo")
+                     , values = c("black", "red"))+
+  scale_x_continuous(labels = c(month.abb, month.abb[1]),
+                     breaks = seq(1, 13, by = 1)) +
+  scale_y_continuous(breaks = seq(-2,2, by = 1), limits = c(-2,2)) +
+  geom_hline(yintercept = 0, alpha = 0.5) +
+  ylab("[hPa]") + ggtitle("Flujo Cros-Ecuatorial inferido") + xlab("") +
+  theme(axis.text.y   = element_text(size = 14, color = "black"), axis.text.x   = element_text(size = 14, color = "black"), axis.title.y  = element_text("ºC"),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.title.x = element_text(),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        panel.ontop = F,
+        plot.title = element_text(hjust = 0.5, size = 18),
+        legend.position = "bottom", legend.key.width = unit(1, "cm"), legend.key.height = unit(0.5, "cm"), legend.text = element_text(size = 15)) 
+
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
+
+PlotMonthsTS(data = V, titulo = "Anomalías de presión en superficie", nombre = "prueba",
+             tl = F)
+
+breaks.lat = seq(-90, 90, by = 20); limits.lat = c(min(breaks.lat), max(breaks.lat))
+
+g = ggplot(data = psl_lat/100, aes(x = lat*100)) + theme_minimal() +
+  geom_line(aes(y = obs, colour = "Observado"), size = 1) +
+  geom_line(aes(y = mod, colour = "Modelo"), size = 1) +
+  scale_color_manual("", breaks = c("Observado", "Modelo")
+                     , values = c("black", "red")) +
+  geom_vline(xintercept = 0, color = "black", alpha = 0.5) +
+  metR::scale_x_latitude("", breaks = breaks.lat, limits = limits.lat) +
+  scale_y_continuous("[hPa]", limits = c(980, 1025)) + 
+  ggtitle("Promedio zonal de PSL - SSP126") +
+  theme(axis.text.y   = element_text(size = 14), axis.text.x   = element_text(size = 14), axis.title.y  = element_text(size = 14),
+        axis.title.x  = element_text(size = 14), panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 3),
+        panel.ontop = TRUE,
+        plot.title = element_text(hjust = 0.5, size = 18)) + geom_hline(yintercept = 0, color = "black")  + theme(legend.position = "bottom")
+
+ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "psl_lat_126",  ".jpg", sep = ""), plot = g, width = 25, height = 15, units = "cm")
+
+
+
+
+genre = ifelse(is.swedish(ArchEnemy), yes = "melodic_death_metal", no = "other_genre")
 rm(list = ls())
 .rs.restartR()
