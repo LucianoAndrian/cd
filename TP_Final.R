@@ -1013,15 +1013,18 @@ g = ggplot(data = psl_lat/100, aes(x = lat*100)) + theme_minimal() +
 
 ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "psl_lat_585",  ".jpg", sep = ""), plot = g, width = 25, height = 15, units = "cm")
   
-##### Desempño ####  ORDENAR #
+##### DESEMP #### 
+source("FUNCIONES.R")
+
+ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
 library(ncdf4)
+library(ggplot2)
 
 aux = nc_open(paste(ruta_nc, "X190.191.245.115.209.14.38.33.nc", sep = ""))
 aux2 = ncvar_get(aux, "slp")
 nc_close(aux)
 
 lat = seq(-90, 90, by = 2.5)
-
 x = array(NA, dim = c(144,73,12,30))
 
 for(m in 1:12){
@@ -1030,16 +1033,10 @@ for(m in 1:12){
     }
 }
 rm(aux2)
-
 # rotando
 psl_obs = x[,ncol(x):1,,]#*array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(x)))
 
-# psl_mod_his
-
-
-
-"PSL_CNRM-CM6.nc"
-
+# psl_mod
 aux = nc_open(paste(ruta_nc,"PSL_CNRM-CM6_his_años.nc", sep = ""))
 aux2 = ncvar_get(aux, "psl")
 nc_close(aux)
@@ -1047,13 +1044,13 @@ nc_close(aux)
 psl = aux2/100#*array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(aux2)))
 rm(aux2)
 
+
+# bias
 aux = array(NA, dim = c(144, 73, 12, 29))
 for(r in 1:29){
   aux[,,,r] = apply(psl_obs - psl[,,,,r], c(1,2,3), sum)/30
 }
 
-  
-  
 aux = apply(aux, c(1,2,3), mean)
 
 mapa_topo3(variable = aux, lon = seq(1, 360, by = 2.5), lat = seq(-90, 90, by = 2.5)
@@ -1081,9 +1078,17 @@ for(i in 1:9){
 }
 
 
+rm(list = ls())
+.rs.restartR()
+#-- V inf ---#
 
 
-# v inf obs y mod
+source("FUNCIONES.R")
+
+ruta_nc = "/home/auri/Facultad/Materias/c-dinamica/TPs/NC_TPfinal/"
+library(ncdf4)
+library(ggplot2)
+
 data = as.data.frame(matrix(NA, ncol = 3, nrow = 13))
 colnames(data) = c("obs", "mod", "meses")
 data[,3] = seq(1,13)
@@ -1099,13 +1104,10 @@ aux = nc_open(paste(ruta_nc, "PSL_CNRM-CM6.nc", sep = ""))
 psl = ncvar_get(aux, "psl")
 nc_close(aux)
 
-
 psl_lat[,2] = apply(psl, c(2), mean, na.rm = T) 
 
 lats =  array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(psl))) # solo lo va hacer una vez y ya queda lats.
 psl = psl*lats
-
-
 
 psl = Fig7.3(psl)
 psl_mean_hn = apply(psl[[3]], c(1), mean)
@@ -1114,7 +1116,7 @@ x[13]=x[1]
 
 data[,2] = x
 
-
+# obs
 aux = nc_open(paste(ruta_nc, "X190.191.245.115.209.14.38.33.nc", sep = ""))
 psl = ncvar_get(aux, "slp")
 nc_close(aux)
@@ -1130,8 +1132,7 @@ for(m in 1:12){
 psl_lat[,1] = rev(apply(psl, c(2), mean, na.rm = T)*100 )
 psl = x[,ncol(x):1,,]*array(data = t(array(data = cos((lat*pi)/180), c(73,144))), c(dim(x)))
 
-
-
+# ~Fig7.3()
 global_mean = apply(psl, c(3), mean, na.rm = T)
 SH_mean = apply(psl[,1:37,], c(3), mean, na.rm = T)
 NH_mean = apply(psl[,37:73,], c(3), mean, na.rm = T)
@@ -1147,6 +1148,8 @@ V[[3]] = array(aux3, dim = c(12, 1))*100
 x = Vinf(aux3*100)
 x[13]=x[1]
 data[,1] = x
+
+
 
 g = ggplot(data, aes(x = meses)) + theme_minimal() +
   geom_line(aes(y = obs, colour = "Observado"), size = 1) + 
@@ -1167,6 +1170,8 @@ g = ggplot(data, aes(x = meses)) + theme_minimal() +
 
 ggsave(paste(getwd(), "/Salidas/TP_FINAL/",nombre,".jpg",sep =""), plot = g, width = 25, height = 15  , units = "cm")
 
+
+## promedio zonal
 PlotMonthsTS(data = V, titulo = "Anomalías de presión en superficie", nombre = "prueba",
              tl = F)
 
@@ -1190,8 +1195,7 @@ g = ggplot(data = psl_lat/100, aes(x = lat*100)) + theme_minimal() +
 ggsave(paste(getwd(), "/Salidas/TP_FINAL/", "psl_lat_126",  ".jpg", sep = ""), plot = g, width = 25, height = 15, units = "cm")
 
 
+#####
 
-
-genre = ifelse(is.swedish(ArchEnemy), yes = "melodic_death_metal", no = "other_genre")
 rm(list = ls())
 .rs.restartR()
